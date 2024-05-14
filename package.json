@@ -1,0 +1,42 @@
+{
+  "name": "niljs",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+"
+  },
+  "homepage": "",
+  "engines": {
+    "node": ">=16.14.0"
+  },
+  "type": "module",
+  "description": "Typescript library to interact with the Nil blockchain. Can be used in the browser or in Node.js.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p tsconfig.json src/index.ts",
+    "prepare": "npx simple-git-hooks",
+    "format": "biome format src",
+    "lint": "biome check src"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "^1.7.3",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "simple-git-hooks": "^2.11.1",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npm run lint",
+    "pre-push": "npm run format",
+    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+    "preserveUnused": [
+      "commit-msg"
+    ]
+  }
+}
