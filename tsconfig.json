@@ -1,15 +1,6 @@
 {
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"],
-  "buildOptions": {
-    "outDir": "dist",
-    "declaration": true,
-    "declarationDir": "dist",
-    "declarationMap": false,
-    "sourceMap": true,
-    "incremental": true,
-    "tsBuildInfoFile": "dist/.tsbuildinfo"
-  },
   "compilerOptions": {
     "strict": true,
     "allowJs": false,
@@ -22,6 +13,8 @@
     "module": "NodeNext",
     "target": "ES2021",
     "lib": ["ES2021"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noEmitOnError": true,
+    "types": ["vitest/globals"]
   }
 }

@@ -1,0 +1,20 @@
+name: "Install dependencies"
+description: "Prepare repository and all dependencies"
+
+inputs:
+  node_version:
+    description: "Node.js version"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Nodejs
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node_version }}
+    - name: Install dependencies
+      shell: bash
+      run: |
+        export SKIP_INSTALL_SIMPLE_GIT_HOOKS=1
+        npm ci
