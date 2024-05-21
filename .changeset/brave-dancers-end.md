@@ -2,4 +2,4 @@
 "niljs": patch
 ---
 
-Added methods to serialize transactions and transactions with signatures
+Added methods to serialize messages and messages with signatures

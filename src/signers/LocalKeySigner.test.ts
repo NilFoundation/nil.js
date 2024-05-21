@@ -24,14 +24,14 @@ test("LocalKeySigner should throw error if invalid private key is provided", asy
 test("Signature should be valid", async () => {
   const privateKey = accounts[0].privateKey;
   const signer = new LocalKeySigner({ privateKey });
-  const transaction = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  const message = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
   /**
-   * Sign the transaction with the private key and verify the signature with the public key.
+   * Sign the message with the private key and verify the signature with the public key.
    */
-  const signature = signer.sign(transaction);
+  const signature = signer.sign(message);
   const publicKey = ec.keyFromPublic(accounts[0].publicKey, "hex");
-  const verified = publicKey.verify(transaction, signature);
+  const verified = publicKey.verify(message, signature);
 
   expect(verified).toBe(true);
 });

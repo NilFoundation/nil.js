@@ -1,87 +1,89 @@
 import {} from "@chainsafe/ssz";
-import type { ISignedTransaction } from "../types/ISignedTransaction.js";
-import type { ITransaction } from "../types/ITransaction.js";
-import { hexToBytes } from "./fromHex.js";
+import type { ISignature } from "../index.js";
+import type { IMessage } from "../types/IMessage.js";
+import type { ISignedMessage } from "../types/ISignedMessage.js";
 import {
-  SszSignedTransactionSchema,
-  SszTransactionSchema,
-} from "./sszSchemas.js";
+  SszMessageSchema,
+  SszSignatureSchema,
+  SszSignedMessageSchema,
+} from "./ssz.js";
 import { toBytes } from "./toBytes.js";
 
 /**
- * Process a transaction object to convert all string fields to bytes and BigInt fields to BigInt.
- * @param transaction - Transaction object
- * @returns ITransaction - Processed transaction object ready to be SSZ encoded.
+ * Process a message object to convert all string fields to bytes and BigInt fields to BigInt.
+ * @param message - Message object
+ * @returns IMessage - Processed message object ready to be SSZ encoded.
  */
-const processTransaction = ({
-  from,
-  to,
-  value,
-  data,
-  signature,
-  maxPriorityFeePerGas,
-  gasPrice,
-  maxFeePerGas,
-  ...rest
-}: ITransaction) => ({
+const prepareMessage = ({ from, to, data, signature, ...rest }: IMessage) => ({
   ...rest,
   from: toBytes(from),
   to: toBytes(to),
-  value: BigInt(value),
   data: toBytes(data),
   signature: signature ? toBytes(signature) : null,
-  maxPriorityFeePerGas: BigInt(maxPriorityFeePerGas),
-  gasPrice: BigInt(gasPrice),
-  maxFeePerGas: BigInt(maxFeePerGas),
 });
 
 /**
- * Process a signed transaction object to convert all string fields to bytes and BigInt fields to BigInt.
- * @param signedTransaction - Signed transaction object
- * @returns ISignedTransaction - Processed signed transaction object ready to be SSZ encoded.
+ * Process a signature object to convert all string fields to bytes and BigInt fields to BigInt.
+ * @param signature - Signature object
+ * @returns ISignature - Processed signature object ready to be SSZ encoded.
  */
-const processSignedTransaction = ({
+const prepareSignature = ({ r, s, v, yParity }: ISignature) => ({
+  r: toBytes(r),
+  s: toBytes(s),
+  v: v ? v : null,
+  yParity,
+});
+
+/**
+ * Process a signed message object to convert all string fields to bytes and BigInt fields to BigInt.
+ * @param signedMessage - Signed message object
+ * @returns ISignedMessage - Processed signed message object ready to be SSZ encoded.
+ */
+const processSignedMessage = ({
   v,
   r,
   s,
   yParity,
   ...rest
-}: ISignedTransaction) => ({
-  ...rest,
-  v: v ? BigInt(v) : null,
-  r: hexToBytes(r),
-  s: hexToBytes(s),
-  yParity: BigInt(yParity),
-  ...processTransaction(rest),
+}: ISignedMessage) => ({
+  ...prepareMessage(rest),
+  ...prepareSignature({ r, s, v, yParity }),
 });
 
 /**
- * Convert a transaction object to SSZ encoded Uint8Array.
- * @param transaction - Transaction object
- * @returns Uint8Array - SSZ encoded transaction
+ * Convert a message object to SSZ encoded Uint8Array.
+ * @param message - Message object
+ * @returns Uint8Array - SSZ encoded message
  */
-const transactionToSsz = (transaction: ITransaction): Uint8Array => {
-  const serialized = SszTransactionSchema.serialize(
-    processTransaction(transaction),
-  );
+const messageToSsz = (message: IMessage): Uint8Array => {
+  const serialized = SszMessageSchema.serialize(prepareMessage(message));
 
   return serialized;
 };
 
 /**
- * Convert a signed transaction object to SSZ encoded Uint8Array.
- * @param transaction - Transaction object with signature
- * @returns Uint8Array - SSZ encoded signed transaction
- * @example
- * const serializedTx = signedTransactionToSsz(signedTransaction);
+ * Convert a signature object to SSZ encoded Uint8Array.
+ * @param signature - Signature object
+ * @returns Uint8Array - SSZ encoded signature
  */
-const signedTransactionToSsz = (
-  transaction: ISignedTransaction,
-): Uint8Array => {
-  const serialized = SszSignedTransactionSchema.serialize(
-    processSignedTransaction(transaction),
+const signatureToSsz = (signature: ISignature): Uint8Array => {
+  const serialized = SszSignatureSchema.serialize(prepareSignature(signature));
+
+  return serialized;
+};
+
+/**
+ * Convert a signed message object to SSZ encoded Uint8Array.
+ * @param message - Message object with signature
+ * @returns Uint8Array - SSZ encoded signed message
+ * @example
+ * const serializedTx = signedMessageToSsz(signedMessage);
+ */
+const signedMessageToSsz = (message: ISignedMessage): Uint8Array => {
+  const serialized = SszSignedMessageSchema.serialize(
+    processSignedMessage(message),
   );
   return serialized;
 };
 
-export { transactionToSsz, signedTransactionToSsz };
+export { messageToSsz, signedMessageToSsz, signatureToSsz };

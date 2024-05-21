@@ -12,9 +12,9 @@ const Uint32 = new UintNumberType(4);
 const UintBn64 = new UintBigintType(8);
 
 /**
- * SSZ schema for a transaction object. It includes all the fields of a transaction object.
+ * SSZ schema for a message object. It includes all the fields of a message object.
  */
-const SszTransactionSchema = new ContainerType({
+const SszMessageSchema = new ContainerType({
   index: Uint32,
   shardId: Uint32,
   from: Bytes32,
@@ -36,15 +36,15 @@ const SszSignatureSchema = new ContainerType({
   r: Bytes32,
   s: Bytes32,
   v: new OptionalType(UintBn64),
-  yParity: UintBn64,
+  yParity: Uint32,
 });
 
 /**
- * SSZ schema for a signed transaction object. It includes all the fields of a signed transaction object.
+ * SSZ schema for a signed message object. It includes all the fields of a signed message object.
  */
-const SszSignedTransactionSchema = new ContainerType({
-  ...SszTransactionSchema.fields,
+const SszSignedMessageSchema = new ContainerType({
+  ...SszMessageSchema.fields,
   ...SszSignatureSchema.fields,
 });
 
-export { SszTransactionSchema, SszSignedTransactionSchema };
+export { SszMessageSchema, SszSignedMessageSchema, SszSignatureSchema };

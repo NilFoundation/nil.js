@@ -1,9 +1,9 @@
 import type { Hex } from "@noble/curves/abstract/utils";
 import invariant from "tiny-invariant";
 import type { IPrivateKey } from "../signers/index.js";
-import type { ITransaction } from "../types/ITransaction.js";
+import type { IMessage } from "../types/IMessage.js";
 import { isHexString } from "./hex.js";
-import { isAddress } from "./transaction.js";
+import { isAddress } from "./message.js";
 
 /**
  * Checks if the value is a string.
@@ -48,13 +48,12 @@ const assertIsValidPrivateKey = (
 };
 
 /**
- * Checks if the value is a valid transaction. If the value is a valid transaction, it returns nothing.
- * @throws Will throw an error if the value is not a valid transaction.
- * @param transaction - The transaction to validate.
+ * Checks if the value is a valid message. If the value is a valid message, it returns nothing.
+ * @throws Will throw an error if the value is not a valid message.
+ * @param message - The message to validate.
  */
-const assertIsValidTransaction = (transaction: ITransaction) => {
-  const { chainId, maxPriorityFeePerGas, gasPrice, maxFeePerGas, to } =
-    transaction;
+const assertIsValidMessage = (message: IMessage) => {
+  const { chainId, maxPriorityFeePerGas, gasPrice, maxFeePerGas, to } = message;
   invariant(
     typeof to === "string" && isAddress(to),
     `Expected a valid 'to' address but got ${to}`,
@@ -81,5 +80,5 @@ export {
   assertIsBuffer,
   assertIsHexString,
   assertIsValidPrivateKey,
-  assertIsValidTransaction,
+  assertIsValidMessage,
 };
