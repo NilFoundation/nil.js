@@ -63,9 +63,9 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * getBlockTransactionCountByNumber returns the transaction count by the block number.
+   * getBlockMessageCountByNumber returns the message count by the block number.
    * @param number - The block number.
-   * @returns The transaction count.
+   * @returns The message count.
    * @example
    import { PublicClient } from 'niljs';
    *
@@ -73,13 +73,11 @@ class PublicClient extends BaseClient {
    *  endpoint: 'http://127.0.0.1:8529'
    * })
    *
-   * const count = await client.getBlockTransactionCountByNumber(1);
+   * const count = await client.getBlockMessageCountByNumber(1);
    */
-  public async getBlockTransactionCountByNumber(
-    number: number,
-  ): Promise<number> {
+  public async getBlockMessageCountByNumber(number: number): Promise<number> {
     const res = await this.rpcClient.request({
-      method: "eth_getBlockTransactionCountByNumber",
+      method: "eth_getBlockMessageCountByNumber",
       params: [number],
     });
 
@@ -87,9 +85,9 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * getBlockTransactionCountByHash returns the transaction count by the block hash.
+   * getBlockMessageCountByHash returns the message count by the block hash.
    * @param hash - The block hash.
-   * @returns The transaction count.
+   * @returns The message count.
    * @example
    import { PublicClient } from 'niljs';
    *
@@ -97,13 +95,11 @@ class PublicClient extends BaseClient {
    *  endpoint: 'http://127.0.0.1:8529'
    * })
    *
-   * const count = await client.getBlockTransactionCountByHash(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
+   * const count = await client.getBlockMessageCountByHash(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
-  public async getBlockTransactionCountByHash(
-    hash: Uint8Array,
-  ): Promise<number> {
+  public async getBlockMessageCountByHash(hash: Uint8Array): Promise<number> {
     const res = await this.rpcClient.request({
-      method: "eth_getBlockTransactionCountByHash",
+      method: "eth_getBlockMessageCountByHash",
       params: [hash],
     });
 
@@ -137,10 +133,10 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * getTransactionCount returns the transaction count of the address.
+   * getMessageCount returns the message count of the address.
    * @param address - The address.
    * @param blockNumberOrHash - The block number or hash.
-   * @returns The transaction count.
+   * @returns The message count.
    * @example
    import { PublicClient } from 'niljs';
    *
@@ -148,14 +144,14 @@ class PublicClient extends BaseClient {
    *  endpoint: 'http://127.0.0.1:8529'
    * })
    *
-   * const count = await client.getTransactionCount(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
+   * const count = await client.getMessageCount(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
    */
-  public async getTransactionCount(
+  public async getMessageCount(
     address: Uint8Array,
     blockNumberOrHash: string,
   ): Promise<number> {
     const res = await this.rpcClient.request({
-      method: "eth_getTransactionCount",
+      method: "eth_getMessageCount",
       params: [address, blockNumberOrHash],
     });
 

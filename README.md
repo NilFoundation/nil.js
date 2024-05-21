@@ -42,7 +42,7 @@ publicClient.getBalance("your_address").then((balance) => {
 });
 ```
 
-The second one is the `WalletClient` class, which is used to interact with the Nil network with a private key. It is used to send transactions to the network.
+The second one is the `WalletClient` class, which is used to interact with the Nil network with a private key. It is used to send messages to the network.
 
 ```typescript
 import { WalletClient } from "niljs";
@@ -51,7 +51,7 @@ const endpoint = "https://localhost:8259";
 const walletClient = new WalletClient({ endpoint });
 
 walletClient
-  .sendTransaction({
+  .sendMessage({
     from: "your_address",
     to: "recipient_address",
     amount: 100,
@@ -61,7 +61,7 @@ walletClient
   });
 ```
 
-Initialize the Signer with the private key of the account you want to use to sign transactions.
+Initialize the Signer with the private key of the account you want to use to sign messages.
 
 ```typescript
 import { Signer } from "niljs";
@@ -72,7 +72,7 @@ const signer = new Signer({ privateKey });
 signer.sign(new Uint8Array(32));
 ```
 
-You can also sign transactions automatically by passing the Signer instance to the WalletClient.
+You can also sign messages automatically by passing the Signer instance to the WalletClient.
 
 ```typescript
 import { WalletClient } from "niljs";

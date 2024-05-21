@@ -11,9 +11,9 @@ import type { ISigner } from "./types/ISigner.js";
  * It is an abstraction of signing the data with the private key.
  * It uses the secp256k1 curve implementation by @noble/curves/secp256k1 library under the hood.
  * @example
- * import { LocalKeySigner } from 'niljs';
+ * import { LocalKeySigner, generatePrivateKey } from 'niljs';
  *
- * const privateKey = new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+ * const privateKey = genratePrivateKey();
  * const signer = new LocalKeySigner({ privateKey });
  */
 class LocalKeySigner implements ISigner {
