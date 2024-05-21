@@ -1,5 +1,4 @@
-import type { ISerializer } from "./ISerializer.js";
-import type { ISigner } from "./ISigner.js";
+import type { ISigner } from "../../signers/types/ISigner.js";
 
 /**
  * Client configuration that is shared between public and private clients.
@@ -29,20 +28,6 @@ type IWalletClientConfig = IClientBaseConfig & {
    * })
    */
   signer?: ISigner;
-  /**
-   * The instance of serializer is used to serialize and deserialize data.
-   * If not included in the config, data should be serialized and deserialized before passing to the client.
-   * @example
-   * import { Serializer } from 'niljs';
-   *
-   * const serializer = new Serializer();
-   *
-   * const client = new WalletClient({
-   *  endpoint: 'http://127.0.0.1:8529',
-   *  serializer: serializer
-   * })
-   */
-  serializer?: ISerializer;
 };
 
 export type { IClientBaseConfig, IPublicClientConfig, IWalletClientConfig };

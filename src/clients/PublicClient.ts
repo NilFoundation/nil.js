@@ -1,5 +1,5 @@
-import type { IPublicClientConfig } from "../types/ClientConfigs.js";
 import { BaseClient } from "./BaseClient.js";
+import type { IPublicClientConfig } from "./types/ClientConfigs.js";
 
 /**
  * Public client is a class that allows you to interact with the network via JSON-RPC api.
@@ -212,3 +212,8 @@ class PublicClient extends BaseClient {
 }
 
 export { PublicClient };
+
+// this client is subject to change a lot
+// we need to add more methods to interact with the network
+// and we need to know shard id before executing the request
+// we won't have a single source of data for all shards so we need to know shard id.

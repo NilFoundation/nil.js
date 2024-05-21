@@ -9,3 +9,7 @@ export default defineConfig({
     globals: true,
   },
 });
+
+// start testing with local node
+// we will have something public in the future.
+// or we can mock api in the future.

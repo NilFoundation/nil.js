@@ -1,4 +1,5 @@
-import { bytesToHex, numberToHexUnpadded } from "@noble/curves/abstract/utils";
+import { numberToHexUnpadded } from "@noble/curves/abstract/utils";
+import { bytesToHex } from "./fromBytes.js";
 
 /**
  * Convert a string, number, bigint, boolean, or ByteArrayType to a hex string.

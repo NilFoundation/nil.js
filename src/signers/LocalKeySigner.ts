@@ -1,10 +1,10 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { toHex } from "../encoding/toHex.js";
-import type { ILocalKeySignerConfig } from "../types/ILocalKeySignerConfig.js";
-import type { ISignature } from "../types/ISignature.js";
-import type { ISigner } from "../types/ISigner.js";
 import { assertIsHexString, assertIsValidPrivateKey } from "../utils/assert.js";
 import { getPublicKey } from "./getPublicKey.js";
+import type { ILocalKeySignerConfig } from "./types/ILocalKeySignerConfig.js";
+import type { ISignature } from "./types/ISignature.js";
+import type { ISigner } from "./types/ISigner.js";
 
 /**
  * LocalKeySigner is a class that allows you to sign the data with the private key.
@@ -38,6 +38,7 @@ class LocalKeySigner implements ISigner {
     return {
       r: toHex(r),
       s: toHex(s),
+      v: recovery ? 28n : 27n,
       yParity: recovery,
     };
   }

@@ -1,6 +1,6 @@
 import type { Hex } from "@noble/curves/abstract/utils";
 import invariant from "tiny-invariant";
-import type { IPrivateKey } from "../types/IPrivateKey.js";
+import type { IPrivateKey } from "../signers/index.js";
 import type { ITransaction } from "../types/ITransaction.js";
 import { isHexString } from "./hex.js";
 import { isAddress } from "./transaction.js";
@@ -42,7 +42,7 @@ const assertIsValidPrivateKey = (
   message?: string,
 ): void => {
   invariant(
-    isHexString(privateKey) && privateKey.length === 64 + 2,
+    isHexString(privateKey) && privateKey.length === 64,
     message ?? `Expected a valid private key, but got ${privateKey}`,
   );
 };
@@ -53,14 +53,8 @@ const assertIsValidPrivateKey = (
  * @param transaction - The transaction to validate.
  */
 const assertIsValidTransaction = (transaction: ITransaction) => {
-  const {
-    chainId,
-    maxPriorityFeePerGas,
-    gasPrice,
-    maxFeePerGas,
-    to,
-    accessList,
-  } = transaction;
+  const { chainId, maxPriorityFeePerGas, gasPrice, maxFeePerGas, to } =
+    transaction;
   invariant(
     typeof to === "string" && isAddress(to),
     `Expected a valid 'to' address but got ${to}`,
@@ -80,10 +74,6 @@ const assertIsValidTransaction = (transaction: ITransaction) => {
   invariant(
     typeof maxPriorityFeePerGas === "number" && maxPriorityFeePerGas > 0,
     `Expected a valid 'maxPriorityFeePerGas' but got ${maxPriorityFeePerGas}`,
-  );
-  invariant(
-    Array.isArray(accessList),
-    `Expected a valid 'accessList' but got ${accessList}`,
   );
 };
 
