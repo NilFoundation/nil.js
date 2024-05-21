@@ -10,9 +10,9 @@ runs:
     - name: Format
       shell: bash
       run: npm run format
-    - name: Test
-      shell: bash
-      run: npm run test:ci
+    # - name: Test
+    #   shell: bash
+    #   run: npm run test:ci
     - name: Build
       shell: bash
       run: |

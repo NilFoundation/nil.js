@@ -1,6 +1,6 @@
 import type { Client as RPCClient } from "@open-rpc/client-js";
 import { createRPCClient } from "../rpc/rpcClient.js";
-import type { IClientBaseConfig } from "../types/ClientConfigs.js";
+import type { IClientBaseConfig } from "./types/ClientConfigs.js";
 
 class BaseClient {
   /**

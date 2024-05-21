@@ -1,11 +1,11 @@
 import invariant from "tiny-invariant";
-import type { IWalletClientConfig } from "../types/ClientConfigs.js";
-import type { ISendTransactionOptions } from "../types/ISendTransactionOptions.js";
-import type { ISerializer } from "../types/ISerializer.js";
-import type { ISigner } from "../types/ISigner.js";
+import { signedTransactionToSsz, transactionToSsz } from "../encoding/toSsz.js";
+import type { ISigner } from "../signers/index.js";
 import type { ITransaction } from "../types/ITransaction.js";
 import { assertIsValidTransaction } from "../utils/assert.js";
 import { BaseClient } from "./BaseClient.js";
+import type { IWalletClientConfig } from "./types/ClientConfigs.js";
+import type { ISendTransactionOptions } from "./types/ISendTransactionOptions.js";
 
 /**
  * Wallet client is a class that allows you to interact with the network via JSON-RPC api.
@@ -20,12 +20,10 @@ import { BaseClient } from "./BaseClient.js";
  */
 class WalletClient extends BaseClient {
   private signer?: ISigner;
-  private serializer?: ISerializer;
 
   constructor(config: IWalletClientConfig) {
     super(config);
     this.signer = config.signer;
-    this.serializer = config.serializer;
   }
 
   /**
@@ -54,12 +52,7 @@ class WalletClient extends BaseClient {
       "Signer is required to sign a transaction. Please provide a signer in the constructor or use sendRawTransaction method.",
     );
 
-    invariant(
-      this.serializer !== undefined,
-      "Serializer is required to serialize a transaction. Please provide a serializer in the constructor or use sendRawTransaction method.",
-    );
-
-    const serializedTransaction = this.serializer?.serialize(transaction);
+    const serializedTransaction = transactionToSsz(transaction);
 
     invariant(
       serializedTransaction !== undefined,
@@ -68,9 +61,9 @@ class WalletClient extends BaseClient {
 
     const signature = this.signer.sign(serializedTransaction);
 
-    const signedTransaction = this.serializer?.serialize({
+    const signedTransaction = signedTransactionToSsz({
       ...transaction,
-      signature,
+      ...signature,
     });
 
     return await this.sendRawTransaction(signedTransaction);
@@ -117,7 +110,9 @@ class WalletClient extends BaseClient {
    */
   public async deployContract(contract: Uint8Array): Promise<Uint8Array> {
     const hash = await this.sendRawTransaction(contract);
-    // todo
+    // there will be a method to get receipt by hash
+    // receipt - result of smart conract calling
+    // we should wait to receipts to be sure that transaction is included in the block
     return hash;
   }
 }

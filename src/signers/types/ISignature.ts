@@ -6,6 +6,7 @@ import type { Hex } from "@noble/curves/abstract/utils";
 type ISignature = {
   r: Hex;
   s: Hex;
+  v?: bigint;
   yParity: number;
 };
 
