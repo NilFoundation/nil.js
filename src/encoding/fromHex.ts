@@ -2,6 +2,7 @@ import {
   type Hex,
   hexToBytes as hexToBytesNoble,
 } from "@noble/curves/abstract/utils";
+import { addHexPrefix } from "../index.js";
 
 /**
  * Convert a hex string to bytes.
@@ -42,4 +43,17 @@ const hexToString = (hex: Hex): string => {
   return Buffer.from(hex, "hex").toString("utf-8");
 };
 
-export { hexToBytes, hexToNumber, hexToString };
+/**
+ * Convert a hex string to a bigint.
+ * @param hex - The hex string to convert to a bigint.
+ * @returns The bigint representation of the input.
+ */
+const hexToBigInt = (hex: Hex): bigint => {
+  if (typeof hex !== "string") {
+    return hexToBigInt(hex.toString());
+  }
+
+  return BigInt(addHexPrefix(hex));
+};
+
+export { hexToBytes, hexToNumber, hexToString, hexToBigInt };

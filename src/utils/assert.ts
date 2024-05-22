@@ -76,9 +76,22 @@ const assertIsValidMessage = (message: IMessage) => {
   );
 };
 
+/**
+ * Checks if the address is valid. If the address is valid, it returns nothing.
+ * @param address - The address to check.
+ * @param message - The message to throw if the address is invalid.
+ */
+const assertIsAddress = (address: string, message?: string): void => {
+  invariant(
+    isAddress(address),
+    message ?? `Expected a valid address but got ${address}`,
+  );
+};
+
 export {
   assertIsBuffer,
   assertIsHexString,
   assertIsValidPrivateKey,
   assertIsValidMessage,
+  assertIsAddress,
 };
