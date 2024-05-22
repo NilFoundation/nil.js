@@ -18,7 +18,7 @@ type IWalletClientConfig = IClientBaseConfig & {
    * The instance of signer is used to sign messages and messages.
    * If not included in the config, messages should be signed before passing to the client.
    * @example
-   * import { Signer } from 'niljs';
+   * import { Signer } from '@nilfoundation/niljs';
    *
    * const signer = new Signer();
    *

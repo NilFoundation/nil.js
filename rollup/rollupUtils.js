@@ -3,7 +3,7 @@
  */
 const createBanner = (version, year) => {
   return `/**!
- * niljs v${version}
+ * @nilfoundation/niljs v${version}
  *
  * @copyright (c) ${year} =nil; Foundation.
  *

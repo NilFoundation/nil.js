@@ -23,7 +23,7 @@
 ### Installation
 
 ```bash
-npm install niljs
+npm install @nilfoundation/niljs
 ```
 
 ### Getting started
@@ -32,7 +32,7 @@ There are two clients in the library to interact with the Nil network.
 The first one is the `PublicClient` class, which is used to interact with the Nil network without the need for a private key. It is used to get information about the network, such as block number and block hash.
 
 ```typescript
-import { PublicClient } from "niljs";
+import { PublicClient } from "@nilfoundation/niljs";
 
 const endpoint = "https://localhost:8259";
 const publicClient = new PublicClient({ endpoint });
@@ -45,7 +45,7 @@ publicClient.getBalance("your_address").then((balance) => {
 The second one is the `WalletClient` class, which is used to interact with the Nil network with a private key. It is used to send messages to the network.
 
 ```typescript
-import { WalletClient } from "niljs";
+import { WalletClient } from "@nilfoundation/niljs";
 
 const endpoint = "https://localhost:8259";
 const walletClient = new WalletClient({ endpoint });
@@ -64,7 +64,7 @@ walletClient
 Initialize the Signer with the private key of the account you want to use to sign messages.
 
 ```typescript
-import { Signer } from "niljs";
+import { Signer } from "@nilfoundation/niljs";
 
 const privateKey = "your_private_key";
 const signer = new Signer({ privateKey });
@@ -75,8 +75,8 @@ signer.sign(new Uint8Array(32));
 You can also sign messages automatically by passing the Signer instance to the WalletClient.
 
 ```typescript
-import { WalletClient } from "niljs";
-import { Signer } from "niljs";
+import { WalletClient } from "@nilfoundation/niljs";
+import { Signer } from "@nilfoundation/niljs";
 
 const endpoint = "https://localhost:8259";
 const privateKey = "your_private_key";
