@@ -2,6 +2,7 @@ import invariant from "tiny-invariant";
 import { messageToSsz, signedMessageToSsz } from "../encoding/toSsz.js";
 import type { ISigner } from "../signers/index.js";
 import type { IMessage } from "../types/IMessage.js";
+import type { IReceipt } from "../types/IReceipt.js";
 import { assertIsValidMessage } from "../utils/assert.js";
 import { BaseClient } from "./BaseClient.js";
 import type { IWalletClientConfig } from "./types/ClientConfigs.js";
@@ -29,8 +30,7 @@ class WalletClient extends BaseClient {
 
   /**
    * sendMessage sends a message to the network.
-   * @param message - The message to send. It can be a raw message or a base message object.
-   * If the message is a raw message, it will be signed with the signer, that is passed in the constructor.
+   * @param message - The message to send. It will be signed with the signer.
    * @param options - The options to send a message.
    * @returns The hash of the message.
    * @example
@@ -127,12 +127,20 @@ class WalletClient extends BaseClient {
    */
   public async deployContract(contract: Uint8Array): Promise<Uint8Array> {
     const hash = await this.sendRawMessage(contract);
-    // there will be a method to get receipt by hash
-    // receipt - result of smart conract calling
-    // we should wait to receipts to be sure that message is included in the block
+    // there will be a method to get receipt by hash, but it is not implemented yet
+    // it will use kinda polling to get receipt asap
+    // mocking it for now:
+    const receipt: Partial<IReceipt> = {
+      success: true,
+    };
 
     // ! compiling smart contract to the bytecode shall not be included in this library
     // it can be done by hardhat
+    invariant(
+      receipt.success,
+      "Contract deployment failed. Please check the contract bytecode.",
+    );
+
     return hash;
   }
 }

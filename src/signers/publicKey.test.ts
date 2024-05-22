@@ -1,5 +1,5 @@
 import { accounts } from "../../test/mocks/accounts.js";
-import { getPublicKey } from "./getPublicKey.js";
+import { getPublicKey } from "./publicKey.js";
 
 test("getPublicKey", async ({ expect }) => {
   const account = accounts[0];

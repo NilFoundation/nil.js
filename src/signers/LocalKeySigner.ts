@@ -1,7 +1,7 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { toHex } from "../encoding/toHex.js";
 import { assertIsHexString, assertIsValidPrivateKey } from "../utils/assert.js";
-import { getPublicKey } from "./getPublicKey.js";
+import { getPublicKey } from "./publicKey.js";
 import type { ILocalKeySignerConfig } from "./types/ILocalKeySignerConfig.js";
 import type { ISignature } from "./types/ISignature.js";
 import type { ISigner } from "./types/ISigner.js";
