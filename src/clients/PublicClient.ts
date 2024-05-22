@@ -6,7 +6,7 @@ import type { IPublicClientConfig } from "./types/ClientConfigs.js";
  * It is an abstraction of connection to the Nil network.
  * Public client alllows to use api that does not require signing data and private key usage.
  * @example
- * import { PublicClient } from 'niljs';
+ * import { PublicClient } from '@nilfoundation/niljs';
  *
  * const client = new PublicClient({
  *  endpoint: 'http://127.0.0.1:8529'
@@ -23,7 +23,7 @@ class PublicClient extends BaseClient {
    * @param number - The block number.
    * @returns The block.
    * @example
-   import { PublicClient } from 'niljs';
+   import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -45,7 +45,7 @@ class PublicClient extends BaseClient {
    * @param number - The block number.
    * @returns The block.
    * @example
-   import { PublicClient } from 'niljs';
+   import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -67,7 +67,7 @@ class PublicClient extends BaseClient {
    * @param number - The block number.
    * @returns The message count.
    * @example
-   import { PublicClient } from 'niljs';
+   import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -89,7 +89,7 @@ class PublicClient extends BaseClient {
    * @param hash - The block hash.
    * @returns The message count.
    * @example
-   import { PublicClient } from 'niljs';
+   import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -112,7 +112,7 @@ class PublicClient extends BaseClient {
    * @param blockNumberOrHash - The block number or hash.
    * @returns The code of the contract.
    * @example
-   import { PublicClient } from 'niljs';
+   import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -138,7 +138,7 @@ class PublicClient extends BaseClient {
    * @param blockNumberOrHash - The block number or hash.
    * @returns The message count.
    * @example
-   import { PublicClient } from 'niljs';
+   import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -164,7 +164,7 @@ class PublicClient extends BaseClient {
    * @param blockNumberOrHash - The block number or hash.
    * @returns The balance of the address.
    * @example
-   import { PublicClient } from 'niljs';
+   import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -189,7 +189,7 @@ class PublicClient extends BaseClient {
    * @param hash - The hash.
    * @returns The message.
    * @example
-   import { PublicClient } from 'niljs';
+   import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'

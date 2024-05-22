@@ -14,7 +14,7 @@ import type { ISignMessageOptions } from "./types/ISignMessageOptions.js";
  * It is an abstraction of connection to the Nil network.
  * Wallet client alllows to use api that require signing data and private key usage.
  * @example
- * import { WalletClient } from 'niljs';
+ * import { WalletClient } from '@nilfoundation/niljs';
  *
  * const client = new WalletClient({
  *  endpoint: 'http://127.0.0.1:8529'
@@ -34,7 +34,7 @@ class WalletClient extends BaseClient {
    * @param options - The options to send a message.
    * @returns The hash of the message.
    * @example
-   * import { WalletClient } from 'niljs';
+   * import { WalletClient } from '@nilfoundation/niljs';
    *
    * const client = new WalletClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -93,7 +93,7 @@ class WalletClient extends BaseClient {
    * @param message - The message to send.
    * @returns The hash of the message.
    * @example
-   * import { WalletClient } from 'niljs';
+   * import { WalletClient } from '@nilfoundation/niljs';
    *
    * const client = new WalletClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -116,7 +116,7 @@ class WalletClient extends BaseClient {
    * @param contract - The contract to deploy.
    * @returns The hash of the message.
    * @example
-   import { WalletClient } from 'niljs';
+   import { WalletClient } from '@nilfoundation/niljs';
    *
    * const client = new WalletClient({
    *  endpoint: 'http://127.0.0.1:8529'
