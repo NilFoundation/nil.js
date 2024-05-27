@@ -27,7 +27,7 @@ type IWalletClientConfig = IClientBaseConfig & {
    *  signer: signer
    * })
    */
-  signer?: ISigner;
+  signer: ISigner;
 };
 
 export type { IClientBaseConfig, IPublicClientConfig, IWalletClientConfig };

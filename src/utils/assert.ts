@@ -42,7 +42,7 @@ const assertIsValidPrivateKey = (
   message?: string,
 ): void => {
   invariant(
-    isHexString(privateKey) && privateKey.length === 64,
+    isHexString(privateKey) && privateKey.length === 32 * 2 + 2,
     message ?? `Expected a valid private key, but got ${privateKey}`,
   );
 };

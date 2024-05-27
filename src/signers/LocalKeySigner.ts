@@ -1,7 +1,13 @@
+import type { Hex } from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { toHex } from "../encoding/toHex.js";
-import { assertIsHexString, assertIsValidPrivateKey } from "../utils/assert.js";
-import { getPublicKey } from "./publicKey.js";
+import {
+  assertIsAddress,
+  assertIsHexString,
+  assertIsValidPrivateKey,
+} from "../utils/assert.js";
+import { getAddressFromPublicKey, getPublicKey } from "./publicKey.js";
+import type { IAddress } from "./types/IAddress.js";
 import type { ILocalKeySignerConfig } from "./types/ILocalKeySignerConfig.js";
 import type { ISignature } from "./types/ISignature.js";
 import type { ISigner } from "./types/ISigner.js";
@@ -17,17 +23,14 @@ import type { ISigner } from "./types/ISigner.js";
  * const signer = new LocalKeySigner({ privateKey });
  */
 class LocalKeySigner implements ISigner {
-  private publicKey;
   private privateKey;
+  private publicKey?: Hex = undefined;
+  private address?: IAddress = undefined;
 
   constructor(config: ILocalKeySignerConfig) {
     const { privateKey } = config;
     assertIsValidPrivateKey(privateKey);
 
-    const publicKey = getPublicKey(privateKey);
-    assertIsHexString(publicKey);
-
-    this.publicKey = publicKey;
     this.privateKey = privateKey;
   }
 
@@ -44,7 +47,26 @@ class LocalKeySigner implements ISigner {
   }
 
   public getPublicKey() {
+    if (this.publicKey) {
+      return this.publicKey;
+    }
+
+    const publicKey = getPublicKey(this.privateKey);
+    assertIsHexString(publicKey);
+
+    this.publicKey = publicKey;
     return this.publicKey;
+  }
+
+  public getAddress() {
+    if (this.address) {
+      return this.address;
+    }
+
+    this.address = getAddressFromPublicKey(this.getPublicKey());
+    assertIsAddress(this.address);
+
+    return this.address;
   }
 }
 
