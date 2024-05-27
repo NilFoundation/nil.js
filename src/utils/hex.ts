@@ -7,8 +7,12 @@ const HEX_REGEX = /^[0-9a-fA-F]+$/;
  * Otherwise, it returns false.
  * @param value - The value to check.
  */
-const isHexString = (value: Hex): boolean => {
-  return typeof value === "string" && HEX_REGEX.test(value);
+const isHexString = (value: Hex): value is Hex => {
+  return (
+    typeof value === "string" &&
+    value.startsWith("0x") &&
+    HEX_REGEX.test(removeHexPrefix(value))
+  );
 };
 
 /**
@@ -16,8 +20,12 @@ const isHexString = (value: Hex): boolean => {
  * @param hex hex-string
  * @returns format: base16-string
  */
-const removeHexPrefix = (hex: string): string => {
-  return hex.replace(/^0x/i, "");
+const removeHexPrefix = (hex: Hex): string => {
+  if (typeof hex !== "string") {
+    throw new Error(`Expected a hex string but got ${hex}`);
+  }
+
+  return hex.startsWith("0x") ? hex.slice(2) : hex;
 };
 
 /**

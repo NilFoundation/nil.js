@@ -1,3 +1,4 @@
+import type { IReceipt } from "../index.js";
 import { BaseClient } from "./BaseClient.js";
 import type { IPublicClientConfig } from "./types/ClientConfigs.js";
 
@@ -205,11 +206,47 @@ class PublicClient extends BaseClient {
 
     return res.result;
   }
+
+  /**
+   * getMessageReceiptByHash returns the message receipt by the hash.
+   * @param shardId - The shard id.
+   * @param hash - The hash.
+   * @returns The message receipt.
+   */
+  public async getMessageReceiptByHash(
+    shardId: number,
+    hash: Uint8Array,
+  ): Promise<IReceipt> {
+    const res = await this.rpcClient.request({
+      method: "eth_getMessageReceipt",
+      params: [shardId, hash],
+    });
+
+    return res.result;
+  }
+
+  /**
+   * sendRawMessage sends a raw message to the network.
+   * @param message - The message to send.
+   * @returns The hash of the message.
+   * @example
+   * import { PublicClient } from '@nilfoundation/niljs';
+   *
+   * const client = new PublicClient({
+   *  endpoint: 'http://127.0.0.1:8529'
+   * })
+   *
+   * const message = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+   * const hash = await client.sendRawMessage(message);
+   */
+  public async sendRawMessage(message: Uint8Array): Promise<Uint8Array> {
+    const res = await this.rpcClient.request({
+      method: "eth_sendRawMessage",
+      params: [message],
+    });
+
+    return res.hash;
+  }
 }
 
 export { PublicClient };
-
-// this client is subject to change a lot
-// we need to add more methods to interact with the network
-// and we need to know shard id before executing the request
-// we won't have a single source of data for all shards so we need to know shard id.

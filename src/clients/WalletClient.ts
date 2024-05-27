@@ -1,10 +1,11 @@
 import invariant from "tiny-invariant";
 import { messageToSsz, signedMessageToSsz } from "../encoding/toSsz.js";
+import { type IReceipt, getShardIdFromAddress } from "../index.js";
 import type { ISigner } from "../signers/index.js";
 import type { IMessage } from "../types/IMessage.js";
-import type { IReceipt } from "../types/IReceipt.js";
 import { assertIsValidMessage } from "../utils/assert.js";
-import { BaseClient } from "./BaseClient.js";
+import { startPollingUntilCondition } from "../utils/polling.js";
+import { PublicClient } from "./PublicClient.js";
 import type { IWalletClientConfig } from "./types/ClientConfigs.js";
 import type { ISendMessageOptions } from "./types/ISendMessageOptions.js";
 import type { ISignMessageOptions } from "./types/ISignMessageOptions.js";
@@ -15,13 +16,15 @@ import type { ISignMessageOptions } from "./types/ISignMessageOptions.js";
  * Wallet client alllows to use api that require signing data and private key usage.
  * @example
  * import { WalletClient } from '@nilfoundation/niljs';
+ * import { LocalKeySigner } from '@nilfoundation/niljs';
  *
  * const client = new WalletClient({
  *  endpoint: 'http://127.0.0.1:8529'
+ *  signer: new LocalKeySigner({ privateKey: "xxx" })
  * })
  */
-class WalletClient extends BaseClient {
-  private signer?: ISigner;
+class WalletClient extends PublicClient {
+  private signer: ISigner;
 
   constructor(config: IWalletClientConfig) {
     super(config);
@@ -89,29 +92,6 @@ class WalletClient extends BaseClient {
   }
 
   /**
-   * sendRawMessage sends a raw message to the network.
-   * @param message - The message to send.
-   * @returns The hash of the message.
-   * @example
-   * import { WalletClient } from '@nilfoundation/niljs';
-   *
-   * const client = new WalletClient({
-   *  endpoint: 'http://127.0.0.1:8529'
-   * })
-   *
-   * const message = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-   * const hash = await client.sendRawMessage(message);
-   */
-  public async sendRawMessage(message: Uint8Array): Promise<Uint8Array> {
-    const res = await this.rpcClient.request({
-      method: "eth_sendRawMessage",
-      params: [message],
-    });
-
-    return res.hash;
-  }
-
-  /**
    * deployContract deploys a contract to the network.
    * @param contract - The contract to deploy.
    * @returns The hash of the message.
@@ -127,19 +107,20 @@ class WalletClient extends BaseClient {
    */
   public async deployContract(contract: Uint8Array): Promise<Uint8Array> {
     const hash = await this.sendRawMessage(contract);
-    // there will be a method to get receipt by hash, but it is not implemented yet
-    // it will use kinda polling to get receipt asap
-    // mocking it for now:
-    const receipt: Partial<IReceipt> = {
-      success: true,
-    };
+    const address = this.signer.getAddress();
+    const shardId = getShardIdFromAddress(address);
+
+    // in the future we want to use subscribe method to get the receipt
+    // for now it is simple short polling
+    const receipt = await startPollingUntilCondition<IReceipt>(
+      async () => await this.getMessageReceiptByHash(shardId, hash),
+      (receipt) => receipt !== undefined,
+      1000,
+    );
 
     // ! compiling smart contract to the bytecode shall not be included in this library
     // it can be done by hardhat
-    invariant(
-      receipt.success,
-      "Contract deployment failed. Please check the contract bytecode.",
-    );
+    invariant(receipt?.success, "Contract deployment failed.");
 
     return hash;
   }

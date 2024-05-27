@@ -1,4 +1,5 @@
 import type { Hex } from "@noble/curves/abstract/utils";
+import type { IAddress } from "../signers/types/IAddress.js";
 
 const ADDRESS_REGEX = /^0x[0-9a-fA-F]{40}$/;
 
@@ -7,8 +8,20 @@ const ADDRESS_REGEX = /^0x[0-9a-fA-F]{40}$/;
  * Otherwise, it returns false.
  * @param value - The value to check.
  */
-const isAddress = (value: Hex): boolean => {
+const isAddress = (value: Hex): value is IAddress => {
   return typeof value === "string" && ADDRESS_REGEX.test(value);
 };
 
-export { isAddress };
+/**
+ * Returns the shard ID from the address.
+ * @param address - The address.
+ */
+const getShardIdFromAddress = (address: Hex): number => {
+  if (typeof address === "string") {
+    return Number.parseInt(address.slice(2, 6), 16);
+  }
+
+  return (address[0] << 8) | address[1];
+};
+
+export { isAddress, getShardIdFromAddress };

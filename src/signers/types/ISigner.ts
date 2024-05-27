@@ -1,4 +1,5 @@
 import type { Hex } from "@noble/curves/abstract/utils";
+import type { IAddress } from "./IAddress.js";
 import type { ISignature } from "./ISignature.js";
 
 /**
@@ -21,6 +22,13 @@ abstract class ISigner {
    * const publicKey = signer.getPublicKey();
    */
   abstract getPublicKey(): Hex;
+  /**
+   * Returns the address.
+   * @returns The address.
+   * @example
+   * const address = signer.getAddress();
+   */
+  abstract getAddress(): IAddress;
 }
 
 export { ISigner };

@@ -4,8 +4,11 @@ import {
   type ISignature,
   addHexPrefix,
   removeHexPrefix,
+  toBytes,
   toHex,
 } from "../index.js";
+import { keccak_256 } from "../utils/keccak256.js";
+import type { IAddress } from "./types/IAddress.js";
 import type { IPrivateKey } from "./types/IPrivateKey.js";
 
 /**
@@ -31,4 +34,19 @@ const recoverPublicKey = (
   //
 };
 
-export { getPublicKey, generatePrivateKey, recoverPublicKey };
+/**
+ * Returns the address from the public key.
+ * @param publicKey - Public key in hex format
+ * @returns Address in hex format
+ */
+const getAddressFromPublicKey = (publicKey: Hex): IAddress => {
+  const bytes = keccak_256(toBytes(removeHexPrefix(publicKey)));
+  return toHex(bytes) as IAddress;
+};
+
+export {
+  getPublicKey,
+  generatePrivateKey,
+  recoverPublicKey,
+  getAddressFromPublicKey,
+};

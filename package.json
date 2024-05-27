@@ -12,7 +12,7 @@
     "node": ">=18.0.0"
   },
   "type": "module",
-  "main": "dist/niljs.cjs.cjs",
+  "main": "dist/niljs.cjs",
   "module": "dist/niljs.esm.js",
   "files": [
     "dist"
@@ -34,7 +34,8 @@
     "lint": "biome check .",
     "biome:fix": "biome check --apply .",
     "changeset": "changeset",
-    "changeset:publish": "npm run build && changeset publish"
+    "changeset:publish": "changeset publish",
+    "git-hooks:update": "git config core.hooksPath .git/hooks/ && rm -rf .git/hooks && npx --no-install simple-git-hooks"
   },
   "license": "MIT",
   "peerDependencies": {
