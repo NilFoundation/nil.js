@@ -25,7 +25,8 @@ const getPublicKey = (privateKey: IPrivateKey): Hex => {
  * @example
  * const privateKey = generatePrivateKey();
  */
-const generatePrivateKey = (): Hex => toHex(secp256k1.utils.randomPrivateKey());
+const generatePrivateKey = (): IPrivateKey =>
+  addHexPrefix(toHex(secp256k1.utils.randomPrivateKey())) as IPrivateKey;
 
 const recoverPublicKey = (
   messageHash: Hex | Uint8Array,
