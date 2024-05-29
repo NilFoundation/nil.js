@@ -1,3 +1,5 @@
+import type { Hex } from "@noble/curves/abstract/utils";
+
 /**
  * The interface for the message object. This object is used to represent a message in the network.
  */
@@ -7,9 +9,9 @@ interface IMessage {
   from: string;
   to: string;
   value: bigint;
-  data: string;
+  data: Hex;
   seqno: number;
-  signature: string | null;
+  signature?: string | null;
   maxPriorityFeePerGas: bigint;
   gasPrice: bigint;
   maxFeePerGas: bigint;

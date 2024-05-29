@@ -1,5 +1,6 @@
 import type { Hex } from "@noble/curves/abstract/utils";
 import invariant from "tiny-invariant";
+import { type IBlock, isValidBlock } from "../index.js";
 import type { IPrivateKey } from "../signers/index.js";
 import type { IMessage } from "../types/IMessage.js";
 import { isHexString } from "./hex.js";
@@ -88,10 +89,23 @@ const assertIsAddress = (address: string, message?: string): void => {
   );
 };
 
+/**
+ * Checks if the block is valid. If the block is valid, it returns nothing.
+ * @param block - The block to check.
+ * @param message - The message to throw if the block is invalid.
+ */
+const assertIsValidBlock = (block: IBlock, message?: string): void => {
+  invariant(
+    isValidBlock(block),
+    message ?? `Expected a valid block but got ${block}`,
+  );
+};
+
 export {
   assertIsBuffer,
   assertIsHexString,
   assertIsValidPrivateKey,
   assertIsValidMessage,
   assertIsAddress,
+  assertIsValidBlock,
 };

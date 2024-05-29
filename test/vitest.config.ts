@@ -7,9 +7,10 @@ export default defineConfig({
     hookTimeout: 60_000,
     testTimeout: 60_000,
     globals: true,
+    coverage: {
+      reportsDirectory: "./test/coverage",
+      provider: "v8",
+      reportOnFailure: true,
+    },
   },
 });
-
-// start testing with local node
-// we will have something public in the future.
-// or we can mock api in the future.

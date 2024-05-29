@@ -1,12 +1,13 @@
 import invariant from "tiny-invariant";
 import { messageToSsz, signedMessageToSsz } from "../encoding/toSsz.js";
-import { type IReceipt, getShardIdFromAddress } from "../index.js";
+import { type IReceipt, getShardIdFromAddress, toHex } from "../index.js";
 import type { ISigner } from "../signers/index.js";
 import type { IMessage } from "../types/IMessage.js";
 import { assertIsValidMessage } from "../utils/assert.js";
 import { startPollingUntilCondition } from "../utils/polling.js";
 import { PublicClient } from "./PublicClient.js";
 import type { IWalletClientConfig } from "./types/ClientConfigs.js";
+import type { IDeployContractOption } from "./types/IDeployContractOption.js";
 import type { ISendMessageOptions } from "./types/ISendMessageOptions.js";
 import type { ISignMessageOptions } from "./types/ISignMessageOptions.js";
 
@@ -25,14 +26,40 @@ import type { ISignMessageOptions } from "./types/ISignMessageOptions.js";
  */
 class WalletClient extends PublicClient {
   private signer: ISigner;
+  private shardId: number;
 
   constructor(config: IWalletClientConfig) {
     super(config);
     this.signer = config.signer;
+
+    const address = this.signer.getAddress();
+    this.shardId = getShardIdFromAddress(address);
+  }
+
+  /**
+   * prepareMessage prepares a message to send.
+   * @param message - The message to send.
+   * @returns The prepared message.
+   */
+  private async prepareMessage(message: IMessage): Promise<IMessage> {
+    const { gasPrice } = message;
+    const finalMsg = {
+      ...message,
+      from: message.from ? message.from : this.signer.getAddress(),
+    };
+
+    if (!gasPrice) {
+      const gasPrice = await this.getGasPrice(this.shardId);
+      finalMsg.gasPrice = gasPrice;
+    }
+
+    return finalMsg;
   }
 
   /**
    * sendMessage sends a message to the network.
+   * "from" field in the message is automatically filled with the signer address, but
+   * can be overwritten by providing the "from" field in the message.
    * @param message - The message to send. It will be signed with the signer.
    * @param options - The options to send a message.
    * @returns The hash of the message.
@@ -50,9 +77,10 @@ class WalletClient extends PublicClient {
     message: IMessage,
     { shouldValidate = true } = {} as ISendMessageOptions,
   ): Promise<Uint8Array> {
-    shouldValidate && assertIsValidMessage(message);
+    const preparedMsg = await this.prepareMessage(message);
+    shouldValidate && assertIsValidMessage(preparedMsg);
 
-    const signedMessage = this.signMessage(message, {
+    const signedMessage = this.signMessage(preparedMsg, {
       shouldValidate: false,
     });
 
@@ -105,15 +133,19 @@ class WalletClient extends PublicClient {
    * const contract = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
    * const hash = await client.deployContract(contract);
    */
-  public async deployContract(contract: Uint8Array): Promise<Uint8Array> {
-    const hash = await this.sendRawMessage(contract);
-    const address = this.signer.getAddress();
-    const shardId = getShardIdFromAddress(address);
+  public async deployContract({
+    bytecode,
+    ...rest
+  }: IDeployContractOption): Promise<Uint8Array> {
+    const hash = await this.sendMessage({
+      data: toHex(bytecode),
+      ...rest,
+    } as IMessage);
 
     // in the future we want to use subscribe method to get the receipt
     // for now it is simple short polling
     const receipt = await startPollingUntilCondition<IReceipt>(
-      async () => await this.getMessageReceiptByHash(shardId, hash),
+      async () => await this.getMessageReceiptByHash(this.shardId, hash),
       (receipt) => receipt !== undefined,
       1000,
     );
