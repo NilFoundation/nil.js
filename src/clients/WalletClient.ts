@@ -1,13 +1,22 @@
 import invariant from "tiny-invariant";
+import { prepareDeployData } from "../encoding/deployData.js";
 import { messageToSsz, signedMessageToSsz } from "../encoding/toSsz.js";
-import { type IReceipt, getShardIdFromAddress, toHex } from "../index.js";
+import {
+  type IReceipt,
+  addHexPrefix,
+  getShardIdFromAddress,
+  toHex,
+} from "../index.js";
 import type { ISigner } from "../signers/index.js";
 import type { IMessage } from "../types/IMessage.js";
 import { assertIsValidMessage } from "../utils/assert.js";
 import { startPollingUntilCondition } from "../utils/polling.js";
 import { PublicClient } from "./PublicClient.js";
+import { emptyAddress } from "./constants.js";
 import type { IWalletClientConfig } from "./types/ClientConfigs.js";
-import type { IDeployContractOption } from "./types/IDeployContractOption.js";
+import type { IDeployContractData } from "./types/IDeployContractData.js";
+import type { IDeployContractOptions } from "./types/IDeployContractOptions.js";
+import type { ISendMessage } from "./types/ISendMessage.js";
 import type { ISendMessageOptions } from "./types/ISendMessageOptions.js";
 import type { ISignMessageOptions } from "./types/ISignMessageOptions.js";
 
@@ -33,7 +42,8 @@ class WalletClient extends PublicClient {
     this.signer = config.signer;
 
     const address = this.signer.getAddress();
-    this.shardId = getShardIdFromAddress(address);
+    // TODO - get shardId from address and remove default value
+    this.shardId = 0 ?? getShardIdFromAddress(address);
   }
 
   /**
@@ -41,19 +51,28 @@ class WalletClient extends PublicClient {
    * @param message - The message to send.
    * @returns The prepared message.
    */
-  private async prepareMessage(message: IMessage): Promise<IMessage> {
-    const { gasPrice } = message;
+  public async prepareMessage(message: ISendMessage): Promise<IMessage> {
     const finalMsg = {
       ...message,
       from: message.from ? message.from : this.signer.getAddress(),
+      data: message.data ?? Uint8Array.from([]),
     };
 
-    if (!gasPrice) {
-      const gasPrice = await this.getGasPrice(this.shardId);
-      finalMsg.gasPrice = gasPrice;
-    }
+    const promises = [
+      message.seqno ??
+        this.getMessageCount(this.shardId, finalMsg.from, "latest"),
+      message.gasPrice ?? this.getGasPrice(this.shardId),
+      message.gasLimit ?? this.estimateGasLimit(this.shardId),
+    ] as const;
 
-    return finalMsg;
+    const [seqno, gasPrice, gasLimit] = await Promise.all(promises);
+
+    return {
+      ...finalMsg,
+      seqno,
+      gasPrice,
+      gasLimit,
+    };
   }
 
   /**
@@ -74,7 +93,7 @@ class WalletClient extends PublicClient {
    * const hash = await client.sendMessage(message);
    */
   public async sendMessage(
-    message: IMessage,
+    message: ISendMessage,
     { shouldValidate = true } = {} as ISendMessageOptions,
   ): Promise<Uint8Array> {
     const preparedMsg = await this.prepareMessage(message);
@@ -84,7 +103,7 @@ class WalletClient extends PublicClient {
       shouldValidate: false,
     });
 
-    return await this.sendRawMessage(signedMessage);
+    return await this.sendRawMessage(addHexPrefix(toHex(signedMessage)));
   }
 
   /**
@@ -111,11 +130,9 @@ class WalletClient extends PublicClient {
       "Serialized message is required to sign a message.",
     );
 
-    const signature = this.signer.sign(serializedMessage);
-
     return signedMessageToSsz({
       ...message,
-      ...signature,
+      ...this.signer.sign(serializedMessage),
     });
   }
 
@@ -133,26 +150,33 @@ class WalletClient extends PublicClient {
    * const contract = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
    * const hash = await client.deployContract(contract);
    */
-  public async deployContract({
-    bytecode,
-    ...rest
-  }: IDeployContractOption): Promise<Uint8Array> {
-    const hash = await this.sendMessage({
-      data: toHex(bytecode),
-      ...rest,
-    } as IMessage);
+  public async deployContract(
+    { deployData, ...restData }: IDeployContractData,
+    { shouldValidate = true }: IDeployContractOptions = {},
+  ): Promise<Uint8Array> {
+    const hash = await this.sendMessage(
+      {
+        data: prepareDeployData(deployData),
+        value: 0n,
+        to: emptyAddress,
+        ...restData,
+      },
+      { shouldValidate },
+    );
 
     // in the future we want to use subscribe method to get the receipt
     // for now it is simple short polling
     const receipt = await startPollingUntilCondition<IReceipt>(
-      async () => await this.getMessageReceiptByHash(this.shardId, hash),
-      (receipt) => receipt !== undefined,
+      () => this.getMessageReceiptByHash(this.shardId, hash),
+      (receipt) => Boolean(receipt),
       1000,
     );
 
-    // ! compiling smart contract to the bytecode shall not be included in this library
-    // it can be done by hardhat
-    invariant(receipt?.success, "Contract deployment failed.");
+    // here it is now always false but we need a fix from the node (add money)
+    invariant(
+      receipt?.success,
+      `Contract deployment failed. Receipt: ${JSON.stringify(receipt)}`,
+    );
 
     return hash;
   }

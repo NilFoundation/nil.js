@@ -1,12 +1,12 @@
 import { defaultAddress } from "../../test/mocks/address.js";
-import { endpoint } from "../../test/mocks/endpoint.js";
 import { rawMsg } from "../../test/mocks/message.js";
 import { masterShardId } from "../../test/mocks/shard.js";
+import { testEnv } from "../../test/testEnv.js";
 import { addHexPrefix } from "../index.js";
 import { PublicClient } from "./PublicClient.js";
 
 const client = new PublicClient({
-  endpoint,
+  endpoint: testEnv.endpoint,
 });
 
 test("getBlockByHash", async ({ expect }) => {

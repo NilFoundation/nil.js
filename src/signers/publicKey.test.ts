@@ -1,8 +1,9 @@
 import { accounts } from "../../test/mocks/accounts.js";
-import { generatePrivateKey, getPublicKey } from "./publicKey.js";
+import { generateRandomPrivateKey } from "./privateKey.js";
+import { getPublicKey } from "./publicKey.js";
 
 test("generatePrivateKey", async ({ expect }) => {
-  const result = generatePrivateKey();
+  const result = generateRandomPrivateKey();
 
   expect(result).toBeDefined();
 });

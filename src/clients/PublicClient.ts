@@ -290,12 +290,24 @@ class PublicClient extends BaseClient {
 
   /**
    * getGasPrice returns the gas price in wei.
+   * @param shardId - The shard id.
    * @returns The gas price.
    */
   public async getGasPrice(shardId: number): Promise<bigint> {
     const stubGasPrice = BigInt(1000000000);
 
     return stubGasPrice;
+  }
+
+  /**
+   * estimateGasLimit returns the gas limit.
+   * @param shardId - The shard id.
+   * @returns The gas limit.
+   */
+  public async estimateGasLimit(shardId: number): Promise<bigint> {
+    const stubGasLimit = BigInt(1000000);
+
+    return stubGasLimit;
   }
 }
 

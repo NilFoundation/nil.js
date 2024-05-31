@@ -5,7 +5,7 @@ import type { IBlock } from "../index.js";
  * @param block - The block to check.
  * @returns True if the block is valid, false otherwise.
  */
-const isValidBlock = (block: IBlock): boolean => {
+const isValidBlock = (block: IBlock): block is IBlock => {
   return true;
 };
 

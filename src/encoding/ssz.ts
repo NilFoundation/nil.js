@@ -1,42 +1,39 @@
 import {
   ByteVectorType,
   ContainerType,
-  OptionalType,
+  ListBasicType,
   UintBigintType,
   UintNumberType,
 } from "@chainsafe/ssz";
 
-const Bytes32 = new ByteVectorType(32);
-const Bytes96 = new ByteVectorType(96);
-const Uint32 = new UintNumberType(4);
-const UintBn64 = new UintBigintType(8);
+const basicTypes = {
+  Uint8: new UintNumberType(1),
+  Uint64: new UintNumberType(8),
+  UintBn256: new UintBigintType(32),
+};
+
+const Bytes20 = new ByteVectorType(20);
 
 /**
  * SSZ schema for a message object. It includes all the fields of a message object.
  */
 const SszMessageSchema = new ContainerType({
-  index: Uint32,
-  shardId: Uint32,
-  from: Bytes32,
-  to: Bytes32,
-  value: UintBn64,
-  data: Bytes96,
-  seqno: Uint32,
-  signature: new OptionalType(Bytes96),
-  maxPriorityFeePerGas: UintBn64,
-  gasPrice: UintBn64,
-  maxFeePerGas: UintBn64,
-  chainId: Uint32,
+  seqno: basicTypes.Uint64,
+  gasPrice: basicTypes.UintBn256,
+  gasLimit: basicTypes.UintBn256,
+  from: Bytes20,
+  to: Bytes20,
+  value: basicTypes.UintBn256,
+  data: new ListBasicType(basicTypes.Uint8, 24576),
 });
 
 /**
  * SSZ schema for a signature object. It includes all the fields of a signature object.
  */
 const SszSignatureSchema = new ContainerType({
-  r: Bytes32,
-  s: Bytes32,
-  v: new OptionalType(UintBn64),
-  yParity: Uint32,
+  r: basicTypes.UintBn256,
+  s: basicTypes.UintBn256,
+  v: basicTypes.Uint8,
 });
 
 /**
@@ -47,4 +44,4 @@ const SszSignedMessageSchema = new ContainerType({
   ...SszSignatureSchema.fields,
 });
 
-export { SszMessageSchema, SszSignedMessageSchema, SszSignatureSchema };
+export { SszMessageSchema, SszSignedMessageSchema };
