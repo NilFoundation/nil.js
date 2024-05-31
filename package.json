@@ -24,6 +24,7 @@
       "require": "./dist/niljs.cjs.js"
     }
   },
+  "sideEffects": false,
   "description": "Typescript library to interact with the Nil blockchain. Can be used in the browser or in Node.js.",
   "scripts": {
     "test": "vitest -c ./test/vitest.config.ts",
@@ -50,9 +51,7 @@
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@types/elliptic": "^6.4.18",
     "@vitest/coverage-v8": "^1.6.0",
-    "elliptic": "^6.5.5",
     "rimraf": "^5.0.7",
     "rollup": "^4.17.2",
     "rollup-plugin-dts": "^6.1.0",

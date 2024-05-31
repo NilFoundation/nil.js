@@ -3,8 +3,8 @@ import invariant from "tiny-invariant";
 import { type IBlock, isValidBlock } from "../index.js";
 import type { IPrivateKey } from "../signers/index.js";
 import type { IMessage } from "../types/IMessage.js";
+import { isAddress } from "./address.js";
 import { isHexString } from "./hex.js";
-import { isAddress } from "./message.js";
 
 /**
  * Checks if the value is a string.
@@ -54,26 +54,15 @@ const assertIsValidPrivateKey = (
  * @param message - The message to validate.
  */
 const assertIsValidMessage = (message: IMessage) => {
-  const { chainId, maxPriorityFeePerGas, gasPrice, maxFeePerGas, to } = message;
+  const { gasPrice, to } = message;
   invariant(
     typeof to === "string" && isAddress(to),
     `Expected a valid 'to' address but got ${to}`,
   );
   invariant(
-    typeof chainId === "number" && chainId > 0,
-    `Expected a valid 'chainId' but got ${chainId}`,
-  );
-  invariant(
-    typeof gasPrice === "number" && gasPrice > 0,
+    (typeof gasPrice === "number" || typeof gasPrice === "bigint") &&
+      gasPrice > 0,
     `Expected a valid 'gasPrice' but got ${gasPrice}`,
-  );
-  invariant(
-    typeof maxFeePerGas === "number" && maxFeePerGas > 0,
-    `Expected a valid 'maxFeePerGas' but got ${maxFeePerGas}`,
-  );
-  invariant(
-    typeof maxPriorityFeePerGas === "number" && maxPriorityFeePerGas > 0,
-    `Expected a valid 'maxPriorityFeePerGas' but got ${maxPriorityFeePerGas}`,
   );
 };
 

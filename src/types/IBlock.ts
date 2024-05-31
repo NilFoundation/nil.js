@@ -1,39 +1,21 @@
+import type { Hex } from "@noble/curves/abstract/utils";
+
 /**
  * The block type.
  */
 type IBlock = {
-  /**
-   * The block id.
-   */
-  id: number;
-  /**
-   * The previous block hash.
-   */
-  prevBlock: string;
-  /**
-   * The smart contracts root hash.
-   */
-  smartContractsRoot: string;
-  /**
-   * The messages root hash.
-   */
-  messagesRoot: string;
-  /**
-   * The receipts root hash.
-   */
-  receiptsRoot: string;
-  /**
-   * The child blocks root hash.
-   */
+  id: string;
+  prevBlock: Hex;
+  smartContractsRoot: Hex;
+  inMessagesRoot: Hex;
+  outMessagesRoot: Hex;
+  outMessagesNum: number;
+  receiptsRoot: Hex;
   childBlocksRootHash: string;
-  /**
-   * The master chain hash.
-   */
-  masterChainHash: string;
-  /**
-   * The logs bloom.
-   */
-  logsBloom: string;
+  masterChainHash: Hex;
+  // biome-ignore lint/suspicious/noExplicitAny: need to investigate
+  logsBloom: any;
+  timestamp: number;
 };
 
 export type { IBlock };

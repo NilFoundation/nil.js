@@ -1,12 +1,6 @@
 import { type Hex, bytesToHex } from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
-import {
-  type ISignature,
-  addHexPrefix,
-  removeHexPrefix,
-  toBytes,
-  toHex,
-} from "../index.js";
+import { type ISignature, addHexPrefix, removeHexPrefix } from "../index.js";
 import { keccak_256 } from "../utils/keccak256.js";
 import type { IAddress } from "./types/IAddress.js";
 import type { IPrivateKey } from "./types/IPrivateKey.js";
@@ -14,19 +8,13 @@ import type { IPrivateKey } from "./types/IPrivateKey.js";
 /**
  * Returns the public key from the private key using the secp256k1 curve.
  */
-const getPublicKey = (privateKey: IPrivateKey): Hex => {
-  const publicKey = secp256k1.getPublicKey(removeHexPrefix(privateKey), false);
+const getPublicKey = (privateKey: IPrivateKey, isCompressed = false): Hex => {
+  const publicKey = secp256k1.getPublicKey(
+    removeHexPrefix(privateKey),
+    isCompressed,
+  );
   return addHexPrefix(bytesToHex(publicKey));
 };
-
-/**
- * Generate a new private key.
- * @returns Hex - Private key
- * @example
- * const privateKey = generatePrivateKey();
- */
-const generatePrivateKey = (): IPrivateKey =>
-  addHexPrefix(toHex(secp256k1.utils.randomPrivateKey())) as IPrivateKey;
 
 const recoverPublicKey = (
   messageHash: Hex | Uint8Array,
@@ -41,13 +29,8 @@ const recoverPublicKey = (
  * @returns Address in hex format
  */
 const getAddressFromPublicKey = (publicKey: Hex): IAddress => {
-  const bytes = keccak_256(toBytes(removeHexPrefix(publicKey)));
-  return toHex(bytes) as IAddress;
+  const bytes = keccak_256(publicKey).slice(-20);
+  return addHexPrefix(bytesToHex(bytes));
 };
 
-export {
-  getPublicKey,
-  generatePrivateKey,
-  recoverPublicKey,
-  getAddressFromPublicKey,
-};
+export { getPublicKey, recoverPublicKey, getAddressFromPublicKey };

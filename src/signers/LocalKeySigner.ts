@@ -1,6 +1,6 @@
 import type { Hex } from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
-import { toHex } from "../encoding/toHex.js";
+import { addHexPrefix, removeHexPrefix } from "../index.js";
 import {
   assertIsAddress,
   assertIsHexString,
@@ -28,21 +28,23 @@ class LocalKeySigner implements ISigner {
   private address?: IAddress = undefined;
 
   constructor(config: ILocalKeySignerConfig) {
-    const { privateKey } = config;
+    const privateKey = addHexPrefix(config.privateKey);
     assertIsValidPrivateKey(privateKey);
 
     this.privateKey = privateKey;
   }
 
   public sign(data: Uint8Array): ISignature {
-    const signature = secp256k1.sign(data, this.privateKey);
+    const signature = secp256k1.sign(
+      removeHexPrefix(data),
+      removeHexPrefix(this.privateKey),
+    );
 
     const { r, s, recovery } = signature;
     return {
-      r: toHex(r),
-      s: toHex(s),
-      v: recovery ? 28n : 27n,
-      yParity: recovery,
+      r,
+      s,
+      v: recovery,
     };
   }
 

@@ -1,75 +1,47 @@
-import { endpoint } from "../../test/mocks/endpoint.js";
-
-import abi from "../../test/mocks/contracts/simpleStorage/bin/SimpleStorage.abi";
-import { type IMessage, LocalKeySigner, generatePrivateKey } from "../index.js";
+import { defaultAddress } from "../../test/mocks/address.js";
+import { bytecode as precompiledContractBytecode } from "../../test/mocks/contracts/simpleStorage/bytecode.js";
+import { testEnv } from "../../test/testEnv.js";
+import { type IMessage, LocalKeySigner, addHexPrefix } from "../index.js";
 import { WalletClient } from "./WalletClient.js";
 
 const client = new WalletClient({
-  endpoint,
+  endpoint: testEnv.endpoint,
   signer: new LocalKeySigner({
-    privateKey: generatePrivateKey(),
+    privateKey: testEnv.localPrivKey,
   }),
 });
 
-test("sendMessage", async ({ expect }) => {
-  const newMessage = {
-    to: "0x1234",
-    data: 100,
-  } as unknown as IMessage;
+test("prepareMessage", async () => {
+  const message = {
+    to: addHexPrefix(defaultAddress),
+  };
 
-  const hash = await client.sendMessage(newMessage);
+  const preparedMessage = await client.prepareMessage(message as IMessage);
 
-  expect(hash).toBeDefined();
+  expect(preparedMessage.from).toBeDefined();
+  expect(preparedMessage.gasPrice).toBeDefined();
 });
 
-test("sendMessage with from field", async ({ expect }) => {
-  const newMessage = {
-    from: "0x1234",
-    to: "0x1234",
-    data: 100,
-  } as unknown as IMessage;
+test("sendMessage", async () => {
+  const message = {
+    to: addHexPrefix(defaultAddress),
+    value: 0n,
+  };
 
-  const hash = await client.sendMessage(newMessage);
+  const result = await client.sendMessage(message);
 
-  expect(hash).toBeDefined();
+  expect(result).toBeDefined();
 });
 
-test("sendMessage with from field and shouldValidate false", async ({
-  expect,
-}) => {
-  const newMessage = {
-    from: "0x1234",
-    to: "0x1234",
-    data: 100,
-  } as unknown as IMessage;
-
-  const hash = await client.sendMessage(newMessage, { shouldValidate: false });
-
-  expect(hash).toBeDefined();
-});
-
-test("sendRawMessage", async ({ expect }) => {
-  const newMessage = {
-    to: "0x1234",
-    data: 100,
-  } as unknown as IMessage;
-  const signedMessage = client.signMessage(newMessage);
-
-  const hash = await client.sendRawMessage(signedMessage);
-
-  expect(hash).toBeDefined();
-});
-
-test("Deploy contract", async ({ expect }) => {
-  const newMessage = {
-    data: 100,
-  } as unknown as IMessage;
-
-  const hash = await client.deployContract({
-    bytecode: new Uint8Array(),
-    args: new Uint8Array(),
-    abi: abi,
+test("deployContract", async () => {
+  const result = await client.deployContract({
+    deployData: {
+      bytecode: precompiledContractBytecode,
+    },
   });
 
-  expect(hash).toBeDefined();
+  expect(result).toBeDefined();
 });
+
+// TODO: implement this test and this feature
+// test("deployContract with constructor", async () => {

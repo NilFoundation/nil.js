@@ -15,6 +15,7 @@
     "lib": ["ES2021"],
     "skipLibCheck": true,
     "noEmitOnError": true,
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals"],
+    "resolveJsonModule": true
   }
 }
