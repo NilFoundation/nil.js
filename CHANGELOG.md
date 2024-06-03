@@ -1,5 +1,19 @@
 # niljs
 
+## 0.1.2
+
+### Patch Changes
+
+- [#13](https://github.com/NilFoundation/nil.js/pull/13) [`f47866e`](https://github.com/NilFoundation/nil.js/commit/f47866ebf12dff028f90283bf23158365a7a53f8) Thanks [@ukorvl](https://github.com/ukorvl)! - Enable ssz serialization
+
+- [#11](https://github.com/NilFoundation/nil.js/pull/11) [`9b64379`](https://github.com/NilFoundation/nil.js/commit/9b643799c27f9014158fe612a169ee673c2640f1) Thanks [@ukorvl](https://github.com/ukorvl)! - Add unit tests for PublicClient
+
+- [#10](https://github.com/NilFoundation/nil.js/pull/10) [`b512a6b`](https://github.com/NilFoundation/nil.js/commit/b512a6bb0c8ecfcd8bb4ead44e6241494402afb2) Thanks [@ukorvl](https://github.com/ukorvl)! - Add simple polling implementation, allow to run publish workflow only manually, extend walletClient from publicClient
+
+- [#8](https://github.com/NilFoundation/nil.js/pull/8) [`8629ea1`](https://github.com/NilFoundation/nil.js/commit/8629ea139786c866f89907e46a828c32d61c76d9) Thanks [@ukorvl](https://github.com/ukorvl)! - Rename package because we are having an error: Package name too similar to existing package nil.js
+
+- [#13](https://github.com/NilFoundation/nil.js/pull/13) [`f47866e`](https://github.com/NilFoundation/nil.js/commit/f47866ebf12dff028f90283bf23158365a7a53f8) Thanks [@ukorvl](https://github.com/ukorvl)! - Add WalletClient unit tests
+
 ## 0.1.1
 
 ### Patch Changes
