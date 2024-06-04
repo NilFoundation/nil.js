@@ -6,6 +6,7 @@ import { WalletClient } from "./WalletClient.js";
 
 const client = new WalletClient({
   endpoint: testEnv.endpoint,
+  shardId: 0,
   signer: new LocalKeySigner({
     privateKey: testEnv.localPrivKey,
   }),
@@ -14,6 +15,7 @@ const client = new WalletClient({
 test("prepareMessage", async () => {
   const message = {
     to: addHexPrefix(defaultAddress),
+    seqno: 0,
   };
 
   const preparedMessage = await client.prepareMessage(message as IMessage);
@@ -26,6 +28,7 @@ test("sendMessage", async () => {
   const message = {
     to: addHexPrefix(defaultAddress),
     value: 0n,
+    seqno: 0,
   };
 
   const result = await client.sendMessage(message);
@@ -38,6 +41,8 @@ test("deployContract", async () => {
     deployData: {
       bytecode: precompiledContractBytecode,
     },
+    seqno: 10000,
+    from: "0x0000186f9cc19906dba062697c3179c1cce6d4c4",
   });
 
   expect(result).toBeDefined();

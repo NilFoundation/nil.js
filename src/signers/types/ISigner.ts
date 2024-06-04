@@ -24,11 +24,12 @@ abstract class ISigner {
   abstract getPublicKey(): Hex;
   /**
    * Returns the address.
+   * @param shardId - The shard id.
    * @returns The address.
    * @example
    * const address = signer.getAddress();
    */
-  abstract getAddress(): IAddress;
+  abstract getAddress(shardId: number): IAddress;
 }
 
 export { ISigner };

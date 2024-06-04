@@ -1,17 +1,16 @@
 import { defaultAddress } from "../../test/mocks/address.js";
 import { rawMsg } from "../../test/mocks/message.js";
-import { masterShardId } from "../../test/mocks/shard.js";
 import { testEnv } from "../../test/testEnv.js";
 import { addHexPrefix } from "../index.js";
 import { PublicClient } from "./PublicClient.js";
 
 const client = new PublicClient({
   endpoint: testEnv.endpoint,
+  shardId: 1,
 });
 
 test("getBlockByHash", async ({ expect }) => {
   const block = await client.getBlockByHash(
-    masterShardId,
     "0x158c4be17b52b92dc03cef7e8cd9cec64c6413175df3cce9f6ae1fb0d12106fa",
   );
 
@@ -19,7 +18,7 @@ test("getBlockByHash", async ({ expect }) => {
 });
 
 test("getBlockByNumber", async ({ expect }) => {
-  const block = await client.getBlockByNumber(masterShardId, "0x1b4");
+  const block = await client.getBlockByNumber("0x1b4");
 
   expect(block).toBeDefined();
 });
@@ -37,7 +36,6 @@ test("getBlockByNumber", async ({ expect }) => {
 // not implemented on the node
 // test("getBlockMessageCountByHash", async ({ expect }) => {
 //   const count = await client.getBlockMessageCountByHash(
-//     masterShardId,
 //     "0x158c4be17b52b92dc03cef7e8cd9cec64c6413175df3cce9f6ae1fb0d12106fa",
 //   );
 
@@ -47,7 +45,6 @@ test("getBlockByNumber", async ({ expect }) => {
 // not implemented on the node
 // test("getCode", async ({ expect }) => {
 //   const code = await client.getCode(
-//     masterShardId,
 //     addHexPrefix(defaultAddress),
 //     "0x1b4",
 //   );
@@ -57,7 +54,6 @@ test("getBlockByNumber", async ({ expect }) => {
 
 test("getMessageCount", async ({ expect }) => {
   const count = await client.getMessageCount(
-    masterShardId,
     addHexPrefix(defaultAddress),
     "latest",
   );
@@ -67,7 +63,6 @@ test("getMessageCount", async ({ expect }) => {
 
 test("getBalance", async ({ expect }) => {
   const balance = await client.getBalance(
-    masterShardId,
     addHexPrefix(defaultAddress),
     "latest",
   );
@@ -77,7 +72,6 @@ test("getBalance", async ({ expect }) => {
 
 test("getMessageByHash", async ({ expect }) => {
   const message = await client.getMessageByHash(
-    masterShardId,
     "0x158c4be17b52b92dc03cef7e8cd9cec64c6413175df3cce9f6ae1fb0d12106fa",
   );
 
@@ -86,7 +80,6 @@ test("getMessageByHash", async ({ expect }) => {
 
 test("getMessageReceiptByHash", async ({ expect }) => {
   const receipt = await client.getMessageReceiptByHash(
-    masterShardId,
     "0x158c4be17b52b92dc03cef7e8cd9cec64c6413175df3cce9f6ae1fb0d12106fa",
   );
 
@@ -100,7 +93,13 @@ test("sendRawMessage", async ({ expect }) => {
 });
 
 test("getGasPrice", async ({ expect }) => {
-  const gasPrice = await client.getGasPrice(masterShardId);
+  const gasPrice = await client.getGasPrice();
 
   expect(gasPrice).toBeDefined();
+});
+
+test("estimateGasLimit", async ({ expect }) => {
+  const gasLimit = await client.estimateGasLimit();
+
+  expect(gasLimit).toBeDefined();
 });

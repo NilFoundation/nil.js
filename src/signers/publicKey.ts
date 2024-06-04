@@ -1,7 +1,13 @@
 import { type Hex, bytesToHex } from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
-import { type ISignature, addHexPrefix, removeHexPrefix } from "../index.js";
-import { keccak_256 } from "../utils/keccak256.js";
+import { poseidonHash } from "../encoding/poseidon.js";
+import {
+  addHexPrefix,
+  assertIsValidShardId,
+  removeHexPrefix,
+  toBytes,
+  toHex,
+} from "../index.js";
 import type { IAddress } from "./types/IAddress.js";
 import type { IPrivateKey } from "./types/IPrivateKey.js";
 
@@ -13,24 +19,31 @@ const getPublicKey = (privateKey: IPrivateKey, isCompressed = false): Hex => {
     removeHexPrefix(privateKey),
     isCompressed,
   );
-  return addHexPrefix(bytesToHex(publicKey));
-};
 
-const recoverPublicKey = (
-  messageHash: Hex | Uint8Array,
-  signature: ISignature,
-) => {
-  //
+  return addHexPrefix(bytesToHex(publicKey));
 };
 
 /**
  * Returns the address from the public key.
  * @param publicKey - Public key in hex format
+ * @param shardId - Shard id
  * @returns Address in hex format
  */
-const getAddressFromPublicKey = (publicKey: Hex): IAddress => {
-  const bytes = keccak_256(publicKey).slice(-20);
-  return addHexPrefix(bytesToHex(bytes));
+const getAddressFromPublicKey = (publicKey: Hex, shardId: number): IAddress => {
+  assertIsValidShardId(shardId);
+  const publickKeyWithoutPrefix = removeHexPrefix(publicKey);
+
+  const shardIdHex = toHex(shardId).padStart(4, "0");
+
+  const pubKeyBytes =
+    typeof publickKeyWithoutPrefix === "string"
+      ? toBytes(publickKeyWithoutPrefix)
+      : publickKeyWithoutPrefix;
+
+  const hash = poseidonHash(pubKeyBytes);
+  const hashHex = toHex(hash).slice(-36);
+
+  return addHexPrefix(shardIdHex + hashHex);
 };
 
-export { getPublicKey, recoverPublicKey, getAddressFromPublicKey };
+export { getPublicKey, getAddressFromPublicKey };

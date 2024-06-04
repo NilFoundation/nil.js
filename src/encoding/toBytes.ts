@@ -1,4 +1,4 @@
-import type { Hex } from "@noble/curves/abstract/utils";
+import { type Hex, numberToBytesBE } from "@noble/curves/abstract/utils";
 import { hexToBytes } from "./fromHex.js";
 
 /**
@@ -6,12 +6,12 @@ import { hexToBytes } from "./fromHex.js";
  * @param num - The number to convert to bytes.
  * @returns The bytes.
  */
-const numberToBytes = (num: number): Uint8Array => {
-  return Buffer.from(num.toString());
+const numberToBytes = (num: number | bigint, length = 2): Uint8Array => {
+  return numberToBytesBE(num, length);
 };
 
 const toBytes = (value: number | boolean | Hex): Uint8Array => {
-  if (typeof value === "number") {
+  if (typeof value === "number" || typeof value === "bigint") {
     return numberToBytes(value);
   }
 

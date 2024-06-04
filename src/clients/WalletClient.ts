@@ -1,12 +1,7 @@
 import invariant from "tiny-invariant";
 import { prepareDeployData } from "../encoding/deployData.js";
 import { messageToSsz, signedMessageToSsz } from "../encoding/toSsz.js";
-import {
-  type IReceipt,
-  addHexPrefix,
-  getShardIdFromAddress,
-  toHex,
-} from "../index.js";
+import { type IReceipt, addHexPrefix, toHex } from "../index.js";
 import type { ISigner } from "../signers/index.js";
 import type { IMessage } from "../types/IMessage.js";
 import { assertIsValidMessage } from "../utils/assert.js";
@@ -35,15 +30,12 @@ import type { ISignMessageOptions } from "./types/ISignMessageOptions.js";
  */
 class WalletClient extends PublicClient {
   private signer: ISigner;
-  private shardId: number;
+  private pollingInterval: number;
 
   constructor(config: IWalletClientConfig) {
     super(config);
     this.signer = config.signer;
-
-    const address = this.signer.getAddress();
-    // TODO - get shardId from address and remove default value
-    this.shardId = 0 ?? getShardIdFromAddress(address);
+    this.pollingInterval = config.pollingInterval ?? 1000;
   }
 
   /**
@@ -54,15 +46,15 @@ class WalletClient extends PublicClient {
   public async prepareMessage(message: ISendMessage): Promise<IMessage> {
     const finalMsg = {
       ...message,
-      from: message.from ? message.from : this.signer.getAddress(),
+      from: message.from ? message.from : this.signer.getAddress(this.shardId),
       data: message.data ?? Uint8Array.from([]),
+      internal: false,
     };
 
     const promises = [
-      message.seqno ??
-        this.getMessageCount(this.shardId, finalMsg.from, "latest"),
-      message.gasPrice ?? this.getGasPrice(this.shardId),
-      message.gasLimit ?? this.estimateGasLimit(this.shardId),
+      message.seqno ?? this.getMessageCount(finalMsg.from, "latest"),
+      message.gasPrice ?? this.getGasPrice(),
+      message.gasLimit ?? this.estimateGasLimit(),
     ] as const;
 
     const [seqno, gasPrice, gasLimit] = await Promise.all(promises);
@@ -167,9 +159,9 @@ class WalletClient extends PublicClient {
     // in the future we want to use subscribe method to get the receipt
     // for now it is simple short polling
     const receipt = await startPollingUntilCondition<IReceipt>(
-      () => this.getMessageReceiptByHash(this.shardId, hash),
+      () => this.getMessageReceiptByHash(hash),
       (receipt) => Boolean(receipt),
-      1000,
+      this.pollingInterval,
     );
 
     // here it is now always false but we need a fix from the node (add money)
