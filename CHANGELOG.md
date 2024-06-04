@@ -1,5 +1,23 @@
 # niljs
 
+## 0.1.3
+
+### Patch Changes
+
+- [#15](https://github.com/NilFoundation/nil.js/pull/15) [`10981f7`](https://github.com/NilFoundation/nil.js/commit/10981f7b2335847d93b71c900686e6625e818fa7) Thanks [@ukorvl](https://github.com/ukorvl)! - Fix package.sjon imports section
+
+- [#15](https://github.com/NilFoundation/nil.js/pull/15) [`10981f7`](https://github.com/NilFoundation/nil.js/commit/10981f7b2335847d93b71c900686e6625e818fa7) Thanks [@ukorvl](https://github.com/ukorvl)! - Add internal field to the IMessage
+
+- [#15](https://github.com/NilFoundation/nil.js/pull/15) [`10981f7`](https://github.com/NilFoundation/nil.js/commit/10981f7b2335847d93b71c900686e6625e818fa7) Thanks [@ukorvl](https://github.com/ukorvl)! - Add pollingInterval and timeout to client configs
+
+- [#15](https://github.com/NilFoundation/nil.js/pull/15) [`10981f7`](https://github.com/NilFoundation/nil.js/commit/10981f7b2335847d93b71c900686e6625e818fa7) Thanks [@ukorvl](https://github.com/ukorvl)! - Add mnemonic key
+
+- [#15](https://github.com/NilFoundation/nil.js/pull/15) [`10981f7`](https://github.com/NilFoundation/nil.js/commit/10981f7b2335847d93b71c900686e6625e818fa7) Thanks [@ukorvl](https://github.com/ukorvl)! - Remove provenance generation on publish cz now repository is private
+
+- [#15](https://github.com/NilFoundation/nil.js/pull/15) [`10981f7`](https://github.com/NilFoundation/nil.js/commit/10981f7b2335847d93b71c900686e6625e818fa7) Thanks [@ukorvl](https://github.com/ukorvl)! - Add shardId property to clients
+
+- [#15](https://github.com/NilFoundation/nil.js/pull/15) [`10981f7`](https://github.com/NilFoundation/nil.js/commit/10981f7b2335847d93b71c900686e6625e818fa7) Thanks [@ukorvl](https://github.com/ukorvl)! - Remove all Buffer references cz it does not work in the browser
+
 ## 0.1.2
 
 ### Patch Changes
