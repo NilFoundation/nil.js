@@ -1,5 +1,5 @@
 import type { Hex } from "@noble/curves/abstract/utils";
-import type { IReceipt } from "../index.js";
+import type { IBlock, IReceipt } from "../index.js";
 import type { IAddress } from "../signers/types/IAddress.js";
 import { BaseClient } from "./BaseClient.js";
 import type { IPublicClientConfig } from "./types/ClientConfigs.js";
@@ -23,7 +23,6 @@ class PublicClient extends BaseClient {
 
   /**
    * getBlockByNumber returns the block by the block number.
-   * @param shardId - The shard id.
    * @param number - The block number.
    * @param fullTx - The flag to include full transactions.
    * @returns The block.
@@ -36,23 +35,18 @@ class PublicClient extends BaseClient {
    *
    * const block = await client.getBlockByNumber(1);
    */
-  public async getBlockByHash(
-    shardId: number,
-    hash: Hex,
-    fullTx = false,
-  ): Promise<Uint8Array> {
-    const res = await this.rpcClient.request({
+  public async getBlockByHash(hash: Hex, fullTx = false) {
+    const res = await this.request<IBlock>({
       method: "eth_getBlockByHash",
-      params: [shardId, hash, fullTx],
+      params: [this.shardId, hash, fullTx],
     });
 
     return res;
   }
 
   /**
-   * getBlockByNumber returns the block by the block number.
-   * @param shardId - The shard id.
-   * @param number - The block number.
+   * getBlockByHash returns the block by the block hash.
+   * @param hash - The block hash.
    * @param fullTx - The flag to include full transactions.
    * @returns The block.
    * @example
@@ -64,14 +58,10 @@ class PublicClient extends BaseClient {
    *
    * const block = await client.getBlockByNumber('0x1');
    */
-  public async getBlockByNumber(
-    shardId: number,
-    blockNumber: string,
-    fullTx = false,
-  ): Promise<Uint8Array> {
-    const res = await this.rpcClient.request({
+  public async getBlockByNumber(blockNumber: string, fullTx = false) {
+    const res = await this.request<IBlock>({
       method: "eth_getBlockByNumber",
-      params: [shardId, blockNumber, fullTx],
+      params: [this.shardId, blockNumber, fullTx],
     });
 
     return res;
@@ -79,25 +69,22 @@ class PublicClient extends BaseClient {
 
   /**
    * getBlockMessageCountByNumber returns the message count by the block number.
-   * @param shardId - The shard id.
    * @param number - The block number.
    * @returns The message count.
    * @example
-   import { PublicClient } from '@nilfoundation/niljs';
+   * import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
    * })
    *
    * const count = await client.getBlockMessageCountByNumber(1);
+   *
    */
-  public async getBlockMessageCountByNumber(
-    shardId: number,
-    blockNumber: string,
-  ): Promise<number> {
-    const res = await this.rpcClient.request({
+  public async getBlockMessageCountByNumber(blockNumber: string) {
+    const res = await this.request<number>({
       method: "eth_getBlockTransactionCountByNumber",
-      params: [shardId, blockNumber],
+      params: [this.shardId, blockNumber],
     });
 
     return res;
@@ -105,11 +92,10 @@ class PublicClient extends BaseClient {
 
   /**
    * getBlockMessageCountByHash returns the message count by the block hash.
-   * @param shardId - The shard id.
    * @param hash - The block hash.
    * @returns The message count.
    * @example
-   import { PublicClient } from '@nilfoundation/niljs';
+   * import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -117,13 +103,10 @@ class PublicClient extends BaseClient {
    *
    * const count = await client.getBlockMessageCountByHash(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
-  public async getBlockMessageCountByHash(
-    shardId: number,
-    hash: Hex,
-  ): Promise<number> {
-    const res = await this.rpcClient.request({
+  public async getBlockMessageCountByHash(hash: Hex) {
+    const res = await this.request<number>({
       method: "eth_getBlockTransactionCountByHash",
-      params: [shardId, hash],
+      params: [this.shardId, hash],
     });
 
     return res;
@@ -131,12 +114,11 @@ class PublicClient extends BaseClient {
 
   /**
    * getCode returns the bytecode of the contract.
-   * @param shardId - The shard id.
    * @param address - The contract address.
    * @param blockNumberOrHash - The block number or hash.
    * @returns The code of the contract.
    * @example
-   import { PublicClient } from '@nilfoundation/niljs';
+   * import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -144,14 +126,10 @@ class PublicClient extends BaseClient {
    *
    * const code = await client.getCode(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
    */
-  public async getCode(
-    shardId: number,
-    address: IAddress,
-    blockNumberOrHash: Hex,
-  ): Promise<Uint8Array> {
-    const res = await this.rpcClient.request({
+  public async getCode(address: IAddress, blockNumberOrHash: Hex) {
+    const res = await this.request<Uint8Array>({
       method: "eth_getCode",
-      params: [shardId, address, blockNumberOrHash],
+      params: [this.shardId, address, blockNumberOrHash],
     });
 
     return res;
@@ -159,27 +137,23 @@ class PublicClient extends BaseClient {
 
   /**
    * getMessageCount returns the message count of the address.
-   * @param shardId - The shard id.
    * @param address - The address.
    * @param blockNumberOrHash - The block number or hash.
    * @returns The message count.
    * @example
-   import { PublicClient } from '@nilfoundation/niljs';
+   * import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
    * })
    *
    * const count = await client.getMessageCount(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
+   *
    */
-  public async getMessageCount(
-    shardId: number,
-    address: IAddress,
-    blockNumberOrHash: string,
-  ): Promise<number> {
-    const res = await this.rpcClient.request({
+  public async getMessageCount(address: IAddress, blockNumberOrHash: string) {
+    const res = await this.request<number>({
       method: "eth_getTransactionCount",
-      params: [shardId, address, blockNumberOrHash],
+      params: [this.shardId, address, blockNumberOrHash],
     });
 
     return res;
@@ -187,12 +161,11 @@ class PublicClient extends BaseClient {
 
   /**
    * getBalance returns the balance of the address.
-   * @param shardId - The shard id.
    * @param address - The address.
    * @param blockNumberOrHash - The block number or hash.
    * @returns The balance of the address.
    * @example
-   import { PublicClient } from '@nilfoundation/niljs';
+   * import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -200,14 +173,10 @@ class PublicClient extends BaseClient {
    *
    * const balance = await client.getBalance(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
    */
-  public async getBalance(
-    shardId: number,
-    address: IAddress,
-    blockNumberOrHash: Hex,
-  ): Promise<Uint8Array> {
-    const res = await this.rpcClient.request({
+  public async getBalance(address: IAddress, blockNumberOrHash: Hex) {
+    const res = await this.request<Uint8Array>({
       method: "eth_getBalance",
-      params: [shardId, address, blockNumberOrHash],
+      params: [this.shardId, address, blockNumberOrHash],
     });
 
     return res;
@@ -215,11 +184,10 @@ class PublicClient extends BaseClient {
 
   /**
    * getMessageByHash returns the message by the hash.
-   * @param shardId - The shard id.
    * @param hash - The hash.
    * @returns The message.
    * @example
-   import { PublicClient } from '@nilfoundation/niljs';
+   * import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
    *  endpoint: 'http://127.0.0.1:8529'
@@ -227,13 +195,10 @@ class PublicClient extends BaseClient {
    *
    * const message = await client.getMessageByHash(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
-  public async getMessageByHash(
-    shardId: number,
-    hash: Hex,
-  ): Promise<Uint8Array> {
-    const res = await this.rpcClient.request({
+  public async getMessageByHash(hash: Hex) {
+    const res = await this.request<Uint8Array>({
       method: "eth_getInMessageByHash",
-      params: [shardId, hash],
+      params: [this.shardId, hash],
     });
 
     return res;
@@ -241,7 +206,6 @@ class PublicClient extends BaseClient {
 
   /**
    * getMessageReceiptByHash returns the message receipt by the hash.
-   * @param shardId - The shard id.
    * @param hash - The hash.
    * @returns The message receipt.
    * @example
@@ -253,13 +217,10 @@ class PublicClient extends BaseClient {
    *
    * const receipt = await client.getMessageReceiptByHash(1, Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
-  public async getMessageReceiptByHash(
-    shardId: number,
-    hash: Hex,
-  ): Promise<IReceipt> {
-    const res = await this.rpcClient.request({
+  public async getMessageReceiptByHash(hash: Hex) {
+    const res = await this.request<IReceipt>({
       method: "eth_getInMessageReceipt",
-      params: [shardId, hash],
+      params: [this.shardId, hash],
     });
 
     return res;
@@ -277,10 +238,9 @@ class PublicClient extends BaseClient {
    * })
    *
    * const message = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-   * const hash = await client.sendRawMessage(message);
    */
-  public async sendRawMessage(message: Hex): Promise<Uint8Array> {
-    const res = await this.rpcClient.request({
+  public async sendRawMessage(message: Hex) {
+    const res = await this.request<Uint8Array>({
       method: "eth_sendRawTransaction",
       params: [message],
     });
@@ -290,21 +250,19 @@ class PublicClient extends BaseClient {
 
   /**
    * getGasPrice returns the gas price in wei.
-   * @param shardId - The shard id.
    * @returns The gas price.
    */
-  public async getGasPrice(shardId: number): Promise<bigint> {
-    const stubGasPrice = BigInt(1000000000);
+  public async getGasPrice(): Promise<bigint> {
+    const stubGasPrice = BigInt(10000000000);
 
     return stubGasPrice;
   }
 
   /**
    * estimateGasLimit returns the gas limit.
-   * @param shardId - The shard id.
    * @returns The gas limit.
    */
-  public async estimateGasLimit(shardId: number): Promise<bigint> {
+  public async estimateGasLimit(): Promise<bigint> {
     const stubGasLimit = BigInt(1000000);
 
     return stubGasLimit;

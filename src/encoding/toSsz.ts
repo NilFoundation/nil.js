@@ -1,4 +1,3 @@
-import {} from "@chainsafe/ssz";
 import { hexToBytes, removeHexPrefix } from "../index.js";
 import type { IMessage } from "../types/IMessage.js";
 import type { ISignedMessage } from "../types/ISignedMessage.js";
@@ -18,7 +17,7 @@ const prepareMessage = <T extends IMessage>({
   ...rest,
   from: hexToBytes(removeHexPrefix(from)),
   to: hexToBytes(removeHexPrefix(to)),
-  data: Array.from(hexToBytes(data)),
+  data: Array.from(data),
 });
 
 /**

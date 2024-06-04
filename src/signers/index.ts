@@ -6,3 +6,4 @@ export * from "./types/IPrivateKey.js";
 export * from "./types/ISigner.js";
 export * from "./types/ISignature.js";
 export * from "./privateKey.js";
+export * from "./MetmaskSigner.js";

@@ -1,4 +1,3 @@
-import type { Hex } from "@noble/curves/abstract/utils";
 import type { IMessage } from "../../index.js";
 
 /**
@@ -11,10 +10,17 @@ type ISendMessage = {
   seqno?: number;
   gasPrice?: bigint;
   gasLimit?: bigint;
-  data?: Hex;
+  data?: Uint8Array;
 } & Omit<
   IMessage,
-  "to" | "value" | "from" | "seqno" | "gasPrice" | "gasLimit" | "data"
+  | "to"
+  | "value"
+  | "from"
+  | "seqno"
+  | "gasPrice"
+  | "gasLimit"
+  | "data"
+  | "internal"
 >;
 
 export type { ISendMessage };

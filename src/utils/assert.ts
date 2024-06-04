@@ -1,5 +1,6 @@
 import type { Hex } from "@noble/curves/abstract/utils";
 import invariant from "tiny-invariant";
+//import { masterShardId } from "../clients/constants.js"; TODO - uncomment
 import { type IBlock, isValidBlock } from "../index.js";
 import type { IPrivateKey } from "../signers/index.js";
 import type { IMessage } from "../types/IMessage.js";
@@ -90,6 +91,19 @@ const assertIsValidBlock = (block: IBlock, message?: string): void => {
   );
 };
 
+/**
+ * Checks if the shard id is valid. If the shard id is valid, it returns nothing.
+ * @param shardId - The shard id to check.
+ * @param message - The message to throw if the shard id is invalid.
+ */
+const assertIsValidShardId = (shardId: number, message?: string): void => {
+  invariant(
+    Number.isInteger(shardId) && shardId >= 0 && shardId < 2 ** 16,
+    //shardId !== masterShardId, // TODO: uncomment
+    message ?? `Expected a valid shard id but got ${shardId}`,
+  );
+};
+
 export {
   assertIsBuffer,
   assertIsHexString,
@@ -97,4 +111,5 @@ export {
   assertIsValidMessage,
   assertIsAddress,
   assertIsValidBlock,
+  assertIsValidShardId,
 };

@@ -40,7 +40,13 @@ const hexToString = (hex: Hex): string => {
     return hexToString(hex.toString());
   }
 
-  return Buffer.from(hex, "hex").toString("utf-8");
+  let str = "";
+
+  for (let i = 0; i < hex.length; i += 2) {
+    str += String.fromCharCode(Number.parseInt(hex.substring(i, 2), 16));
+  }
+
+  return str;
 };
 
 /**

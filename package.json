@@ -21,7 +21,7 @@
   "exports": {
     ".": {
       "import": "./dist/niljs.esm.js",
-      "require": "./dist/niljs.cjs.js"
+      "require": "./dist/niljs.cjs"
     }
   },
   "sideEffects": false,
@@ -63,8 +63,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/",
-    "provenance": true
+    "registry": "https://registry.npmjs.org/"
   },
   "simple-git-hooks": {
     "pre-commit": "npm run lint",
@@ -76,6 +75,8 @@
   },
   "dependencies": {
     "@chainsafe/ssz": "^0.16.0",
+    "@iden3/js-crypto": "^1.1.0",
+    "@scure/bip39": "^1.3.0",
     "abitype": "^1.0.2",
     "tiny-invariant": "^1.3.3"
   },

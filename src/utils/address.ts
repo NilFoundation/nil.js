@@ -13,7 +13,7 @@ const isAddress = (value: Hex): value is IAddress => {
 };
 
 /**
- * Returns the shard ID from the address.
+ * Returns the shard ID from the provided address.
  * @param address - The address.
  */
 const getShardIdFromAddress = (address: Hex): number => {

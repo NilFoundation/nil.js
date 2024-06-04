@@ -7,7 +7,8 @@ import { hexToBytes } from "./fromHex.js";
  * @param d - Deploy data
  * @returns Deploy data as bytes
  */
-const prepareDeployData = (d: IDeployData) =>
-  hexToBytes(removeHexPrefix(d.bytecode));
+const prepareDeployData = (d: IDeployData) => {
+  return hexToBytes(removeHexPrefix(d.bytecode));
+};
 
 export { prepareDeployData };

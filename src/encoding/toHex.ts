@@ -2,6 +2,21 @@ import { numberToHexUnpadded } from "@noble/curves/abstract/utils";
 import { bytesToHex } from "./fromBytes.js";
 
 /**
+ * Convert a string to a hex string.
+ * @param str - The input string to convert to hex
+ * @returns The hex string representation of the input.
+ */
+const stringToHex = (str: string): string => {
+  let hex = "";
+
+  for (let i = 0; i < str.length; i++) {
+    hex += str.charCodeAt(i).toString(16);
+  }
+
+  return hex;
+};
+
+/**
  * Convert a string, number, bigint, boolean, or ByteArrayType to a hex string.
  * @param str - The input string to convert to hex
  * @returns The hex string representation of the input.
@@ -10,7 +25,7 @@ const toHex = <T extends string | number | bigint | boolean | Uint8Array>(
   value: T,
 ): string => {
   if (typeof value === "string") {
-    return Buffer.from(value).toString("hex");
+    return stringToHex(value);
   }
 
   if (typeof value === "number") {

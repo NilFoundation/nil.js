@@ -2,9 +2,7 @@
  * Interface for the Signature. It contains the r, s, and yParity values.
  */
 type ISignature = {
-  r: bigint;
-  s: bigint;
-  v: number;
+  signature: Uint8Array;
 };
 
 export type { ISignature };

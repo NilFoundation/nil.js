@@ -15,7 +15,10 @@ const bytesToHex = (bytes: Uint8Array): string => {
  * @returns The string representation of the input.
  */
 const bytesToString = (bytes: Uint8Array): string => {
-  return Buffer.from(bytes).toString("utf-8");
+  const decoder = new TextDecoder("utf8");
+  const str = decoder.decode(bytes);
+
+  return str;
 };
 
 /**

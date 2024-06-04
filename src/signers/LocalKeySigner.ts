@@ -1,11 +1,13 @@
-import type { Hex } from "@noble/curves/abstract/utils";
+import { type Hex, concatBytes } from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
-import { addHexPrefix, removeHexPrefix } from "../index.js";
+import invariant from "tiny-invariant";
+import { addHexPrefix, numberToBytes, removeHexPrefix } from "../index.js";
 import {
   assertIsAddress,
   assertIsHexString,
   assertIsValidPrivateKey,
 } from "../utils/assert.js";
+import { privateKeyFromPhrase } from "./mnemonic.js";
 import { getAddressFromPublicKey, getPublicKey } from "./publicKey.js";
 import type { IAddress } from "./types/IAddress.js";
 import type { ILocalKeySignerConfig } from "./types/ILocalKeySignerConfig.js";
@@ -28,10 +30,20 @@ class LocalKeySigner implements ISigner {
   private address?: IAddress = undefined;
 
   constructor(config: ILocalKeySignerConfig) {
-    const privateKey = addHexPrefix(config.privateKey);
-    assertIsValidPrivateKey(privateKey);
+    const { privateKey, mnemonic } = config;
 
-    this.privateKey = privateKey;
+    invariant(
+      privateKey || mnemonic,
+      "Either privateKey or mnemonic must be provided.",
+    );
+
+    const privKey = mnemonic
+      ? privateKeyFromPhrase(mnemonic)
+      : addHexPrefix(privateKey as string);
+
+    assertIsValidPrivateKey(privKey);
+
+    this.privateKey = privKey;
   }
 
   public sign(data: Uint8Array): ISignature {
@@ -42,9 +54,11 @@ class LocalKeySigner implements ISigner {
 
     const { r, s, recovery } = signature;
     return {
-      r,
-      s,
-      v: recovery,
+      signature: concatBytes(
+        numberToBytes(r, 32),
+        numberToBytes(s, 32),
+        numberToBytes(recovery, 1),
+      ),
     };
   }
 
@@ -53,19 +67,19 @@ class LocalKeySigner implements ISigner {
       return this.publicKey;
     }
 
-    const publicKey = getPublicKey(this.privateKey);
+    const publicKey = getPublicKey(this.privateKey, true);
     assertIsHexString(publicKey);
 
     this.publicKey = publicKey;
     return this.publicKey;
   }
 
-  public getAddress() {
+  public getAddress(shardId: number) {
     if (this.address) {
       return this.address;
     }
 
-    this.address = getAddressFromPublicKey(this.getPublicKey());
+    this.address = getAddressFromPublicKey(this.getPublicKey(), shardId);
     assertIsAddress(this.address);
 
     return this.address;
