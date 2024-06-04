@@ -1,4 +1,4 @@
-import { type Hex, numberToBytesBE } from "@noble/curves/abstract/utils";
+import { type Hex, numberToBytesLE } from "@noble/curves/abstract/utils";
 import { hexToBytes } from "./fromHex.js";
 
 /**
@@ -7,7 +7,9 @@ import { hexToBytes } from "./fromHex.js";
  * @returns The bytes.
  */
 const numberToBytes = (num: number | bigint, length = 2): Uint8Array => {
-  return numberToBytesBE(num, length);
+  const b = numberToBytesLE(num, length);
+  console.log(b);
+  return b;
 };
 
 const toBytes = (value: number | boolean | Hex): Uint8Array => {

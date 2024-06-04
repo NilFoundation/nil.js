@@ -7,7 +7,7 @@ import { poseidon } from "@iden3/js-crypto";
  * @returns The hash.
  */
 const poseidonHash = (bytes: Uint8Array) => {
-  return poseidon.hashBytes(bytes);
+  return poseidon.hashBytesX(bytes, 16);
 };
 
 export { poseidonHash };

@@ -8,7 +8,7 @@ import { SszMessageSchema, SszSignedMessageSchema } from "./ssz.js";
  * @param message - Message object
  * @returns IMessage - Processed message object ready to be SSZ encoded.
  */
-const prepareMessage = <T extends IMessage>({
+export const prepareMessage = <T extends IMessage>({
   from,
   to,
   data,
