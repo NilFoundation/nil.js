@@ -37,7 +37,8 @@
     "biome:fix": "biome check --apply .",
     "changeset": "changeset",
     "changeset:publish": "changeset publish",
-    "git-hooks:update": "git config core.hooksPath .git/hooks/ && rm -rf .git/hooks && npx --no-install simple-git-hooks"
+    "git-hooks:update": "git config core.hooksPath .git/hooks/ && rm -rf .git/hooks && npx --no-install simple-git-hooks",
+    "scripts": "npx --no-install allow-scripts"
   },
   "license": "MIT",
   "peerDependencies": {
@@ -50,6 +51,8 @@
     "@changesets/cli": "^2.27.2",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
+    "@lavamoat/allow-scripts": "^3.0.4",
+    "@lavamoat/preinstall-always-fail": "^2.0.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@vitest/coverage-v8": "^1.6.0",
     "rimraf": "^5.0.7",
@@ -84,5 +87,13 @@
     "nil",
     "blockchain",
     "client"
-  ]
+  ],
+  "lavamoat": {
+    "allowScripts": {
+      "@lavamoat/preinstall-always-fail": false,
+      "rollup-plugin-esbuild>esbuild": true,
+      "@biomejs/biome": true,
+      "simple-git-hooks": true
+    }
+  }
 }
