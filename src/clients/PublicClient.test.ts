@@ -1,11 +1,13 @@
 import { defaultAddress } from "../../test/mocks/address.js";
 import { rawMsg } from "../../test/mocks/message.js";
 import { testEnv } from "../../test/testEnv.js";
-import { addHexPrefix } from "../index.js";
+import { HttpTransport, addHexPrefix } from "../index.js";
 import { PublicClient } from "./PublicClient.js";
 
 const client = new PublicClient({
-  endpoint: testEnv.endpoint,
+  transport: new HttpTransport({
+    endpoint: testEnv.endpoint,
+  }),
   shardId: 1,
 });
 

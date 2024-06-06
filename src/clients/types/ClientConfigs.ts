@@ -1,3 +1,4 @@
+import type { ITransport } from "../../index.js";
 import type { ISigner } from "../../signers/types/ISigner.js";
 
 /**
@@ -5,29 +6,21 @@ import type { ISigner } from "../../signers/types/ISigner.js";
  */
 type IClientBaseConfig = {
   /**
-   * The endpoint of the network. It is a URL of the network node.
-   * @example 'http://127.0.0.1:8529'
-   */
-  endpoint: string;
-  /**
    * The shardId is used to specify the shard in every call.
    * @example 0
    * @default 0
    */
   shardId: number;
   /**
-   * The polling interval is used to poll the network for new data.
-   * @example 1000
-   * @default 1000
+   * The transport is used to send requests to the network.
+   * @example
+   * import { MetaMaskTransport } from '@nilfoundation/niljs';
+   *
+   * const transport = new MetaMaskTransport();
+   *
+   * const client = new PublicClient({ transport, shardId: 1 });
    */
-  pollingInterval?: number;
-  /**
-   * The timeout is used to set the timeout for the request.
-   * If the request is not completed within the timeout, it will be rejected.
-   * @example 1000
-   * @default 20000
-   */
-  timeout?: number;
+  transport: ITransport;
 };
 
 type IPublicClientConfig = IClientBaseConfig;

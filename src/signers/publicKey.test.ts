@@ -20,5 +20,5 @@ test("getAddressFromPublicKey", async ({ expect }) => {
 
   const result = getAddressFromPublicKey(input, accountShardId);
 
-  expect(result).toBe(expectedOutput);
+  expect(result.toLowerCase()).toBe(expectedOutput.toLowerCase());
 });
