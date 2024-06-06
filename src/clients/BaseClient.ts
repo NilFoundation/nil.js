@@ -1,20 +1,13 @@
-import type { Client as RPCClient } from "@open-rpc/client-js";
 import type { RequestArguments } from "@open-rpc/client-js/build/ClientInterface.js";
-import { assertIsValidShardId } from "../index.js";
-import { createRPCClient } from "../rpc/rpcClient.js";
+import { type ITransport, assertIsValidShardId } from "../index.js";
 import type { IClientBaseConfig } from "./types/ClientConfigs.js";
 
 class BaseClient {
-  /**
-   * RPC client instance.
-   */
-  protected rpcClient: RPCClient;
+  protected transport: ITransport;
   protected shardId: number;
-  private timeout: number;
 
   constructor(config: IClientBaseConfig) {
-    this.rpcClient = createRPCClient(config.endpoint);
-    this.timeout = config.timeout !== undefined ? config.timeout : 20000;
+    this.transport = config.transport;
     this.shardId = config.shardId;
   }
 
@@ -24,14 +17,7 @@ class BaseClient {
    * @returns The response.
    */
   protected async request<T>(requestObject: RequestArguments): Promise<T> {
-    return this.rpcClient.request(requestObject, this.timeout);
-  }
-
-  /**
-   * Closes the connection to the network.
-   */
-  public closeConnection(): void {
-    this.rpcClient.close();
+    return this.transport.request(requestObject);
   }
 
   /**

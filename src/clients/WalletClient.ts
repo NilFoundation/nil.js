@@ -5,7 +5,6 @@ import { type IReceipt, addHexPrefix, toHex } from "../index.js";
 import type { ISigner } from "../signers/index.js";
 import type { IMessage } from "../types/IMessage.js";
 import { assertIsValidMessage } from "../utils/assert.js";
-import { startPollingUntilCondition } from "../utils/polling.js";
 import { PublicClient } from "./PublicClient.js";
 import { emptyAddress } from "./constants.js";
 import type { IWalletClientConfig } from "./types/ClientConfigs.js";
@@ -30,12 +29,10 @@ import type { ISignMessageOptions } from "./types/ISignMessageOptions.js";
  */
 class WalletClient extends PublicClient {
   private signer: ISigner;
-  private pollingInterval: number;
 
   constructor(config: IWalletClientConfig) {
     super(config);
     this.signer = config.signer;
-    this.pollingInterval = config.pollingInterval ?? 1000;
   }
 
   /**
@@ -158,10 +155,9 @@ class WalletClient extends PublicClient {
 
     // in the future we want to use subscribe method to get the receipt
     // for now it is simple short polling
-    const receipt = await startPollingUntilCondition<IReceipt>(
+    const receipt = await this.transport.startPollingUntil<IReceipt>(
       () => this.getMessageReceiptByHash(hash),
       (receipt) => Boolean(receipt),
-      this.pollingInterval,
     );
 
     // here it is now always false but we need a fix from the node (add money)

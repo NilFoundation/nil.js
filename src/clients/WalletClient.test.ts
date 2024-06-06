@@ -1,14 +1,21 @@
 import { defaultAddress } from "../../test/mocks/address.js";
 import { bytecode as precompiledContractBytecode } from "../../test/mocks/contracts/simpleStorage/bytecode.js";
 import { testEnv } from "../../test/testEnv.js";
-import { type IMessage, LocalKeySigner, addHexPrefix } from "../index.js";
+import {
+  HttpTransport,
+  type IMessage,
+  LocalKeySigner,
+  addHexPrefix,
+} from "../index.js";
 import { WalletClient } from "./WalletClient.js";
 
 const client = new WalletClient({
-  endpoint: testEnv.endpoint,
   shardId: 0,
   signer: new LocalKeySigner({
     privateKey: testEnv.localPrivKey,
+  }),
+  transport: new HttpTransport({
+    endpoint: testEnv.endpoint,
   }),
 });
 

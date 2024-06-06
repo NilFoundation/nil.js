@@ -9,6 +9,7 @@ const startPollingUntilCondition = async <Result>(
   cb: () => Promise<Result>,
   condition: (result: Result) => boolean,
   interval: number,
+  pollingTimeout: number,
 ) => {
   let result: Result | undefined;
 
