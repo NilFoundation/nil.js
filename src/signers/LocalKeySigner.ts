@@ -1,7 +1,11 @@
-import { type Hex, concatBytes } from "@noble/curves/abstract/utils";
+import {
+  type Hex,
+  concatBytes,
+  numberToBytesBE,
+} from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import invariant from "tiny-invariant";
-import { addHexPrefix, numberToBytes, removeHexPrefix } from "../index.js";
+import { addHexPrefix, removeHexPrefix } from "../index.js";
 import {
   assertIsAddress,
   assertIsHexString,
@@ -47,17 +51,24 @@ class LocalKeySigner implements ISigner {
   }
 
   public sign(data: Uint8Array): ISignature {
-    const signature = secp256k1.sign(
-      removeHexPrefix(data),
-      removeHexPrefix(this.privateKey),
-    );
+    console.log("data", data);
+    console.log("sign", this.privateKey);
+    const signature = secp256k1.sign(data, removeHexPrefix(this.privateKey));
 
     const { r, s, recovery } = signature;
+    console.log("r", r.toString(16));
+    console.log("r bytes", numberToBytesBE(r, 32));
+    console.log("s", s.toString(16));
+    console.log("s bytes", numberToBytesBE(s, 32));
+    console.log("recovery", recovery);
+    // 1
+    // 1 0 LE
+    // 0 1
     return {
       signature: concatBytes(
-        numberToBytes(r, 32),
-        numberToBytes(s, 32),
-        numberToBytes(recovery, 1),
+        numberToBytesBE(r, 32),
+        numberToBytesBE(s, 32),
+        numberToBytesBE(recovery, 1),
       ),
     };
   }

@@ -1,7 +1,12 @@
+import { hexToBytes } from "@noble/curves/abstract/utils";
 import invariant from "tiny-invariant";
 import { prepareDeployData } from "../encoding/deployData.js";
-import { messageToSsz, signedMessageToSsz } from "../encoding/toSsz.js";
-import { type IReceipt, addHexPrefix, toHex } from "../index.js";
+import {
+  type IReceipt,
+  addHexPrefix,
+  removeHexPrefix,
+  toHex,
+} from "../index.js";
 import type { ISigner } from "../signers/index.js";
 import type { IMessage } from "../types/IMessage.js";
 import { assertIsValidMessage } from "../utils/assert.js";
@@ -9,10 +14,11 @@ import { PublicClient } from "./PublicClient.js";
 import { emptyAddress } from "./constants.js";
 import type { IWalletClientConfig } from "./types/ClientConfigs.js";
 import type { IDeployContractData } from "./types/IDeployContractData.js";
-import type { IDeployContractOptions } from "./types/IDeployContractOptions.js";
 import type { ISendMessage } from "./types/ISendMessage.js";
 import type { ISendMessageOptions } from "./types/ISendMessageOptions.js";
-import type { ISignMessageOptions } from "./types/ISignMessageOptions.js";
+
+import type { ValueOf } from "@chainsafe/ssz";
+import { SszMessageSchema, SszSignedMessageSchema } from "../encoding/ssz.js";
 
 /**
  * Wallet client is a class that allows you to interact with the network via JSON-RPC api.
@@ -29,10 +35,47 @@ import type { ISignMessageOptions } from "./types/ISignMessageOptions.js";
  */
 class WalletClient extends PublicClient {
   private signer: ISigner;
-
   constructor(config: IWalletClientConfig) {
     super(config);
     this.signer = config.signer;
+  }
+
+  public async encodeMessage(message: ISendMessage): Promise<{
+    bytes: Uint8Array;
+    hash: Uint8Array;
+  }> {
+    const rawMsgFormat: ValueOf<typeof SszMessageSchema> = {
+      internal: false,
+      seqno:
+        message.seqno ??
+        (await this.getMessageCount(
+          this.signer.getAddress(this.shardId),
+          "latest",
+        )),
+      gasPrice: message.gasPrice ?? 0n,
+      gasLimit: message.gasLimit ?? 0n,
+      from: message.from
+        ? hexToBytes(removeHexPrefix(message.from))
+        : hexToBytes(this.signer.getAddress(this.shardId).slice(2)),
+      to: message.to ? hexToBytes(message.to.slice(2)) : Uint8Array.from([]),
+      value: message.value,
+      data: message.data ?? Uint8Array.from([]),
+    };
+    console.log("raw msg", rawMsgFormat);
+    const hash = SszMessageSchema.hashTreeRoot(rawMsgFormat);
+    const signature = this.signer.sign(hash);
+
+    const byteRepresenation = SszSignedMessageSchema.serialize({
+      ...rawMsgFormat,
+      signature: signature.signature,
+    });
+    return {
+      bytes: byteRepresenation,
+      hash: SszSignedMessageSchema.hashTreeRoot({
+        ...rawMsgFormat,
+        signature: signature.signature,
+      }),
+    };
   }
 
   /**
@@ -88,41 +131,10 @@ class WalletClient extends PublicClient {
     const preparedMsg = await this.prepareMessage(message);
     shouldValidate && assertIsValidMessage(preparedMsg);
 
-    const signedMessage = this.signMessage(preparedMsg, {
-      shouldValidate: false,
-    });
+    const signedMessage = await this.encodeMessage(preparedMsg);
 
-    return await this.sendRawMessage(addHexPrefix(toHex(signedMessage)));
-  }
-
-  /**
-   * signMessage signs a message with the signer.
-   * @param message - The message to sign.
-   * @param options - The options to sign a message.
-   * @returns The signed message as Uint8Array.
-   */
-  public signMessage(
-    message: IMessage,
-    { shouldValidate = true } = {} as ISignMessageOptions,
-  ): Uint8Array {
-    shouldValidate && assertIsValidMessage(message);
-
-    invariant(
-      this.signer !== undefined,
-      "Signer is required to sign a message. Please provide a signer in the constructor or use sendRawMessage method.",
-    );
-
-    const serializedMessage = messageToSsz(message);
-
-    invariant(
-      serializedMessage !== undefined,
-      "Serialized message is required to sign a message.",
-    );
-
-    return signedMessageToSsz({
-      ...message,
-      ...this.signer.sign(serializedMessage),
-    });
+    await this.sendRawMessage(addHexPrefix(toHex(signedMessage.bytes)));
+    return signedMessage.hash;
   }
 
   /**
@@ -139,19 +151,33 @@ class WalletClient extends PublicClient {
    * const contract = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
    * const hash = await client.deployContract(contract);
    */
-  public async deployContract(
-    { deployData, ...restData }: IDeployContractData,
-    { shouldValidate = true }: IDeployContractOptions = {},
-  ): Promise<Uint8Array> {
-    const hash = await this.sendMessage(
-      {
-        data: prepareDeployData(deployData),
-        value: 0n,
-        to: emptyAddress,
-        ...restData,
-      },
-      { shouldValidate },
-    );
+  public async deployContract({
+    deployData,
+    ...restData
+  }: IDeployContractData): Promise<Uint8Array> {
+    const seqno =
+      restData.seqno ??
+      (await this.getMessageCount(
+        this.signer.getAddress(this.shardId),
+        "latest",
+      ));
+
+    const { hash, bytes } = await this.encodeMessage({
+      data: prepareDeployData({
+        seqno: deployData.seqno ?? seqno,
+        shardId: deployData.shardId ?? this.shardId,
+        bytecode: deployData.bytecode,
+        pubkey: deployData.pubkey,
+      }),
+      value: 0n,
+      to: emptyAddress,
+      from: restData.from ?? this.signer.getAddress(this.shardId),
+      gasPrice: restData.gasPrice ?? (await this.getGasPrice()),
+      gasLimit: restData.gasLimit ?? 100_000n,
+      seqno,
+    });
+
+    await this.sendRawMessage(addHexPrefix(toHex(bytes)));
 
     // in the future we want to use subscribe method to get the receipt
     // for now it is simple short polling

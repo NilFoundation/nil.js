@@ -1,5 +1,10 @@
-import type { Hex } from "@noble/curves/abstract/utils";
-import type { IBlock, IReceipt } from "../index.js";
+import { type Hex, bytesToHex } from "@noble/curves/abstract/utils";
+import {
+  type IBlock,
+  type IReceipt,
+  addHexPrefix,
+  hexToBigInt,
+} from "../index.js";
 import type { IAddress } from "../signers/types/IAddress.js";
 import { BaseClient } from "./BaseClient.js";
 import type { IPublicClientConfig } from "./types/ClientConfigs.js";
@@ -151,12 +156,14 @@ class PublicClient extends BaseClient {
    *
    */
   public async getMessageCount(address: IAddress, blockNumberOrHash: string) {
-    const res = await this.request<number>({
+    console.log("adress", address);
+    const res = await this.request<string>({
       method: "eth_getTransactionCount",
-      params: [this.shardId, address, blockNumberOrHash],
+      params: [address, blockNumberOrHash],
     });
+    console.log("res", res, blockNumberOrHash);
 
-    return res;
+    return Number.parseInt(res.slice(2), 16);
   }
 
   /**
@@ -174,12 +181,13 @@ class PublicClient extends BaseClient {
    * const balance = await client.getBalance(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
    */
   public async getBalance(address: IAddress, blockNumberOrHash: Hex) {
-    const res = await this.request<Uint8Array>({
+    const hexAddress = addHexPrefix(address);
+    const res = await this.request<`0x${string}`>({
       method: "eth_getBalance",
-      params: [this.shardId, address, blockNumberOrHash],
+      params: [hexAddress, blockNumberOrHash],
     });
 
-    return res;
+    return hexToBigInt(res);
   }
 
   /**
@@ -195,10 +203,10 @@ class PublicClient extends BaseClient {
    *
    * const message = await client.getMessageByHash(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
-  public async getMessageByHash(hash: Hex) {
+  public async getMessageByHash(hash: Hex, shardId?: number) {
     const res = await this.request<Uint8Array>({
       method: "eth_getInMessageByHash",
-      params: [this.shardId, hash],
+      params: [shardId ?? this.shardId, hash],
     });
 
     return res;
@@ -217,13 +225,18 @@ class PublicClient extends BaseClient {
    *
    * const receipt = await client.getMessageReceiptByHash(1, Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
-  public async getMessageReceiptByHash(hash: Hex) {
-    const res = await this.request<IReceipt>({
-      method: "eth_getInMessageReceipt",
-      params: [this.shardId, hash],
-    });
+  public async getMessageReceiptByHash(hash: Hex, shardId?: number) {
+    if (typeof hash === "string") {
+      return this.request<IReceipt>({
+        method: "eth_getInMessageReceipt",
+        params: [shardId ?? this.shardId, addHexPrefix(hash)],
+      });
+    }
 
-    return res;
+    return this.request<IReceipt>({
+      method: "eth_getInMessageReceipt",
+      params: [shardId ?? this.shardId, addHexPrefix(bytesToHex(hash))],
+    });
   }
 
   /**
@@ -253,7 +266,7 @@ class PublicClient extends BaseClient {
    * @returns The gas price.
    */
   public async getGasPrice(): Promise<bigint> {
-    const stubGasPrice = BigInt(10000000000);
+    const stubGasPrice = BigInt(1);
 
     return stubGasPrice;
   }

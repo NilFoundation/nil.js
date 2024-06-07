@@ -1,16 +1,16 @@
 import { defaultAddress } from "../../test/mocks/address.js";
-import { bytecode as precompiledContractBytecode } from "../../test/mocks/contracts/simpleStorage/bytecode.js";
+import { bytecode } from "../../test/mocks/contracts/simpleStorage/bytecode.js";
 import { testEnv } from "../../test/testEnv.js";
-import {
-  HttpTransport,
-  type IMessage,
-  LocalKeySigner,
-  addHexPrefix,
-} from "../index.js";
+import { HttpTransport, LocalKeySigner, addHexPrefix } from "../index.js";
 import { WalletClient } from "./WalletClient.js";
+import type { ISendMessage } from "./types/ISendMessage.js";
+
+const signer = new LocalKeySigner({
+  privateKey: testEnv.localPrivKey,
+});
 
 const client = new WalletClient({
-  shardId: 0,
+  shardId: 1,
   signer: new LocalKeySigner({
     privateKey: testEnv.localPrivKey,
   }),
@@ -19,26 +19,19 @@ const client = new WalletClient({
   }),
 });
 
-test("prepareMessage", async () => {
-  const message = {
-    to: addHexPrefix(defaultAddress),
-    seqno: 0,
-  };
-
-  const preparedMessage = await client.prepareMessage(message as IMessage);
-
-  expect(preparedMessage.from).toBeDefined();
-  expect(preparedMessage.gasPrice).toBeDefined();
-});
-
 test("sendMessage", async () => {
-  const message = {
-    to: addHexPrefix(defaultAddress),
+  const address = signer.getAddress(client.getShardId());
+  const message: ISendMessage = {
+    to: `${addHexPrefix(address).slice(0, 40)}10`,
     value: 0n,
-    seqno: 0,
+    gasLimit: 100n,
+    gasPrice: 1n,
   };
 
   const result = await client.sendMessage(message);
+
+  // sleep 4 seconds
+  await new Promise((r) => setTimeout(r, 4000));
 
   expect(result).toBeDefined();
 });
@@ -46,14 +39,26 @@ test("sendMessage", async () => {
 test("deployContract", async () => {
   const result = await client.deployContract({
     deployData: {
-      bytecode: precompiledContractBytecode,
+      bytecode: bytecode,
+      shardId: client.getShardId(),
     },
-    seqno: 10000,
     from: "0x0000186f9cc19906dba062697c3179c1cce6d4c4",
   });
-
   expect(result).toBeDefined();
 });
 
 // TODO: implement this test and this feature
 // test("deployContract with constructor", async () => {
+
+test("message encoding", async () => {
+  const message = {
+    data: new Uint8Array(0),
+    to: addHexPrefix(defaultAddress),
+    value: 0n,
+    seqno: 100,
+  };
+
+  const encodedMessage = await client.encodeMessage(message);
+
+  expect(encodedMessage).toBeDefined();
+});

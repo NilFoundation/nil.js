@@ -9,7 +9,6 @@ interface IMessage {
   seqno: number;
   gasPrice: bigint;
   gasLimit: bigint;
-  internal: boolean;
 }
 
 export type { IMessage };
