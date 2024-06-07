@@ -1,12 +1,9 @@
 import { hexToBytes } from "@noble/curves/abstract/utils";
 import invariant from "tiny-invariant";
 import { prepareDeployData } from "../encoding/deployData.js";
-import { poseidonHash } from "../encoding/poseidon.js";
-import { messageToSsz, signedMessageToSsz } from "../encoding/toSsz.js";
 import {
   type IReceipt,
   addHexPrefix,
-  numberToBytes,
   removeHexPrefix,
   toHex,
 } from "../index.js";
@@ -19,7 +16,6 @@ import type { IWalletClientConfig } from "./types/ClientConfigs.js";
 import type { IDeployContractData } from "./types/IDeployContractData.js";
 import type { ISendMessage } from "./types/ISendMessage.js";
 import type { ISendMessageOptions } from "./types/ISendMessageOptions.js";
-import type { ISignMessageOptions } from "./types/ISignMessageOptions.js";
 
 import type { ValueOf } from "@chainsafe/ssz";
 import { SszMessageSchema, SszSignedMessageSchema } from "../encoding/ssz.js";
@@ -139,39 +135,6 @@ class WalletClient extends PublicClient {
 
     await this.sendRawMessage(addHexPrefix(toHex(signedMessage.bytes)));
     return signedMessage.hash;
-  }
-
-  /**
-   * signMessage signs a message with the signer.
-   * @param message - The message to sign.
-   * @param options - The options to sign a message.
-   * @returns The signed message as Uint8Array.
-   */
-  public signMessage(
-    message: IMessage,
-    { shouldValidate = true } = {} as ISignMessageOptions,
-  ): Uint8Array {
-    shouldValidate && assertIsValidMessage(message);
-
-    invariant(
-      this.signer !== undefined,
-      "Signer is required to sign a message. Please provide a signer in the constructor or use sendRawMessage method.",
-    );
-
-    const serializedMessage = messageToSsz(message);
-
-    const poseidonNum = poseidonHash(serializedMessage);
-    const hashBytes = numberToBytes(poseidonNum, 32);
-
-    invariant(
-      serializedMessage !== undefined,
-      "Serialized message is required to sign a message.",
-    );
-
-    return signedMessageToSsz({
-      ...message,
-      ...this.signer.sign(hashBytes),
-    });
   }
 
   /**
