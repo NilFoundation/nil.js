@@ -1,5 +1,27 @@
 # niljs
 
+## 0.1.4
+
+### Patch Changes
+
+- [#21](https://github.com/NilFoundation/nil.js/pull/21) [`7438aa8`](https://github.com/NilFoundation/nil.js/commit/7438aa8edcd702fa71679d24aa7d6e90b4002c00) Thanks [@KlonD90](https://github.com/KlonD90)! - Fix package.sjon imports section
+
+- [#21](https://github.com/NilFoundation/nil.js/pull/21) [`7438aa8`](https://github.com/NilFoundation/nil.js/commit/7438aa8edcd702fa71679d24aa7d6e90b4002c00) Thanks [@KlonD90](https://github.com/KlonD90)! - Add internal field to the IMessage
+
+- [#21](https://github.com/NilFoundation/nil.js/pull/21) [`7438aa8`](https://github.com/NilFoundation/nil.js/commit/7438aa8edcd702fa71679d24aa7d6e90b4002c00) Thanks [@KlonD90](https://github.com/KlonD90)! - Add pollingInterval and timeout to client configs
+
+- [#20](https://github.com/NilFoundation/nil.js/pull/20) [`373faae`](https://github.com/NilFoundation/nil.js/commit/373faaecd6f0972144d3258fade1682d86749f06) Thanks [@ukorvl](https://github.com/ukorvl)! - Add metamask transport
+
+- [#21](https://github.com/NilFoundation/nil.js/pull/21) [`7438aa8`](https://github.com/NilFoundation/nil.js/commit/7438aa8edcd702fa71679d24aa7d6e90b4002c00) Thanks [@KlonD90](https://github.com/KlonD90)! - Add mnemonic key
+
+- [#17](https://github.com/NilFoundation/nil.js/pull/17) [`aec6f4f`](https://github.com/NilFoundation/nil.js/commit/aec6f4fe73011700724df16fa3e7567ca2e20f86) Thanks [@ukorvl](https://github.com/ukorvl)! - Add @lavamoat/allow-scripts package to run lifecycle scripts manually
+
+- [#21](https://github.com/NilFoundation/nil.js/pull/21) [`7438aa8`](https://github.com/NilFoundation/nil.js/commit/7438aa8edcd702fa71679d24aa7d6e90b4002c00) Thanks [@KlonD90](https://github.com/KlonD90)! - Remove provenance generation on publish cz now repository is private
+
+- [#21](https://github.com/NilFoundation/nil.js/pull/21) [`7438aa8`](https://github.com/NilFoundation/nil.js/commit/7438aa8edcd702fa71679d24aa7d6e90b4002c00) Thanks [@KlonD90](https://github.com/KlonD90)! - Add shardId property to clients
+
+- [#21](https://github.com/NilFoundation/nil.js/pull/21) [`7438aa8`](https://github.com/NilFoundation/nil.js/commit/7438aa8edcd702fa71679d24aa7d6e90b4002c00) Thanks [@KlonD90](https://github.com/KlonD90)! - Remove all Buffer references cz it does not work in the browser
+
 ## 0.1.3
 
 ### Patch Changes
