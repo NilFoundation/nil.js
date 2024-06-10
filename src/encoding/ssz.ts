@@ -16,7 +16,6 @@ import { poseidonHash } from "./poseidon.js";
 
 setHasher({
   digest64(a, b) {
-    // console.log("digest a b", a, b);
     const hash = poseidonHash(concatBytes(a, b));
     const arr = new Uint8Array(32);
     for (let i = 0; i < 32; i++) {
