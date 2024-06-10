@@ -1,5 +1,11 @@
 # niljs
 
+## 0.2.0
+
+### Minor Changes
+
+- [#27](https://github.com/NilFoundation/nil.js/pull/27) [`8edcc59`](https://github.com/NilFoundation/nil.js/commit/8edcc5964335b6f53f3ebec2fd536841e26f0ce3) Thanks [@KlonD90](https://github.com/KlonD90)! - Remove hack that support fastssz sha256 zerohashes
+
 ## 0.1.4
 
 ### Patch Changes
