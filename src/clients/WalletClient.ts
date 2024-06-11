@@ -1,24 +1,26 @@
 import { hexToBytes } from "@noble/curves/abstract/utils";
 import invariant from "tiny-invariant";
 import { prepareDeployData } from "../encoding/deployData.js";
+import { SszMessageSchema, SszSignedMessageSchema } from "../encoding/ssz.js";
 import {
+  type IMessage,
   type IReceipt,
   addHexPrefix,
   removeHexPrefix,
   toHex,
 } from "../index.js";
 import type { ISigner } from "../signers/index.js";
-import type { IMessage } from "../types/IMessage.js";
-import { assertIsValidMessage } from "../utils/assert.js";
+import {
+  assertIsValidDeployData,
+  assertIsValidSendMessageData,
+} from "../utils/assert.js";
 import { PublicClient } from "./PublicClient.js";
 import { emptyAddress } from "./constants.js";
 import type { IWalletClientConfig } from "./types/ClientConfigs.js";
 import type { IDeployContractData } from "./types/IDeployContractData.js";
+import type { IDeployContractOptions } from "./types/IDeployContractOptions.js";
 import type { ISendMessage } from "./types/ISendMessage.js";
 import type { ISendMessageOptions } from "./types/ISendMessageOptions.js";
-
-import type { ValueOf } from "@chainsafe/ssz";
-import { SszMessageSchema, SszSignedMessageSchema } from "../encoding/ssz.js";
 
 /**
  * Wallet client is a class that allows you to interact with the network via JSON-RPC api.
@@ -40,61 +42,56 @@ class WalletClient extends PublicClient {
     this.signer = config.signer;
   }
 
-  public async encodeMessage(message: ISendMessage): Promise<{
+  public async encodeMessage(rawMsgFormat: IMessage): Promise<{
     bytes: Uint8Array;
     hash: Uint8Array;
   }> {
-    const rawMsgFormat: ValueOf<typeof SszMessageSchema> = {
-      internal: false,
-      seqno:
-        message.seqno ??
-        (await this.getMessageCount(
-          this.signer.getAddress(this.shardId),
-          "latest",
-        )),
-      gasPrice: message.gasPrice ?? 0n,
-      gasLimit: message.gasLimit ?? 0n,
-      from: message.from
-        ? hexToBytes(removeHexPrefix(message.from))
-        : hexToBytes(this.signer.getAddress(this.shardId).slice(2)),
-      to: message.to ? hexToBytes(message.to.slice(2)) : Uint8Array.from([]),
-      value: message.value,
-      data: message.data ?? Uint8Array.from([]),
-    };
-    console.log("raw msg", rawMsgFormat);
-    const hash = SszMessageSchema.hashTreeRoot(rawMsgFormat);
-    const signature = this.signer.sign(hash);
+    const hashMessageUnsigned = SszMessageSchema.hashTreeRoot(rawMsgFormat);
 
-    const byteRepresenation = SszSignedMessageSchema.serialize({
+    const { signature } = this.signer.sign(hashMessageUnsigned);
+
+    const bytes = SszSignedMessageSchema.serialize({
       ...rawMsgFormat,
-      signature: signature.signature,
+      signature,
     });
-    return {
-      bytes: byteRepresenation,
-      hash: SszSignedMessageSchema.hashTreeRoot({
-        ...rawMsgFormat,
-        signature: signature.signature,
-      }),
-    };
+
+    const hash = SszSignedMessageSchema.hashTreeRoot({
+      ...rawMsgFormat,
+      signature,
+    });
+
+    return { bytes, hash };
   }
 
   /**
-   * prepareMessage prepares a message to send.
+   * populateMessage prepares a message to send.
    * @param message - The message to send.
    * @returns The prepared message.
    */
-  public async prepareMessage(message: ISendMessage): Promise<IMessage> {
+  public async populateMessage({
+    to,
+    from,
+    data,
+    seqno: userSeqno,
+    gasPrice: userGasPrice,
+    gasLimit: userGasLimit,
+    ...restMessage
+  }: ISendMessage): Promise<IMessage> {
     const finalMsg = {
-      ...message,
-      from: message.from ? message.from : this.signer.getAddress(this.shardId),
-      data: message.data ?? Uint8Array.from([]),
+      ...restMessage,
+      to: to ? hexToBytes(removeHexPrefix(to)) : Uint8Array.from([]),
+      from: from
+        ? hexToBytes(removeHexPrefix(from))
+        : hexToBytes(removeHexPrefix(this.signer.getAddress(this.shardId))),
+      data: data ?? Uint8Array.from([]),
       internal: false,
     };
 
     const promises = [
-      message.seqno ?? this.getMessageCount(finalMsg.from, "latest"),
-      message.gasPrice ?? this.getGasPrice(),
-      message.gasLimit ?? this.estimateGasLimit(),
+      userSeqno ??
+        this.getMessageCount(this.signer.getAddress(this.shardId), "latest"),
+      userGasPrice ?? this.getGasPrice(),
+      userGasLimit ?? this.estimateGasLimit(),
     ] as const;
 
     const [seqno, gasPrice, gasLimit] = await Promise.all(promises);
@@ -128,12 +125,14 @@ class WalletClient extends PublicClient {
     message: ISendMessage,
     { shouldValidate = true } = {} as ISendMessageOptions,
   ): Promise<Uint8Array> {
-    const preparedMsg = await this.prepareMessage(message);
-    shouldValidate && assertIsValidMessage(preparedMsg);
+    shouldValidate && assertIsValidSendMessageData(message);
+
+    const preparedMsg = await this.populateMessage(message);
 
     const signedMessage = await this.encodeMessage(preparedMsg);
 
     await this.sendRawMessage(addHexPrefix(toHex(signedMessage.bytes)));
+
     return signedMessage.hash;
   }
 
@@ -151,30 +150,40 @@ class WalletClient extends PublicClient {
    * const contract = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
    * const hash = await client.deployContract(contract);
    */
-  public async deployContract({
-    deployData,
-    ...restData
-  }: IDeployContractData): Promise<Uint8Array> {
-    const seqno =
-      restData.seqno ??
-      (await this.getMessageCount(
-        this.signer.getAddress(this.shardId),
-        "latest",
-      ));
-
-    const { hash, bytes } = await this.encodeMessage({
-      data: prepareDeployData({
-        seqno: deployData.seqno ?? seqno,
-        shardId: deployData.shardId ?? this.shardId,
-        bytecode: deployData.bytecode,
-        pubkey: deployData.pubkey,
-      }),
+  public async deployContract(
+    {
+      deployData: { shardId, pubkey, bytecode, seqno },
+      ...restData
+    }: IDeployContractData,
+    { shouldValidate = true }: IDeployContractOptions = {},
+  ): Promise<Uint8Array> {
+    const populatedMesageData = {
       value: 0n,
       to: emptyAddress,
-      from: restData.from ?? this.signer.getAddress(this.shardId),
-      gasPrice: restData.gasPrice ?? (await this.getGasPrice()),
-      gasLimit: restData.gasLimit ?? 100_000n,
-      seqno,
+      ...restData,
+    };
+
+    if (shouldValidate) {
+      assertIsValidSendMessageData(populatedMesageData);
+    }
+
+    const { data, ...populatedMessage } =
+      await this.populateMessage(populatedMesageData);
+
+    const populatedDeployData = {
+      shardId: shardId ?? this.shardId,
+      pubkey,
+      bytecode,
+      seqno: seqno ?? populatedMessage.seqno,
+    };
+
+    if (shouldValidate) {
+      assertIsValidDeployData(populatedDeployData);
+    }
+
+    const { hash, bytes } = await this.encodeMessage({
+      data: prepareDeployData(populatedDeployData),
+      ...populatedMessage,
     });
 
     await this.sendRawMessage(addHexPrefix(toHex(bytes)));

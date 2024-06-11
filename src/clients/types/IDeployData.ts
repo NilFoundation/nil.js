@@ -8,8 +8,17 @@ type IDeployData = {
    * Compiled contract bytecode.
    */
   bytecode: Hex;
+  /**
+   * Shard id.
+   */
   shardId: number;
+  /**
+   * Public key.
+   */
   pubkey?: Hex;
+  /**
+   * Sequence number.
+   */
   seqno?: number;
 };
 

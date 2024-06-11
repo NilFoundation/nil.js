@@ -11,12 +11,23 @@ const signer = new LocalKeySigner({
 
 const client = new WalletClient({
   shardId: 1,
-  signer: new LocalKeySigner({
-    privateKey: testEnv.localPrivKey,
-  }),
+  signer,
   transport: new HttpTransport({
     endpoint: testEnv.endpoint,
   }),
+});
+
+test("populateMessage", async () => {
+  const message = {
+    to: addHexPrefix(defaultAddress),
+    seqno: 0,
+    value: 0n,
+  };
+
+  const preparedMessage = await client.populateMessage(message);
+
+  expect(preparedMessage.from).toBeDefined();
+  expect(preparedMessage.gasPrice).toBeDefined();
 });
 
 test("sendMessage", async () => {
@@ -30,9 +41,6 @@ test("sendMessage", async () => {
 
   const result = await client.sendMessage(message);
 
-  // sleep 4 seconds
-  await new Promise((r) => setTimeout(r, 4000));
-
   expect(result).toBeDefined();
 });
 
@@ -44,13 +52,11 @@ test("deployContract", async () => {
     },
     from: "0x0000186f9cc19906dba062697c3179c1cce6d4c4",
   });
+
   expect(result).toBeDefined();
 });
 
-// TODO: implement this test and this feature
-// test("deployContract with constructor", async () => {
-
-test("message encoding", async () => {
+test("encodeMessage", async () => {
   const message = {
     data: new Uint8Array(0),
     to: addHexPrefix(defaultAddress),
@@ -58,7 +64,8 @@ test("message encoding", async () => {
     seqno: 100,
   };
 
-  const encodedMessage = await client.encodeMessage(message);
+  const preparedMessage = await client.populateMessage(message);
+  const encodedMessage = await client.encodeMessage(preparedMessage);
 
   expect(encodedMessage).toBeDefined();
 });
