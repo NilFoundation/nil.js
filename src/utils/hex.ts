@@ -20,12 +20,12 @@ const isHexString = (value: Hex): value is Hex => {
  * @param hex hex-string
  * @returns format: base16-string
  */
-const removeHexPrefix = (hex: Hex): string => {
-  if (typeof hex !== "string") {
-    throw new Error("Expected hex to be a string");
+const removeHexPrefix = <T extends Hex>(hex: T): T => {
+  if (typeof hex === "string") {
+    return (hex.startsWith("0x") ? hex.slice(2) : hex) as T;
   }
 
-  return hex.startsWith("0x") ? hex.slice(2) : hex;
+  return hex;
 };
 
 /**

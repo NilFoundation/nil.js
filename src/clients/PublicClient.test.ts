@@ -1,5 +1,4 @@
 import { defaultAddress } from "../../test/mocks/address.js";
-import { rawMsg } from "../../test/mocks/message.js";
 import { testEnv } from "../../test/testEnv.js";
 import { HttpTransport, addHexPrefix } from "../index.js";
 import { PublicClient } from "./PublicClient.js";
@@ -86,12 +85,6 @@ test("getMessageReceiptByHash", async ({ expect }) => {
   );
 
   expect(receipt).toBeDefined();
-});
-
-test("sendRawMessage", async ({ expect }) => {
-  const hash = await client.sendRawMessage(rawMsg);
-
-  expect(hash).toBeDefined();
 });
 
 test("getGasPrice", async ({ expect }) => {

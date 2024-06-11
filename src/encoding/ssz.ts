@@ -52,7 +52,7 @@ const Bytes65 = new ByteVectorType(65);
 /**
  * SSZ schema for a message object. It includes all the fields of a message object.
  */
-export const SszMessageSchema = new ContainerType({
+const SszMessageSchema = new ContainerType({
   internal: basicTypes.Bool,
   seqno: basicTypes.Uint64,
   gasPrice: basicTypes.UintBn256,
@@ -66,14 +66,19 @@ export const SszMessageSchema = new ContainerType({
 /**
  * SSZ schema for a signed message object. It includes all the fields of a signed message object.
  */
-export const SszSignedMessageSchema = new ContainerType({
+const SszSignedMessageSchema = new ContainerType({
   ...SszMessageSchema.fields,
   signature: Bytes65,
 });
 
-export const SszDeployMessageSchema = new ContainerType({
+/**
+ * SSZ schema for a deploy message object. It includes all the fields of a deploy message object.
+ */
+const SszDeployMessageSchema = new ContainerType({
   shardId: basicTypes.Uint32,
   seqno: basicTypes.Uint64,
   publicKey: Bytes33,
   code: new ByteListType(24576),
 });
+
+export { SszMessageSchema, SszSignedMessageSchema, SszDeployMessageSchema };

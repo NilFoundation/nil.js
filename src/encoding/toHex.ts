@@ -1,5 +1,4 @@
-import { numberToHexUnpadded } from "@noble/curves/abstract/utils";
-import { bytesToHex } from "./fromBytes.js";
+import { bytesToHex, numberToHexUnpadded } from "@noble/curves/abstract/utils";
 
 /**
  * Convert a string to a hex string.

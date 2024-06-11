@@ -16,6 +16,7 @@
     "skipLibCheck": true,
     "noEmitOnError": true,
     "types": ["vitest/globals"],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "useUnknownInCatchVariables": false
   }
 }

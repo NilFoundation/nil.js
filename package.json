@@ -34,7 +34,7 @@
     "prepare": "npx simple-git-hooks",
     "format": "biome format .",
     "lint": "biome check .",
-    "biome:fix": "biome check --apply .",
+    "biome:fix": "biome check --write .",
     "changeset": "changeset",
     "changeset:publish": "changeset publish",
     "git-hooks:update": "git config core.hooksPath .git/hooks/ && rm -rf .git/hooks && npx --no-install simple-git-hooks",

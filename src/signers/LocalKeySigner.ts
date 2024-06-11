@@ -51,19 +51,9 @@ class LocalKeySigner implements ISigner {
   }
 
   public sign(data: Uint8Array): ISignature {
-    console.log("data", data);
-    console.log("sign", this.privateKey);
     const signature = secp256k1.sign(data, removeHexPrefix(this.privateKey));
-
     const { r, s, recovery } = signature;
-    console.log("r", r.toString(16));
-    console.log("r bytes", numberToBytesBE(r, 32));
-    console.log("s", s.toString(16));
-    console.log("s bytes", numberToBytesBE(s, 32));
-    console.log("recovery", recovery);
-    // 1
-    // 1 0 LE
-    // 0 1
+
     return {
       signature: concatBytes(
         numberToBytesBE(r, 32),

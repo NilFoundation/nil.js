@@ -1,9 +1,10 @@
 import type { Hex } from "@noble/curves/abstract/utils";
 import invariant from "tiny-invariant";
-//import { masterShardId } from "../clients/constants.js"; TODO - uncomment
+import { masterShardId } from "../clients/constants.js";
+import type { IDeployData } from "../clients/types/IDeployData.js";
+import type { ISendMessage } from "../clients/types/ISendMessage.js";
 import { type IBlock, isValidBlock } from "../index.js";
 import type { IPrivateKey } from "../signers/index.js";
-import type { IMessage } from "../types/IMessage.js";
 import { isAddress } from "./address.js";
 import { isHexString } from "./hex.js";
 
@@ -50,21 +51,84 @@ const assertIsValidPrivateKey = (
 };
 
 /**
- * Checks if the value is a valid message. If the value is a valid message, it returns nothing.
- * @throws Will throw an error if the value is not a valid message.
- * @param message - The message to validate.
+ * Checks if the data to send message is valid. If the message is valid, it returns nothing.
+ * @throws Will throw an error if the value is not a valid data to send message.
+ * @param sendMessage - The data to validate.
+ * @param message - The message to throw if the data is invalid.
  */
-const assertIsValidMessage = (message: IMessage) => {
-  const { gasPrice, to } = message;
+const assertIsValidSendMessageData = (
+  sendMessage: ISendMessage,
+  message?: string,
+) => {
+  const { gasPrice, gasLimit, to, from, seqno, value } = sendMessage;
   invariant(
     typeof to === "string" && isAddress(to),
-    `Expected a valid 'to' address but got ${to}`,
+    message ?? `Expected a valid 'to' address but got ${to}`,
   );
+
   invariant(
-    (typeof gasPrice === "number" || typeof gasPrice === "bigint") &&
-      gasPrice > 0,
-    `Expected a valid 'gasPrice' but got ${gasPrice}`,
+    typeof value === "bigint" && value >= 0,
+    message ?? `Expected a valid 'value' but got ${value}`,
   );
+
+  if (from !== undefined) {
+    invariant(
+      typeof from === "string" && isAddress(from),
+      message ?? `Expected a valid 'from' address but got ${from}`,
+    );
+  }
+
+  if (gasPrice !== undefined) {
+    invariant(
+      (typeof gasPrice === "number" || typeof gasPrice === "bigint") &&
+        gasPrice > 0,
+      message ?? `Expected a valid 'gasPrice' but got ${gasPrice}`,
+    );
+  }
+
+  if (gasLimit !== undefined) {
+    invariant(
+      (typeof gasLimit === "number" || typeof gasLimit === "bigint") &&
+        gasLimit > 0,
+      message ?? `Expected a valid 'gasLimit' but got ${gasLimit}`,
+    );
+  }
+
+  if (seqno !== undefined) {
+    invariant(
+      seqno >= 0,
+      message ?? `Expected a valid 'seqno' but got ${seqno}`,
+    );
+  }
+};
+
+/**
+ * Checks if the data to deploy contract is valid. If the data is valid, it returns nothing.
+ * @throws Will throw an error if the value is not a valid data to deploy contract.
+ * @param deployData - The data to validate.
+ * @param message - The message to throw if the data is invalid.
+ */
+const assertIsValidDeployData = (
+  deployContractData: IDeployData,
+  message?: string,
+) => {
+  const { seqno, pubkey, shardId } = deployContractData;
+
+  if (seqno !== undefined) {
+    invariant(
+      seqno >= 0,
+      message ?? `Expected a valid 'seqno' but got ${seqno}`,
+    );
+  }
+
+  if (pubkey !== undefined) {
+    invariant(
+      typeof pubkey === "string" || pubkey instanceof Uint8Array,
+      message ?? `Expected a valid 'pubkey' but got ${pubkey}`,
+    );
+  }
+
+  assertIsValidShardId(shardId, message);
 };
 
 /**
@@ -98,8 +162,10 @@ const assertIsValidBlock = (block: IBlock, message?: string): void => {
  */
 const assertIsValidShardId = (shardId: number, message?: string): void => {
   invariant(
-    Number.isInteger(shardId) && shardId >= 0 && shardId < 2 ** 16,
-    //shardId !== masterShardId, // TODO: uncomment
+    Number.isInteger(shardId) &&
+      shardId >= 0 &&
+      shardId < 2 ** 16 &&
+      shardId !== masterShardId,
     message ?? `Expected a valid shard id but got ${shardId}`,
   );
 };
@@ -108,8 +174,9 @@ export {
   assertIsBuffer,
   assertIsHexString,
   assertIsValidPrivateKey,
-  assertIsValidMessage,
+  assertIsValidSendMessageData,
   assertIsAddress,
   assertIsValidBlock,
   assertIsValidShardId,
+  assertIsValidDeployData,
 };
