@@ -1,5 +1,11 @@
 # niljs
 
+## 0.2.2
+
+### Patch Changes
+
+- [#33](https://github.com/NilFoundation/nil.js/pull/33) [`89a0e3c`](https://github.com/NilFoundation/nil.js/commit/89a0e3c4617fbb79dac29311dda526e1c09b3a37) Thanks [@KlonD90](https://github.com/KlonD90)! - fix export types
+
 ## 0.2.1
 
 ### Patch Changes
