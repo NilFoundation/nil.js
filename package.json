@@ -20,6 +20,7 @@
   "types": "dist/niljs.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/niljs.d.ts",
       "import": "./dist/niljs.esm.js",
       "require": "./dist/niljs.cjs"
     }
