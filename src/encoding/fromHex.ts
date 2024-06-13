@@ -1,5 +1,5 @@
 import type { Hex } from "@noble/curves/abstract/utils";
-import { addHexPrefix } from "../index.js";
+import { addHexPrefix } from "../utils/hex.js";
 
 /**
  * Convert a hex string to a number.

@@ -3,9 +3,10 @@ import invariant from "tiny-invariant";
 import { masterShardId } from "../clients/constants.js";
 import type { IDeployData } from "../clients/types/IDeployData.js";
 import type { ISendMessage } from "../clients/types/ISendMessage.js";
-import { type IBlock, isValidBlock } from "../index.js";
 import type { IPrivateKey } from "../signers/index.js";
+import type { IBlock } from "../types/IBlock.js";
 import { isAddress } from "./address.js";
+import { isValidBlock } from "./block.js";
 import { isHexString } from "./hex.js";
 
 /**

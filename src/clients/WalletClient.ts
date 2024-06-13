@@ -2,18 +2,15 @@ import { hexToBytes } from "@noble/curves/abstract/utils";
 import invariant from "tiny-invariant";
 import { prepareDeployData } from "../encoding/deployData.js";
 import { SszMessageSchema, SszSignedMessageSchema } from "../encoding/ssz.js";
-import {
-  type IMessage,
-  type IReceipt,
-  addHexPrefix,
-  removeHexPrefix,
-  toHex,
-} from "../index.js";
+import { toHex } from "../encoding/toHex.js";
 import type { ISigner } from "../signers/index.js";
+import type { IMessage } from "../types/IMessage.js";
+import type { IReceipt } from "../types/IReceipt.js";
 import {
   assertIsValidDeployData,
   assertIsValidSendMessageData,
 } from "../utils/assert.js";
+import { addHexPrefix, removeHexPrefix } from "../utils/hex.js";
 import { PublicClient } from "./PublicClient.js";
 import { emptyAddress } from "./constants.js";
 import type { IWalletClientConfig } from "./types/ClientConfigs.js";

@@ -5,12 +5,12 @@ import {
 } from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import invariant from "tiny-invariant";
-import { addHexPrefix, removeHexPrefix } from "../index.js";
 import {
   assertIsAddress,
   assertIsHexString,
   assertIsValidPrivateKey,
 } from "../utils/assert.js";
+import { addHexPrefix, removeHexPrefix } from "../utils/hex.js";
 import { privateKeyFromPhrase } from "./mnemonic.js";
 import { getAddressFromPublicKey, getPublicKey } from "./publicKey.js";
 import type { IAddress } from "./types/IAddress.js";

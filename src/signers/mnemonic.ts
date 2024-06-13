@@ -1,5 +1,6 @@
 import { mnemonicToSeedSync } from "@scure/bip39";
-import { addHexPrefix, toHex } from "../index.js";
+import { toHex } from "../encoding/toHex.js";
+import { addHexPrefix } from "../utils/hex.js";
 import type { IPrivateKey } from "./index.js";
 
 /**

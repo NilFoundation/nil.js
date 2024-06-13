@@ -1,5 +1,7 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
-import { type IPrivateKey, addHexPrefix, toHex } from "../index.js";
+import { toHex } from "../encoding/toHex.js";
+import { addHexPrefix } from "../utils/hex.js";
+import type { IPrivateKey } from "./types/IPrivateKey.js";
 
 /**
  * Generate a new private key.
