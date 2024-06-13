@@ -1,14 +1,10 @@
 import { type Hex, bytesToHex } from "@noble/curves/abstract/utils";
+import { hexToBigInt, hexToNumber } from "../encoding/index.js";
 import { BlockNotFoundError } from "../errors/rpcErrors.js";
-import {
-  type IBlock,
-  type IReceipt,
-  addHexPrefix,
-  hexToBigInt,
-  hexToNumber,
-  removeHexPrefix,
-} from "../index.js";
 import type { IAddress } from "../signers/types/IAddress.js";
+import type { IBlock } from "../types/IBlock.js";
+import type { IReceipt } from "../types/IReceipt.js";
+import { addHexPrefix, removeHexPrefix } from "../utils/hex.js";
 import { BaseClient } from "./BaseClient.js";
 import type { IPublicClientConfig } from "./types/ClientConfigs.js";
 

@@ -1,12 +1,9 @@
 import { type Hex, bytesToHex, hexToBytes } from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { poseidonHash } from "../encoding/poseidon.js";
-import {
-  addHexPrefix,
-  assertIsValidShardId,
-  removeHexPrefix,
-  toHex,
-} from "../index.js";
+import { toHex } from "../encoding/toHex.js";
+import { assertIsValidShardId } from "../utils/assert.js";
+import { addHexPrefix, removeHexPrefix } from "../utils/hex.js";
 import type { IAddress } from "./types/IAddress.js";
 import type { IPrivateKey } from "./types/IPrivateKey.js";
 
