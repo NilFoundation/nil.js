@@ -1,5 +1,15 @@
 # niljs
 
+## 0.2.1
+
+### Patch Changes
+
+- [#30](https://github.com/NilFoundation/nil.js/pull/30) [`8578302`](https://github.com/NilFoundation/nil.js/commit/85783024fc6493d045c8474615349836c2df6497) Thanks [@KlonD90](https://github.com/KlonD90)! - fix circular deps
+
+- [#23](https://github.com/NilFoundation/nil.js/pull/23) [`f27b10a`](https://github.com/NilFoundation/nil.js/commit/f27b10a8ef784731a4948de72ae7e4604b20e74d) Thanks [@ukorvl](https://github.com/ukorvl)! - Allow to pass shardId to public methods
+
+- [#23](https://github.com/NilFoundation/nil.js/pull/23) [`f27b10a`](https://github.com/NilFoundation/nil.js/commit/f27b10a8ef784731a4948de72ae7e4604b20e74d) Thanks [@ukorvl](https://github.com/ukorvl)! - Fix all unit tests
+
 ## 0.2.0
 
 ### Minor Changes
