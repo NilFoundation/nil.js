@@ -1,11 +1,7 @@
-import type { Hex } from "@noble/curves/abstract/utils";
-import type { IAddress } from "./IAddress.js";
-import type { ISignature } from "./ISignature.js";
-
 /**
  * Interface for the Signer class
  */
-abstract class ISigner {
+interface ISigner {
   /**
    * Signs the data.
    * Accepts valid data as an argument and returns the signature.
@@ -14,14 +10,7 @@ abstract class ISigner {
    * const data = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
    * const recoveredSignature = signer.sign(data);
    */
-  abstract sign(data: Uint8Array): ISignature;
-  /**
-   * Returns the public key.
-   * @returns The public key.
-   * @example
-   * const publicKey = signer.getPublicKey();
-   */
-  abstract getPublicKey(): Hex;
+  sign(data: Uint8Array): Promise<Uint8Array>;
   /**
    * Returns the address.
    * @param shardId - The shard id.
@@ -29,7 +18,7 @@ abstract class ISigner {
    * @example
    * const address = signer.getAddress();
    */
-  abstract getAddress(shardId: number): IAddress;
+  getAddress(params: unknown): Promise<Uint8Array>;
 }
 
-export { ISigner };
+export type { ISigner };

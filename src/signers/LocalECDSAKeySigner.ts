@@ -15,7 +15,6 @@ import { privateKeyFromPhrase } from "./mnemonic.js";
 import { getAddressFromPublicKey, getPublicKey } from "./publicKey.js";
 import type { IAddress } from "./types/IAddress.js";
 import type { ILocalKeySignerConfig } from "./types/ILocalKeySignerConfig.js";
-import type { ISignature } from "./types/ISignature.js";
 import type { ISigner } from "./types/ISigner.js";
 
 /**
@@ -28,7 +27,7 @@ import type { ISigner } from "./types/ISigner.js";
  * const privateKey = genratePrivateKey();
  * const signer = new LocalKeySigner({ privateKey });
  */
-class LocalKeySigner implements ISigner {
+class LocalECDSAKeySigner implements ISigner {
   private privateKey;
   private publicKey?: Hex = undefined;
   private address?: IAddress = undefined;
@@ -50,17 +49,15 @@ class LocalKeySigner implements ISigner {
     this.privateKey = privKey;
   }
 
-  public sign(data: Uint8Array): ISignature {
+  public async sign(data: Uint8Array): Promise<Uint8Array> {
     const signature = secp256k1.sign(data, removeHexPrefix(this.privateKey));
     const { r, s, recovery } = signature;
 
-    return {
-      signature: concatBytes(
-        numberToBytesBE(r, 32),
-        numberToBytesBE(s, 32),
-        numberToBytesBE(recovery, 1),
-      ),
-    };
+    return concatBytes(
+      numberToBytesBE(r, 32),
+      numberToBytesBE(s, 32),
+      numberToBytesBE(recovery, 1),
+    );
   }
 
   public getPublicKey() {
@@ -75,7 +72,7 @@ class LocalKeySigner implements ISigner {
     return this.publicKey;
   }
 
-  public getAddress(shardId: number) {
+  public async getAddress(shardId: number) {
     if (this.address) {
       return this.address;
     }
@@ -87,4 +84,4 @@ class LocalKeySigner implements ISigner {
   }
 }
 
-export { LocalKeySigner };
+export { LocalECDSAKeySigner };

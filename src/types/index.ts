@@ -5,3 +5,4 @@ export * from "./IReceipt.js";
 export * from "./ILog.js";
 export * from "./IDeployData.js";
 export * from "./window.js";
+export * from "./ExternalMessage.js";

@@ -1,5 +1,6 @@
-import type { Hex } from "@noble/curves/abstract/utils";
+import { numberToBytesLE, type Hex } from "@noble/curves/abstract/utils";
 import type { IAddress } from "../signers/types/IAddress.js";
+import { poseidonHash } from "../encoding/poseidon.js";
 
 const ADDRESS_REGEX = /^0x[0-9a-fA-F]{40}$/;
 
@@ -24,4 +25,30 @@ const getShardIdFromAddress = (address: Hex): number => {
   return (address[0] << 8) | address[1];
 };
 
-export { isAddress, getShardIdFromAddress };
+const calculateAddress = (
+  shardId: number,
+  code: Uint8Array,
+  salt: Uint8Array,
+): Uint8Array => {
+  if (!Number.isInteger(shardId)) {
+    throw new Error("Shard ID must be an integer");
+  }
+  if (salt.length !== 32) {
+    throw new Error("Salt must be 32 bytes");
+  }
+  if (code.length === 0) {
+    throw new Error("Code must not be empty");
+  }
+  if (shardId < 0 || shardId > 0xffff) {
+    throw new Error("Invalid shard ID");
+  }
+  const bytes = new Uint8Array(code.length + 32);
+  bytes.set(code);
+  bytes.set(salt, code.length);
+  const hash = poseidonHash(bytes);
+  const shardPart = numberToBytesLE(shardId, 2);
+  const hashPart = numberToBytesLE(hash, 18);
+  return new Uint8Array([...shardPart, ...hashPart]);
+};
+
+export { isAddress, getShardIdFromAddress, calculateAddress };

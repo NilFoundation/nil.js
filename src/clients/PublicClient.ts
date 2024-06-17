@@ -307,6 +307,18 @@ class PublicClient extends BaseClient {
 
     return stubGasLimit;
   }
+
+  /**
+   * chainId returns the chain id.
+   * @returns The chain id.
+   */
+  public async chainId(): Promise<number> {
+    const res = await this.request<string>({
+      method: "eth_chainId",
+      params: [],
+    });
+    return hexToNumber(removeHexPrefix(res));
+  }
 }
 
 export { PublicClient };
