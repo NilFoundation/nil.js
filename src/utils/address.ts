@@ -1,6 +1,6 @@
-import { numberToBytesLE, type Hex } from "@noble/curves/abstract/utils";
-import type { IAddress } from "../signers/types/IAddress.js";
+import { type Hex, numberToBytesLE } from "@noble/curves/abstract/utils";
 import { poseidonHash } from "../encoding/poseidon.js";
+import type { IAddress } from "../signers/types/IAddress.js";
 
 const ADDRESS_REGEX = /^0x[0-9a-fA-F]{40}$/;
 

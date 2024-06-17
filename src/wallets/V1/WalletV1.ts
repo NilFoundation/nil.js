@@ -1,11 +1,11 @@
 import { hexToBytes } from "@noble/curves/abstract/utils";
+import type { Address } from "abitype";
+import { bytesToHex, encodeDeployData, encodeFunctionData } from "viem";
 import type { PublicClient } from "../../clients/PublicClient.js";
 import type { ISigner } from "../../signers/index.js";
-import type { Address } from "abitype";
-import { externalMessageEncode } from "../../utils/messageEncoding.js";
 import { calculateAddress, isAddress } from "../../utils/address.js";
+import { externalMessageEncode } from "../../utils/messageEncoding.js";
 import { code } from "./Wallet-bin.js";
-import { bytesToHex, encodeDeployData, encodeFunctionData } from "viem";
 import WalletAbi from "./Wallet.abi.json";
 
 export type WalletV1Config = {
