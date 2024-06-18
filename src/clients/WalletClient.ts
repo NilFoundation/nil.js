@@ -34,8 +34,10 @@ import type { ISendMessageOptions } from "./types/ISendMessageOptions.js";
  */
 class WalletClient extends PublicClient {
   private signer: ISigner;
+  private shardId: number;
   constructor(config: IWalletClientConfig) {
     super(config);
+    this.shardId = config.shardId;
     this.signer = config.signer;
   }
 
@@ -188,7 +190,7 @@ class WalletClient extends PublicClient {
     // in the future we want to use subscribe method to get the receipt
     // for now it is simple short polling
     const receipt = await this.transport.startPollingUntil<IReceipt>(
-      () => this.getMessageReceiptByHash(hash),
+      () => this.getMessageReceiptByHash(shardId, hash),
       (receipt) => Boolean(receipt),
     );
 

@@ -14,6 +14,7 @@ import {
 import { concatBytes } from "@noble/curves/abstract/utils";
 import { poseidonHash } from "./poseidon.js";
 
+// IMPORTANT: the following code should be here because chainsafe/ssz is using by default SHA256 and it lazy used SHA256 for hashing instead of Poseidon
 setHasher({
   digest64(a, b) {
     const hash = poseidonHash(concatBytes(a, b));

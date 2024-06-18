@@ -31,7 +31,7 @@ test("populateMessage", async () => {
 });
 
 test("sendMessage", async () => {
-  const address = signer.getAddress(client.getShardId());
+  const address = signer.getAddress(1);
   const message: ISendMessage = {
     to: `${addHexPrefix(address).slice(0, 40)}10`,
     value: 0n,
@@ -48,7 +48,7 @@ test("deployContract", async () => {
   const result = await client.deployContract({
     deployData: {
       bytecode: bytecode,
-      shardId: client.getShardId(),
+      shardId: 1,
     },
     from: "0x0000186f9cc19906dba062697c3179c1cce6d4c4",
   });

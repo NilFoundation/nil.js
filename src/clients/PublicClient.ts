@@ -27,9 +27,9 @@ class PublicClient extends BaseClient {
 
   /**
    * getBlockByNumber returns the block by the block number.
+   * @param shardId - The shard id.
    * @param number - The block number.
    * @param fullTx - The flag to include full transactions.
-   * @param shardId - The shard id.
    * @returns The block.
    * @example
    import { PublicClient } from '@nilfoundation/niljs';
@@ -38,13 +38,9 @@ class PublicClient extends BaseClient {
    *  endpoint: 'http://127.0.0.1:8529'
    * })
    *
-   * const block = await client.getBlockByNumber(1);
+   * const block = await client.getBlockByNumber(1, 1);
    */
-  public async getBlockByHash(
-    hash: Hex,
-    fullTx = false,
-    shardId = this.shardId,
-  ) {
+  public async getBlockByHash(shardId: number, hash: Hex, fullTx = false) {
     try {
       return await this.request<IBlock>({
         method: "eth_getBlockByHash",
@@ -60,9 +56,9 @@ class PublicClient extends BaseClient {
 
   /**
    * getBlockByNumber returns the block by the block number.
+   * @param shardId - The shard id.
    * @param blockNumber - The block number.
    * @param fullTx - The flag to include full transactions.
-   * @param shardId - The shard id.
    * @returns The block.
    * @example
    import { PublicClient } from '@nilfoundation/niljs';
@@ -71,12 +67,12 @@ class PublicClient extends BaseClient {
    *  endpoint: 'http://127.0.0.1:8529'
    * })
    *
-   * const block = await client.getBlockByNumber('0x1');
+   * const block = await client.getBlockByNumber(1, '0x1');
    */
   public async getBlockByNumber(
+    shardId: number,
     blockNumber: string,
     fullTx = false,
-    shardId = this.shardId,
   ) {
     try {
       return await this.request<IBlock>({
@@ -106,8 +102,8 @@ class PublicClient extends BaseClient {
    *
    */
   public async getBlockMessageCountByNumber(
+    shardId: number,
     blockNumber: string,
-    shardId = this.shardId,
   ) {
     const res = await this.request<number>({
       method: "eth_getBlockTransactionCountByNumber",
@@ -131,7 +127,7 @@ class PublicClient extends BaseClient {
    *
    * const count = await client.getBlockMessageCountByHash(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
-  public async getBlockMessageCountByHash(hash: Hex, shardId = this.shardId) {
+  public async getBlockMessageCountByHash(shardId: number, hash: Hex) {
     const res = await this.request<number>({
       method: "eth_getBlockTransactionCountByHash",
       params: [shardId, hash],
@@ -155,14 +151,10 @@ class PublicClient extends BaseClient {
    *
    * const code = await client.getCode(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
    */
-  public async getCode(
-    address: IAddress,
-    blockNumberOrHash: Hex,
-    shardId = this.shardId,
-  ) {
+  public async getCode(address: IAddress, blockNumberOrHash: Hex) {
     const res = await this.request<Uint8Array>({
       method: "eth_getCode",
-      params: [shardId, address, blockNumberOrHash],
+      params: [address, blockNumberOrHash],
     });
 
     return res;
@@ -229,7 +221,7 @@ class PublicClient extends BaseClient {
    *
    * const message = await client.getMessageByHash(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
-  public async getMessageByHash(hash: Hex, shardId = this.shardId) {
+  public async getMessageByHash(shardId: number, hash: Hex) {
     const res = await this.request<Uint8Array>({
       method: "eth_getInMessageByHash",
       params: [shardId, hash],
@@ -240,8 +232,8 @@ class PublicClient extends BaseClient {
 
   /**
    * getMessageReceiptByHash returns the message receipt by the hash.
-   * @param hash - The hash.
    * @param shardId - The shard id.
+   * @param hash - The hash.
    * @returns The message receipt.
    * @example
    * import { PublicClient } from '@nilfoundation/niljs';
@@ -252,7 +244,7 @@ class PublicClient extends BaseClient {
    *
    * const receipt = await client.getMessageReceiptByHash(1, Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
-  public async getMessageReceiptByHash(hash: Hex, shardId = this.shardId) {
+  public async getMessageReceiptByHash(shardId: number, hash: Hex) {
     const res = await this.request<IReceipt>({
       method: "eth_getInMessageReceipt",
       params: [

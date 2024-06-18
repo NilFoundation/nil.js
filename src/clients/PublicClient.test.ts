@@ -7,11 +7,11 @@ const client = new PublicClient({
   transport: new HttpTransport({
     endpoint: testEnv.endpoint,
   }),
-  shardId: 1,
 });
 
 test("getBlockByHash", async ({ expect }) => {
   const block = await client.getBlockByHash(
+    1,
     "0x158c4be17b52b92dc03cef7e8cd9cec64c6413175df3cce9f6ae1fb0d12106fa",
   );
 
@@ -19,7 +19,7 @@ test("getBlockByHash", async ({ expect }) => {
 });
 
 test("getBlockByNumber", async ({ expect }) => {
-  const block = await client.getBlockByNumber("0x1b4");
+  const block = await client.getBlockByNumber(1, "0x1b4");
 
   expect(block).toBeDefined();
 });
@@ -73,6 +73,7 @@ test("getBalance", async ({ expect }) => {
 
 test("getMessageByHash", async ({ expect }) => {
   const message = await client.getMessageByHash(
+    1,
     "0x158c4be17b52b92dc03cef7e8cd9cec64c6413175df3cce9f6ae1fb0d12106fa",
   );
 
@@ -81,6 +82,7 @@ test("getMessageByHash", async ({ expect }) => {
 
 test("getMessageReceiptByHash", async ({ expect }) => {
   const receipt = await client.getMessageReceiptByHash(
+    1,
     "0x158c4be17b52b92dc03cef7e8cd9cec64c6413175df3cce9f6ae1fb0d12106fa",
   );
 

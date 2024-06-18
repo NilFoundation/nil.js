@@ -6,12 +6,6 @@ import type { ISigner } from "../../signers/types/ISigner.js";
  */
 type IClientBaseConfig = {
   /**
-   * The shardId is used to specify the shard in every call.
-   * @example 0
-   * @default 0
-   */
-  shardId: number;
-  /**
    * The transport is used to send requests to the network.
    * @example
    * import { MetaMaskTransport } from '@nilfoundation/niljs';
@@ -26,6 +20,11 @@ type IClientBaseConfig = {
 type IPublicClientConfig = IClientBaseConfig;
 
 type IWalletClientConfig = IClientBaseConfig & {
+  /**
+   * The shardId is used to specify the shard in every call.
+   * @example 0
+   */
+  shardId: number;
   /**
    * The instance of signer is used to sign messages and messages.
    * If not included in the config, messages should be signed before passing to the client.
