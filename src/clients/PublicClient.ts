@@ -249,7 +249,7 @@ class PublicClient extends BaseClient {
    * const receipt = await client.getMessageReceiptByHash(1, Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
   public async getMessageReceiptByHash(hash: Hex, shardId = this.shardId) {
-    const res = await this.request<IReceipt>({
+    const res = await this.request<IReceipt | null>({
       method: "eth_getInMessageReceipt",
       params: [
         shardId,

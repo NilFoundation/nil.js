@@ -9,9 +9,9 @@ export class Faucet {
   constructor(client: PublicClient) {
     this.client = client;
   }
-  async withdrawTo(address: Hex, value = 1000000000000000000n) {
-    const [seqno, chainId] = await Promise.all([
-      this.client.getMessageCount(Faucet.address, "latest"),
+  async withdrawTo(address: Hex, value = 1000000000000000000n, seqno?: number) {
+    const [refinedSeqno, chainId] = await Promise.all([
+      seqno ?? this.client.getMessageCount(Faucet.address, "latest"),
       this.client.chainId(),
     ]);
     const calldata = encodeFunctionData({
@@ -23,7 +23,7 @@ export class Faucet {
       isDeploy: false,
       to: hexToBytes(Faucet.address),
       chainId,
-      seqno,
+      seqno: refinedSeqno,
       data: hexToBytes(calldata),
       authData: new Uint8Array(0),
     });

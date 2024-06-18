@@ -1,5 +1,6 @@
 // Message is abstraction layer that will suit people who want to write their own Wallet
 
+import { bytesToHex } from "viem";
 import { SszMessageSchema, SszSignedMessageSchema } from "./encoding/ssz.js";
 import type { ISigner } from "./signers/index.js";
 import type { ExternalMessage } from "./types/ExternalMessage.js";
@@ -80,6 +81,7 @@ export class ExternalMessageEnvelope {
   }
   // return signature
   public async sign(signer: ISigner): Promise<Uint8Array> {
+    console.log("signing hash", bytesToHex(this.signingHash()));
     return signer.sign(this.signingHash());
   }
   public async updateAuthdata(signer: ISigner): Promise<Uint8Array> {

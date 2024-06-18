@@ -31,10 +31,19 @@ export type CallParams = {
 
 export type SendMessageParams = {
   to: Address | Uint8Array;
-  data: Uint8Array;
+  refundTo?: Address | Uint8Array;
+  data?: Uint8Array;
   value: bigint;
   gas: bigint;
   deploy?: boolean;
+  seqno?: number;
+};
+
+export type SendSyncMessageParams = {
+  to: Address | Uint8Array;
+  data?: Uint8Array;
+  value: bigint;
+  gas: bigint;
   seqno?: number;
 };
 
@@ -91,8 +100,14 @@ export class WalletV1 {
     this.shardId = shardId;
     this.client = client;
     if (typeof salt === "bigint") {
-      this.salt = hexToBytes(`0x${salt.toString(16).padStart(64, "0")}`);
+      this.salt = hexToBytes(`0x${salt.toString(16).padStart(64, "0")}`).slice(
+        0,
+        32,
+      );
     } else {
+      if (salt.length !== 32) {
+        throw new Error("Salt must be 32 bytes");
+      }
       this.salt = salt;
     }
     this.signer = signer;
@@ -170,48 +185,118 @@ export class WalletV1 {
   }
   async sendMessage({
     to,
+    refundTo,
     data,
     deploy,
     seqno,
     gas,
     value,
   }: SendMessageParams) {
+    let hexTo: `0x${string}`;
     if (typeof to === "string" && !isAddress(to)) {
       throw new Error("Invalid address");
     }
+    if (typeof to === "string") {
+      hexTo = to;
+    } else {
+      hexTo = bytesToHex(to);
+    }
+    let hexRefundTo: `0x${string}`;
+    if (refundTo) {
+      if (typeof refundTo === "string" && !isAddress(refundTo)) {
+        throw new Error("Invalid refund address");
+      }
+      if (typeof refundTo === "string") {
+        hexRefundTo = refundTo;
+      } else {
+        hexRefundTo = bytesToHex(refundTo);
+      }
+    } else {
+      hexRefundTo = this.getAddressHex();
+    }
+
     const callData = encodeFunctionData({
       abi: WalletAbi,
-      functionName: "sendMessage",
-      args: [to, gas, deploy, value, data],
+      functionName: "asyncCall",
+      args: [
+        hexTo,
+        hexRefundTo,
+        gas,
+        !!deploy,
+        value,
+        data ? bytesToHex(data) : "0x",
+      ],
     });
     const { hash } = await this.requestToWallet({
       data: hexToBytes(callData),
       deploy: false,
       seqno,
     });
-    return hash;
+    return bytesToHex(hash);
   }
   async sendRawInternalMessage(rawMessage: Uint8Array) {
     const { hash } = await this.requestToWallet({
       data: rawMessage,
       deploy: false,
     });
-    return hash;
+    return bytesToHex(hash);
   }
   async deployContract(
     bytecode: Uint8Array,
-    salt: Uint8Array,
+    salt: Uint8Array | bigint,
     shardId: number,
     gas: bigint,
   ) {
-    const bytecodeWithSalt = new Uint8Array([...bytecode, ...salt]);
-    await this.sendMessage({
-      to: calculateAddress(shardId, bytecode, salt),
+    let byteSalt: Uint8Array;
+    if (typeof salt === "bigint") {
+      byteSalt = hexToBytes(`0x${salt.toString(16).padStart(64, "0")}`).slice(
+        0,
+        32,
+      );
+    } else {
+      if (salt.length !== 32) {
+        throw new Error("Salt must be 32 bytes");
+      }
+      byteSalt = salt;
+    }
+    const bytecodeWithSalt = new Uint8Array([...bytecode, ...byteSalt]);
+    return this.sendMessage({
+      to: calculateAddress(shardId, bytecode, byteSalt),
+      refundTo: this.getAddressHex(),
       data: bytecodeWithSalt,
       value: 0n,
       deploy: true,
       gas,
     });
+  }
+  async syncSendMessage({
+    to,
+    data,
+    seqno,
+    gas,
+    value,
+  }: SendSyncMessageParams) {
+    let hexTo: `0x${string}`;
+    if (typeof to === "string" && !isAddress(to)) {
+      throw new Error("Invalid address");
+    }
+    if (typeof to === "string") {
+      hexTo = to;
+    } else {
+      hexTo = bytesToHex(to);
+    }
+
+    const callData = encodeFunctionData({
+      abi: WalletAbi,
+      functionName: "syncCall",
+      args: [hexTo, gas, value, data ? bytesToHex(data) : "0x"],
+    });
+    const { hash } = await this.requestToWallet({
+      data: hexToBytes(callData),
+      deploy: false,
+      seqno,
+    });
+    return bytesToHex(hash);
   }
   async getBalance() {
     return this.client.getBalance(this.getAddressHex(), "latest");

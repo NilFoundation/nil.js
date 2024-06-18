@@ -5,21 +5,22 @@
     "type": "constructor"
   },
   {
-    "inputs": [{ "internalType": "bytes", "name": "message", "type": "bytes" }],
-    "name": "send",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
     "inputs": [
       { "internalType": "address", "name": "dst", "type": "address" },
+      { "internalType": "address", "name": "refundTo", "type": "address" },
       { "internalType": "uint256", "name": "gas", "type": "uint256" },
       { "internalType": "bool", "name": "deploy", "type": "bool" },
       { "internalType": "uint256", "name": "value", "type": "uint256" },
       { "internalType": "bytes", "name": "call_data", "type": "bytes" }
     ],
-    "name": "sendMessage",
+    "name": "asyncCall",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes", "name": "message", "type": "bytes" }],
+    "name": "send",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
