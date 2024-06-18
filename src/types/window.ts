@@ -12,3 +12,5 @@ declare global {
     ethereum?: Eip1193Provider;
   }
 }
+
+export type { Eip1193Provider };
