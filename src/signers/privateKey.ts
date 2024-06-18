@@ -1,6 +1,5 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { toHex } from "../encoding/toHex.js";
-import { addHexPrefix } from "../utils/hex.js";
 import type { IPrivateKey } from "./types/IPrivateKey.js";
 
 /**
@@ -10,6 +9,6 @@ import type { IPrivateKey } from "./types/IPrivateKey.js";
  * const privateKey = generatePrivateKey();
  */
 const generateRandomPrivateKey = (): IPrivateKey =>
-  addHexPrefix(toHex(secp256k1.utils.randomPrivateKey())) as IPrivateKey;
+  toHex(secp256k1.utils.randomPrivateKey());
 
 export { generateRandomPrivateKey };

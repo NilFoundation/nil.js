@@ -18,6 +18,14 @@ interface ISigner {
    * @example
    * const address = signer.getAddress();
    */
+  getPublicKey(params: unknown): Promise<Uint8Array>;
+  /**
+   * Returns the address.
+   * @param shardId - The shard id.
+   * @returns The address.
+   * @example
+   * const address = signer.getAddress();
+   */
   getAddress(params: unknown): Promise<Uint8Array>;
 }
 

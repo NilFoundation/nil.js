@@ -1,6 +1,11 @@
-import { hexToBytes } from "@noble/curves/abstract/utils";
 import type { Address } from "abitype";
-import { bytesToHex, encodeDeployData, encodeFunctionData } from "viem";
+import {
+  type Hex,
+  bytesToHex,
+  encodeDeployData,
+  encodeFunctionData,
+  hexToBytes,
+} from "viem";
 import type { PublicClient } from "../../clients/PublicClient.js";
 import type { ISigner } from "../../signers/index.js";
 import { calculateAddress, isAddress } from "../../utils/address.js";
@@ -9,12 +14,12 @@ import { code } from "./Wallet-bin.js";
 import WalletAbi from "./Wallet.abi.json";
 
 export type WalletV1Config = {
-  pubkey: Uint8Array;
+  pubkey: Uint8Array | Hex;
   shardId: number;
   client: PublicClient;
   signer: ISigner;
   salt: Uint8Array | bigint;
-  address: string | Uint8Array;
+  address: Hex | Uint8Array;
   calculatedAddress?: boolean;
 };
 
@@ -40,7 +45,34 @@ export type RequestParams = {
 };
 
 export class WalletV1 {
-  static code = hexToBytes(code.slice(2));
+  static code = hexToBytes(code);
+  static calculateWalletAddress({
+    pubKey,
+    shardId,
+    salt,
+  }: {
+    pubKey: Uint8Array;
+    shardId: number;
+    salt: Uint8Array | bigint;
+  }) {
+    const constructorData = hexToBytes(
+      encodeDeployData({
+        abi: WalletAbi,
+        bytecode: bytesToHex(WalletV1.code),
+        args: [bytesToHex(pubKey)],
+      }),
+    );
+    let byteSalt: Uint8Array;
+    if (typeof salt === "bigint") {
+      byteSalt = hexToBytes(`0x${salt.toString(16).padStart(64, "0")}`).slice(
+        0,
+        32,
+      );
+    } else {
+      byteSalt = salt;
+    }
+    return calculateAddress(shardId, constructorData, byteSalt);
+  }
   pubkey: Uint8Array;
   shardId: number;
   client: PublicClient;
@@ -55,17 +87,20 @@ export class WalletV1 {
     salt,
     signer,
   }: WalletV1Config) {
-    this.pubkey = pubkey;
+    this.pubkey = typeof pubkey === "string" ? hexToBytes(pubkey) : pubkey;
     this.shardId = shardId;
     this.client = client;
     if (typeof salt === "bigint") {
-      this.salt = hexToBytes(salt.toString(16).padStart(64, "0"));
+      this.salt = hexToBytes(`0x${salt.toString(16).padStart(64, "0")}`);
     } else {
       this.salt = salt;
     }
     this.signer = signer;
-    this.address = typeof address === "string" ? hexToBytes(address) : address;
-    if (this.address.length !== 32) {
+    this.address =
+      typeof address === "string" && isAddress(address)
+        ? hexToBytes(address)
+        : address;
+    if (this.address.length !== 20) {
       throw new Error("Invalid address length");
     }
   }
@@ -87,8 +122,8 @@ export class WalletV1 {
       encodeDeployData({
         abi: WalletAbi,
         bytecode: bytesToHex(WalletV1.code),
-        args: [this.pubkey],
-      }).slice(2),
+        args: [bytesToHex(this.pubkey)],
+      }),
     );
     const bytecode = new Uint8Array([...constructorData, ...this.salt]);
     const { hash } = await this.requestToWallet({
@@ -150,7 +185,7 @@ export class WalletV1 {
       args: [to, gas, deploy, value, data],
     });
     const { hash } = await this.requestToWallet({
-      data: hexToBytes(callData.slice(2)),
+      data: hexToBytes(callData),
       deploy: false,
       seqno,
     });
@@ -170,7 +205,7 @@ export class WalletV1 {
     gas: bigint,
   ) {
     const bytecodeWithSalt = new Uint8Array([...bytecode, ...salt]);
-    this.sendMessage({
+    await this.sendMessage({
       to: calculateAddress(shardId, bytecode, salt),
       data: bytecodeWithSalt,
       value: 0n,
@@ -178,8 +213,6 @@ export class WalletV1 {
       gas,
     });
   }
-  sendCall({ to, data, value }: CallParams) {}
-  prepareExternalMessage() {}
   async getBalance() {
     return this.client.getBalance(this.getAddressHex(), "latest");
   }

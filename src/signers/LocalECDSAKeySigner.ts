@@ -1,15 +1,8 @@
-import {
-  type Hex,
-  concatBytes,
-  numberToBytesBE,
-} from "@noble/curves/abstract/utils";
+import { concatBytes, numberToBytesBE } from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import invariant from "tiny-invariant";
-import {
-  assertIsAddress,
-  assertIsHexString,
-  assertIsValidPrivateKey,
-} from "../utils/assert.js";
+import { type Hex, bytesToHex, hexToBytes } from "viem";
+import { assertIsValidPrivateKey } from "../utils/assert.js";
 import { addHexPrefix, removeHexPrefix } from "../utils/hex.js";
 import { privateKeyFromPhrase } from "./mnemonic.js";
 import { getAddressFromPublicKey, getPublicKey } from "./publicKey.js";
@@ -28,7 +21,7 @@ import type { ISigner } from "./types/ISigner.js";
  * const signer = new LocalKeySigner({ privateKey });
  */
 class LocalECDSAKeySigner implements ISigner {
-  private privateKey;
+  private privateKey: Hex;
   private publicKey?: Hex = undefined;
   private address?: IAddress = undefined;
 
@@ -60,27 +53,27 @@ class LocalECDSAKeySigner implements ISigner {
     );
   }
 
-  public getPublicKey() {
+  public async getPublicKey() {
     if (this.publicKey) {
-      return this.publicKey;
+      return hexToBytes(this.publicKey);
     }
 
     const publicKey = getPublicKey(this.privateKey, true);
-    assertIsHexString(publicKey);
 
     this.publicKey = publicKey;
-    return this.publicKey;
+    return hexToBytes(this.publicKey);
   }
 
   public async getAddress(shardId: number) {
     if (this.address) {
-      return this.address;
+      return hexToBytes(this.address);
     }
 
-    this.address = getAddressFromPublicKey(this.getPublicKey(), shardId);
-    assertIsAddress(this.address);
+    const pubKey = await this.getPublicKey();
 
-    return this.address;
+    this.address = getAddressFromPublicKey(bytesToHex(pubKey), shardId);
+
+    return hexToBytes(this.address);
   }
 }
 

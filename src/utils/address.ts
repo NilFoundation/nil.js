@@ -1,4 +1,4 @@
-import { type Hex, numberToBytesLE } from "@noble/curves/abstract/utils";
+import { type Hex, numberToBytesBE } from "@noble/curves/abstract/utils";
 import { poseidonHash } from "../encoding/poseidon.js";
 import type { IAddress } from "../signers/types/IAddress.js";
 
@@ -46,9 +46,10 @@ const calculateAddress = (
   bytes.set(code);
   bytes.set(salt, code.length);
   const hash = poseidonHash(bytes);
-  const shardPart = numberToBytesLE(shardId, 2);
-  const hashPart = numberToBytesLE(hash, 18);
-  return new Uint8Array([...shardPart, ...hashPart]);
+  const shardPart = numberToBytesBE(shardId, 2);
+  const hashPart = numberToBytesBE(hash, 32);
+
+  return new Uint8Array([...shardPart, ...hashPart.slice(14)]);
 };
 
 export { isAddress, getShardIdFromAddress, calculateAddress };

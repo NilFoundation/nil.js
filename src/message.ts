@@ -37,9 +37,6 @@ export class ExternalMessageEnvelope {
     });
   }
   public hash(): Uint8Array {
-    if (this.authData.length === 0) {
-      throw new Error("AuthData is empty");
-    }
     return SszSignedMessageSchema.hashTreeRoot({
       seqno: this.seqno,
       chainId: this.chainId,
@@ -50,9 +47,6 @@ export class ExternalMessageEnvelope {
     });
   }
   public signingHash(): Uint8Array {
-    if (this.authData.length === 0) {
-      throw new Error("AuthData is empty");
-    }
     return SszMessageSchema.hashTreeRoot({
       seqno: this.seqno,
       chainId: this.chainId,

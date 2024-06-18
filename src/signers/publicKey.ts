@@ -1,5 +1,6 @@
-import { type Hex, bytesToHex, hexToBytes } from "@noble/curves/abstract/utils";
+import { bytesToHex, hexToBytes } from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
+import type { Hex } from "viem";
 import { poseidonHash } from "../encoding/poseidon.js";
 import { toHex } from "../encoding/toHex.js";
 import { assertIsValidShardId } from "../utils/assert.js";
