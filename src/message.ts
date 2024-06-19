@@ -1,9 +1,10 @@
-// Message is abstraction layer that will suit people who want to write their own Wallet
-
 import { bytesToHex } from "viem";
 import { SszMessageSchema, SszSignedMessageSchema } from "./encoding/ssz.js";
 import type { ISigner } from "./signers/index.js";
 import type { ExternalMessage } from "./types/ExternalMessage.js";
+import type { IDeployData } from "./types/IDeployData.js";
+import { prepareDeployPart } from "./utils/messageEncoding.js";
+import type { PublicClient } from "./clients/PublicClient.js";
 
 export class ExternalMessageEnvelope {
   isDeploy: boolean;
@@ -48,6 +49,12 @@ export class ExternalMessageEnvelope {
     });
   }
   public signingHash(): Uint8Array {
+    // print all the fields
+    console.log("seqno", this.seqno);
+    console.log("chainId", this.chainId);
+    console.log("to", this.to);
+    console.log("data", this.data);
+    console.log("isDeploy", this.isDeploy);
     return SszMessageSchema.hashTreeRoot({
       seqno: this.seqno,
       chainId: this.chainId,
@@ -61,6 +68,7 @@ export class ExternalMessageEnvelope {
     hash: Uint8Array;
   }> {
     const signature = await this.sign(signer);
+    console.log("signature", bytesToHex(signature));
     const raw = SszSignedMessageSchema.serialize({
       seqno: this.seqno,
       chainId: this.chainId,
@@ -81,13 +89,34 @@ export class ExternalMessageEnvelope {
   }
   // return signature
   public async sign(signer: ISigner): Promise<Uint8Array> {
-    console.log("signing hash", bytesToHex(this.signingHash()));
+    console.log("signingHash", bytesToHex(this.signingHash()));
     return signer.sign(this.signingHash());
   }
   public async updateAuthdata(signer: ISigner): Promise<Uint8Array> {
     this.authData = await this.sign(signer);
     return this.authData;
   }
+  public hexAddress(): `0x${string}` {
+    return bytesToHex(this.to);
+  }
+  public send(client: PublicClient) {
+    return client.sendRawMessage(this.encode());
+  }
 }
 
 export class InternalMessageEnvelope {}
+
+export const externalDeploymentMessage = (
+  data: IDeployData,
+  chainId: number,
+): ExternalMessageEnvelope => {
+  const { data: deployData, address } = prepareDeployPart(data);
+  return new ExternalMessageEnvelope({
+    isDeploy: true,
+    to: address,
+    chainId,
+    seqno: 0,
+    data: deployData,
+    authData: new Uint8Array(0),
+  });
+};

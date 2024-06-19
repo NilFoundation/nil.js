@@ -6,9 +6,11 @@ import FaucetAbi from "./Faucet.abi.json";
 export class Faucet {
   static address = "0x000100000000000000000000000000000FA00CE7" as const;
   private client: PublicClient;
+
   constructor(client: PublicClient) {
     this.client = client;
   }
+
   async withdrawTo(address: Hex, value = 1000000000000000000n, seqno?: number) {
     const [refinedSeqno, chainId] = await Promise.all([
       seqno ?? this.client.getMessageCount(Faucet.address, "latest"),

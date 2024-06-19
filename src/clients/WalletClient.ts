@@ -1,6 +1,5 @@
 import { hexToBytes } from "@noble/curves/abstract/utils";
 import invariant from "tiny-invariant";
-import { prepareDeployData } from "../encoding/deployData.js";
 import { SszMessageSchema, SszSignedMessageSchema } from "../encoding/ssz.js";
 import { toHex } from "../encoding/toHex.js";
 import type { ISigner } from "../signers/index.js";

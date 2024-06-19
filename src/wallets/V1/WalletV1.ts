@@ -1,15 +1,12 @@
-import type { Address } from "abitype";
-import {
-  type Hex,
-  bytesToHex,
-  encodeDeployData,
-  encodeFunctionData,
-  hexToBytes,
-} from "viem";
+import type { Abi, Address } from "abitype";
+import { type Hex, bytesToHex, encodeFunctionData, hexToBytes } from "viem";
 import type { PublicClient } from "../../clients/PublicClient.js";
 import type { ISigner } from "../../signers/index.js";
-import { calculateAddress, isAddress } from "../../utils/address.js";
-import { externalMessageEncode } from "../../utils/messageEncoding.js";
+import { isAddress } from "../../utils/address.js";
+import {
+  externalMessageEncode,
+  prepareDeployPart,
+} from "../../utils/messageEncoding.js";
 import { code } from "./Wallet-bin.js";
 import WalletAbi from "./Wallet.abi.json";
 
@@ -53,8 +50,20 @@ export type RequestParams = {
   seqno?: number;
 };
 
+export type DeployParams = {
+  bytecode: Uint8Array;
+  abi?: Abi;
+  args?: unknown[];
+  salt: Uint8Array | bigint;
+  shardId: number;
+  gas: bigint;
+  value?: bigint;
+};
+
 export class WalletV1 {
   static code = hexToBytes(code);
+  static abi = WalletAbi as Abi;
+
   static calculateWalletAddress({
     pubKey,
     shardId,
@@ -64,30 +73,23 @@ export class WalletV1 {
     shardId: number;
     salt: Uint8Array | bigint;
   }) {
-    const constructorData = hexToBytes(
-      encodeDeployData({
-        abi: WalletAbi,
-        bytecode: bytesToHex(WalletV1.code),
-        args: [bytesToHex(pubKey)],
-      }),
-    );
-    let byteSalt: Uint8Array;
-    if (typeof salt === "bigint") {
-      byteSalt = hexToBytes(`0x${salt.toString(16).padStart(64, "0")}`).slice(
-        0,
-        32,
-      );
-    } else {
-      byteSalt = salt;
-    }
-    return calculateAddress(shardId, constructorData, byteSalt);
+    const { address } = prepareDeployPart({
+      abi: WalletAbi as Abi,
+      bytecode: WalletV1.code,
+      args: [bytesToHex(pubKey)],
+      salt: salt,
+      shard: shardId,
+    });
+    return address;
   }
+
   pubkey: Uint8Array;
   shardId: number;
   client: PublicClient;
   salt: Uint8Array;
   signer: ISigner;
   address: Uint8Array;
+
   constructor({
     pubkey,
     shardId,
@@ -97,6 +99,9 @@ export class WalletV1 {
     signer,
   }: WalletV1Config) {
     this.pubkey = typeof pubkey === "string" ? hexToBytes(pubkey) : pubkey;
+    if (this.pubkey.length !== 33) {
+      throw new Error("Invalid pubkey length");
+    }
     this.shardId = shardId;
     this.client = client;
     if (typeof salt === "bigint") {
@@ -119,9 +124,11 @@ export class WalletV1 {
       throw new Error("Invalid address length");
     }
   }
+
   getAddressHex() {
     return bytesToHex(this.address);
   }
+
   async selfDeploy(waitTillConfirmation = true) {
     const [balance, code] = await Promise.all([
       await this.client.getBalance(this.getAddressHex(), "latest"),
@@ -133,16 +140,16 @@ export class WalletV1 {
       throw new Error("Contract already deployed");
     }
     if (balance <= 0n) throw new Error("Insufficient balance");
-    const constructorData = hexToBytes(
-      encodeDeployData({
-        abi: WalletAbi,
-        bytecode: bytesToHex(WalletV1.code),
-        args: [bytesToHex(this.pubkey)],
-      }),
-    );
-    const bytecode = new Uint8Array([...constructorData, ...this.salt]);
+
+    const { data } = prepareDeployPart({
+      abi: WalletAbi as Abi,
+      bytecode: WalletV1.code,
+      args: [bytesToHex(this.pubkey)],
+      salt: this.salt,
+      shard: this.shardId,
+    });
     const { hash } = await this.requestToWallet({
-      data: bytecode,
+      data: data,
       deploy: true,
       seqno: 0,
     });
@@ -157,10 +164,12 @@ export class WalletV1 {
     }
     return hash;
   }
+
   async checkDeploymentStatus(): Promise<boolean> {
     const code = await this.client.getCode(this.getAddressHex(), "latest");
     return code.length > 0;
   }
+
   async requestToWallet(
     requestParams: RequestParams,
     send = true,
@@ -183,6 +192,7 @@ export class WalletV1 {
     if (send) await this.client.sendRawMessage(encodedMessage.raw);
     return encodedMessage;
   }
+
   async sendMessage({
     to,
     refundTo,
@@ -241,34 +251,37 @@ export class WalletV1 {
     });
     return bytesToHex(hash);
   }
-  async deployContract(
-    bytecode: Uint8Array,
-    salt: Uint8Array | bigint,
-    shardId: number,
-    gas: bigint,
-  ) {
-    let byteSalt: Uint8Array;
-    if (typeof salt === "bigint") {
-      byteSalt = hexToBytes(`0x${salt.toString(16).padStart(64, "0")}`).slice(
-        0,
-        32,
-      );
-    } else {
-      if (salt.length !== 32) {
-        throw new Error("Salt must be 32 bytes");
-      }
-      byteSalt = salt;
-    }
-    const bytecodeWithSalt = new Uint8Array([...bytecode, ...byteSalt]);
-    return this.sendMessage({
-      to: calculateAddress(shardId, bytecode, byteSalt),
+
+  async deployContract({
+    shardId,
+    bytecode,
+    abi,
+    args,
+    salt,
+    value,
+    gas,
+  }: DeployParams) {
+    const { data, address } = prepareDeployPart({
+      shard: shardId,
+      bytecode: bytecode,
+      abi,
+      args,
+      salt,
+    });
+    const hash = await this.sendMessage({
+      to: address,
       refundTo: this.getAddressHex(),
-      data: bytecodeWithSalt,
-      value: 0n,
+      data,
+      value: value ?? 0n,
       deploy: true,
       gas,
     });
+    return {
+      hash,
+      address: bytesToHex(address),
+    };
   }
+
   async syncSendMessage({
     to,
     data,
@@ -298,6 +311,7 @@ export class WalletV1 {
     });
     return bytesToHex(hash);
   }
+
   async getBalance() {
     return this.client.getBalance(this.getAddressHex(), "latest");
   }
