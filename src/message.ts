@@ -1,10 +1,10 @@
 import { bytesToHex } from "viem";
+import type { PublicClient } from "./clients/PublicClient.js";
 import { SszMessageSchema, SszSignedMessageSchema } from "./encoding/ssz.js";
 import type { ISigner } from "./signers/index.js";
 import type { ExternalMessage } from "./types/ExternalMessage.js";
 import type { IDeployData } from "./types/IDeployData.js";
 import { prepareDeployPart } from "./utils/messageEncoding.js";
-import type { PublicClient } from "./clients/PublicClient.js";
 
 export class ExternalMessageEnvelope {
   isDeploy: boolean;

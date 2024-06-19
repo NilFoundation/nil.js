@@ -22,12 +22,12 @@
 // });
 
 import { bytesToHex } from "viem";
+import { PublicClient } from "./clients/PublicClient.js";
 import { Faucet } from "./faucet/Faucet.js";
 import { LocalECDSAKeySigner } from "./signers/LocalECDSAKeySigner.js";
 import { generateRandomPrivateKey } from "./signers/privateKey.js";
 import { HttpTransport } from "./transport/index.js";
 import { WalletV1 } from "./wallets/V1/WalletV1.js";
-import { PublicClient } from "./clients/PublicClient.js";
 
 // console.log(bytesToHex(msg.signingHash()));
 
