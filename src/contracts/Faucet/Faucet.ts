@@ -1,6 +1,6 @@
 import { type Hex, bytesToHex, encodeFunctionData, hexToBytes } from "viem";
-import type { PublicClient } from "../clients/PublicClient.js";
-import { ExternalMessageEnvelope } from "../message.js";
+import type { PublicClient } from "../../clients/PublicClient.js";
+import { ExternalMessageEnvelope } from "../../message.js";
 import FaucetAbi from "./Faucet.abi.json";
 
 export class Faucet {

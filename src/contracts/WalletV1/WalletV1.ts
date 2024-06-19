@@ -1,12 +1,11 @@
 import type { Abi, Address } from "abitype";
 import { type Hex, bytesToHex, encodeFunctionData, hexToBytes } from "viem";
 import type { PublicClient } from "../../clients/PublicClient.js";
+import { prepareDeployPart } from "../../encoding/deployPart.js";
 import type { ISigner } from "../../signers/index.js";
-import { isAddress } from "../../utils/address.js";
-import {
-  externalMessageEncode,
-  prepareDeployPart,
-} from "../../utils/messageEncoding.js";
+import { isAddress, refineAddress } from "../../utils/address.js";
+import { externalMessageEncode } from "../../utils/messageEncoding.js";
+import { refineCompressedPublicKey, refineSalt } from "../../utils/refiners.js";
 import { code } from "./Wallet-bin.js";
 import WalletAbi from "./Wallet.abi.json";
 
@@ -97,32 +96,14 @@ export class WalletV1 {
     client,
     salt,
     signer,
+    calculatedAddress,
   }: WalletV1Config) {
-    this.pubkey = typeof pubkey === "string" ? hexToBytes(pubkey) : pubkey;
-    if (this.pubkey.length !== 33) {
-      throw new Error("Invalid pubkey length");
-    }
+    this.pubkey = refineCompressedPublicKey(pubkey);
     this.shardId = shardId;
     this.client = client;
-    if (typeof salt === "bigint") {
-      this.salt = hexToBytes(`0x${salt.toString(16).padStart(64, "0")}`).slice(
-        0,
-        32,
-      );
-    } else {
-      if (salt.length !== 32) {
-        throw new Error("Salt must be 32 bytes");
-      }
-      this.salt = salt;
-    }
+    this.salt = refineSalt(salt);
     this.signer = signer;
-    this.address =
-      typeof address === "string" && isAddress(address)
-        ? hexToBytes(address)
-        : address;
-    if (this.address.length !== 20) {
-      throw new Error("Invalid address length");
-    }
+    this.address = refineAddress(address);
   }
 
   getAddressHex() {

@@ -1,6 +1,7 @@
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import packageJson from "../package.json" with { type: "json" };
 const esbuild = require("rollup-plugin-esbuild").default;
+import json from "@rollup/plugin-json";
 import { dts } from "rollup-plugin-dts";
 import filesize from "rollup-plugin-filesize";
 import { createBanner, listDependencies } from "./rollupUtils.js";
@@ -23,6 +24,7 @@ const getConfig = ({ outputFile, format }) => ({
       banner: createBanner(packageJson.version, new Date().getFullYear()),
     }),
     filesize(),
+    json(),
   ],
   external: (id) => externalizedDeps.some((dep) => id.includes(dep)),
 });

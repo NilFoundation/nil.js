@@ -1,10 +1,10 @@
 import { bytesToHex } from "viem";
 import type { PublicClient } from "./clients/PublicClient.js";
+import { prepareDeployPart } from "./encoding/deployPart.js";
 import { SszMessageSchema, SszSignedMessageSchema } from "./encoding/ssz.js";
 import type { ISigner } from "./signers/index.js";
 import type { ExternalMessage } from "./types/ExternalMessage.js";
 import type { IDeployData } from "./types/IDeployData.js";
-import { prepareDeployPart } from "./utils/messageEncoding.js";
 
 export class ExternalMessageEnvelope {
   isDeploy: boolean;
@@ -50,11 +50,6 @@ export class ExternalMessageEnvelope {
   }
   public signingHash(): Uint8Array {
     // print all the fields
-    console.log("seqno", this.seqno);
-    console.log("chainId", this.chainId);
-    console.log("to", this.to);
-    console.log("data", this.data);
-    console.log("isDeploy", this.isDeploy);
     return SszMessageSchema.hashTreeRoot({
       seqno: this.seqno,
       chainId: this.chainId,
@@ -68,7 +63,6 @@ export class ExternalMessageEnvelope {
     hash: Uint8Array;
   }> {
     const signature = await this.sign(signer);
-    console.log("signature", bytesToHex(signature));
     const raw = SszSignedMessageSchema.serialize({
       seqno: this.seqno,
       chainId: this.chainId,
@@ -89,7 +83,6 @@ export class ExternalMessageEnvelope {
   }
   // return signature
   public async sign(signer: ISigner): Promise<Uint8Array> {
-    console.log("signingHash", bytesToHex(this.signingHash()));
     return signer.sign(this.signingHash());
   }
   public async updateAuthdata(signer: ISigner): Promise<Uint8Array> {

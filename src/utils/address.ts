@@ -1,4 +1,5 @@
 import { type Hex, numberToBytesBE } from "@noble/curves/abstract/utils";
+import { hexToBytes } from "viem";
 import { poseidonHash } from "../encoding/poseidon.js";
 import type { IAddress } from "../signers/types/IAddress.js";
 
@@ -50,6 +51,22 @@ const calculateAddress = (
   const hashPart = numberToBytesBE(hash, 32);
 
   return new Uint8Array([...shardPart, ...hashPart.slice(14)]);
+};
+
+export const refineAddress = (
+  address: Uint8Array | `0x${string}`,
+): Uint8Array => {
+  if (typeof address === "string") {
+    const bytes = hexToBytes(address);
+    if (bytes.length !== 20) {
+      throw new Error("Invalid address length");
+    }
+    return bytes;
+  }
+  if (address.length !== 20) {
+    throw new Error("Invalid address length");
+  }
+  return address;
 };
 
 export { isAddress, getShardIdFromAddress, calculateAddress };

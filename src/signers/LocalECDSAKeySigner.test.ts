@@ -1,5 +1,5 @@
+import { bytesToHex } from "viem";
 import { accounts } from "../../test/mocks/accounts.js";
-import { removeHexPrefix } from "../index.js";
 import { LocalECDSAKeySigner } from "./LocalECDSAKeySigner.js";
 
 test("getPublicKey", async () => {
@@ -7,9 +7,7 @@ test("getPublicKey", async () => {
   const signer = new LocalECDSAKeySigner({ privateKey });
 
   const publicKey = await signer.getPublicKey();
-  expect(removeHexPrefix(publicKey)).toBe(
-    removeHexPrefix(accounts[0].publicKey),
-  );
+  expect(bytesToHex(publicKey)).toBe(accounts[0].publicKey);
 });
 
 test("getAddress", async () => {
