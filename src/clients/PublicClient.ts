@@ -1,4 +1,5 @@
 import { type Hex, bytesToHex } from "@noble/curves/abstract/utils";
+import { hexToBytes } from "viem";
 import { hexToBigInt, hexToNumber } from "../encoding/index.js";
 import { BlockNotFoundError } from "../errors/rpcErrors.js";
 import type { IAddress } from "../signers/types/IAddress.js";
@@ -155,17 +156,12 @@ class PublicClient extends BaseClient {
    *
    * const code = await client.getCode(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
    */
-  public async getCode(
-    address: IAddress,
-    blockNumberOrHash: Hex,
-    shardId = this.shardId,
-  ) {
-    const res = await this.request<Uint8Array>({
+  public async getCode(address: IAddress, blockNumberOrHash: Hex) {
+    const res = await this.request<`0x${string}`>({
       method: "eth_getCode",
-      params: [shardId, address, blockNumberOrHash],
+      params: [address, blockNumberOrHash],
     });
-
-    return res;
+    return hexToBytes(res);
   }
 
   /**
@@ -253,7 +249,7 @@ class PublicClient extends BaseClient {
    * const receipt = await client.getMessageReceiptByHash(1, Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
   public async getMessageReceiptByHash(hash: Hex, shardId = this.shardId) {
-    const res = await this.request<IReceipt>({
+    const res = await this.request<IReceipt | null>({
       method: "eth_getInMessageReceipt",
       params: [
         shardId,
@@ -279,10 +275,16 @@ class PublicClient extends BaseClient {
    *
    * const message = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
    */
-  public async sendRawMessage(message: Hex) {
+  public async sendRawMessage(message: `0x${string}` | Uint8Array) {
+    let hexMessage: `0x${string}`;
+    if (typeof message !== "string") {
+      hexMessage = `0x${bytesToHex(message)}`;
+    } else {
+      hexMessage = message;
+    }
     const res = await this.request<Uint8Array>({
       method: "eth_sendRawTransaction",
-      params: [message],
+      params: [hexMessage],
     });
 
     return res;
@@ -306,6 +308,18 @@ class PublicClient extends BaseClient {
     const stubGasLimit = BigInt(1000000);
 
     return stubGasLimit;
+  }
+
+  /**
+   * chainId returns the chain id.
+   * @returns The chain id.
+   */
+  public async chainId(): Promise<number> {
+    const res = await this.request<string>({
+      method: "eth_chainId",
+      params: [],
+    });
+    return hexToNumber(removeHexPrefix(res));
   }
 }
 

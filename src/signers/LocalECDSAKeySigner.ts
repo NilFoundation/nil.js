@@ -1,21 +1,13 @@
-import {
-  type Hex,
-  concatBytes,
-  numberToBytesBE,
-} from "@noble/curves/abstract/utils";
+import { concatBytes, numberToBytesBE } from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import invariant from "tiny-invariant";
-import {
-  assertIsAddress,
-  assertIsHexString,
-  assertIsValidPrivateKey,
-} from "../utils/assert.js";
+import { type Hex, bytesToHex, hexToBytes } from "viem";
+import { assertIsValidPrivateKey } from "../utils/assert.js";
 import { addHexPrefix, removeHexPrefix } from "../utils/hex.js";
 import { privateKeyFromPhrase } from "./mnemonic.js";
 import { getAddressFromPublicKey, getPublicKey } from "./publicKey.js";
 import type { IAddress } from "./types/IAddress.js";
 import type { ILocalKeySignerConfig } from "./types/ILocalKeySignerConfig.js";
-import type { ISignature } from "./types/ISignature.js";
 import type { ISigner } from "./types/ISigner.js";
 
 /**
@@ -28,8 +20,8 @@ import type { ISigner } from "./types/ISigner.js";
  * const privateKey = genratePrivateKey();
  * const signer = new LocalKeySigner({ privateKey });
  */
-class LocalKeySigner implements ISigner {
-  private privateKey;
+class LocalECDSAKeySigner implements ISigner {
+  private privateKey: Hex;
   private publicKey?: Hex = undefined;
   private address?: IAddress = undefined;
 
@@ -50,41 +42,39 @@ class LocalKeySigner implements ISigner {
     this.privateKey = privKey;
   }
 
-  public sign(data: Uint8Array): ISignature {
+  public async sign(data: Uint8Array): Promise<Uint8Array> {
     const signature = secp256k1.sign(data, removeHexPrefix(this.privateKey));
     const { r, s, recovery } = signature;
 
-    return {
-      signature: concatBytes(
-        numberToBytesBE(r, 32),
-        numberToBytesBE(s, 32),
-        numberToBytesBE(recovery, 1),
-      ),
-    };
+    return concatBytes(
+      numberToBytesBE(r, 32),
+      numberToBytesBE(s, 32),
+      numberToBytesBE(recovery, 1),
+    );
   }
 
-  public getPublicKey() {
+  public async getPublicKey() {
     if (this.publicKey) {
-      return this.publicKey;
+      return hexToBytes(this.publicKey);
     }
 
     const publicKey = getPublicKey(this.privateKey, true);
-    assertIsHexString(publicKey);
 
     this.publicKey = publicKey;
-    return this.publicKey;
+    return hexToBytes(this.publicKey);
   }
 
-  public getAddress(shardId: number) {
+  public async getAddress(shardId: number) {
     if (this.address) {
-      return this.address;
+      return hexToBytes(this.address);
     }
 
-    this.address = getAddressFromPublicKey(this.getPublicKey(), shardId);
-    assertIsAddress(this.address);
+    const pubKey = await this.getPublicKey();
 
-    return this.address;
+    this.address = getAddressFromPublicKey(bytesToHex(pubKey), shardId);
+
+    return hexToBytes(this.address);
   }
 }
 
-export { LocalKeySigner };
+export { LocalECDSAKeySigner };

@@ -1,5 +1,10 @@
-import { type Hex, bytesToHex, hexToBytes } from "@noble/curves/abstract/utils";
+import {
+  bytesToHex,
+  hexToBytes,
+  numberToBytesBE,
+} from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
+import type { Hex } from "viem";
 import { poseidonHash } from "../encoding/poseidon.js";
 import { toHex } from "../encoding/toHex.js";
 import { assertIsValidShardId } from "../utils/assert.js";
@@ -29,17 +34,15 @@ const getAddressFromPublicKey = (publicKey: Hex, shardId: number): IAddress => {
   assertIsValidShardId(shardId);
   const publickKeyWithoutPrefix = removeHexPrefix(publicKey);
 
-  const shardIdHex = toHex(shardId).padStart(4, "0");
-
   const pubKeyBytes =
     typeof publickKeyWithoutPrefix === "string"
       ? hexToBytes(publickKeyWithoutPrefix)
       : publickKeyWithoutPrefix;
 
   const hash = poseidonHash(pubKeyBytes);
-  const hashHex = toHex(hash).slice(-36);
-
-  return addHexPrefix(shardIdHex + hashHex);
+  const shardPart = numberToBytesBE(shardId, 2);
+  const hashPart = numberToBytesBE(hash, 32);
+  return toHex(new Uint8Array([...shardPart, ...hashPart.slice(14)]));
 };
 
 export { getPublicKey, getAddressFromPublicKey };

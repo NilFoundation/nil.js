@@ -46,39 +46,24 @@ const basicTypes = {
 };
 
 const Bytes20 = new ByteVectorType(20);
-const Bytes33 = new ByteVectorType(33);
-const Bytes65 = new ByteVectorType(65);
 
 /**
  * SSZ schema for a message object. It includes all the fields of a message object.
  */
 const SszMessageSchema = new ContainerType({
-  internal: basicTypes.Bool,
-  seqno: basicTypes.Uint64,
-  gasPrice: basicTypes.UintBn256,
-  gasLimit: basicTypes.UintBn256,
-  from: Bytes20,
+  deploy: basicTypes.Bool,
   to: Bytes20,
-  value: basicTypes.UintBn256,
+  chainId: basicTypes.Uint64,
+  seqno: basicTypes.Uint64,
   data: new ByteListType(24576),
 });
 
 /**
- * SSZ schema for a signed message object. It includes all the fields of a signed message object.
+ * SSZ schema for a message object. It includes all the fields of a message object.
  */
 const SszSignedMessageSchema = new ContainerType({
   ...SszMessageSchema.fields,
-  signature: Bytes65,
+  authData: new ByteListType(256),
 });
 
-/**
- * SSZ schema for a deploy message object. It includes all the fields of a deploy message object.
- */
-const SszDeployMessageSchema = new ContainerType({
-  shardId: basicTypes.Uint32,
-  seqno: basicTypes.Uint64,
-  publicKey: Bytes33,
-  code: new ByteListType(24576),
-});
-
-export { SszMessageSchema, SszSignedMessageSchema, SszDeployMessageSchema };
+export { SszMessageSchema, SszSignedMessageSchema };

@@ -22,24 +22,24 @@ const stringToHex = (str: string): string => {
  */
 const toHex = <T extends string | number | bigint | boolean | Uint8Array>(
   value: T,
-): string => {
+): `0x${string}` => {
   if (typeof value === "string") {
-    return stringToHex(value);
+    return `0x${stringToHex(value)}`;
   }
 
   if (typeof value === "number") {
-    return numberToHexUnpadded(value);
+    return `0x${numberToHexUnpadded(value)}`;
   }
 
   if (typeof value === "bigint") {
-    return numberToHexUnpadded(value);
+    return `0x${numberToHexUnpadded(value)}`;
   }
 
   if (typeof value === "boolean") {
-    return (value ? 1 : 0).toString(16);
+    return `0x${(value ? 1 : 0).toString(16)}`;
   }
 
-  return bytesToHex(value);
+  return `0x${bytesToHex(value)}`;
 };
 
 export { toHex };

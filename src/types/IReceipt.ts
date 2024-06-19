@@ -13,6 +13,7 @@ type IReceipt = {
   blockHash: string;
   blockNumber: bigint;
   msgIndex: bigint;
+  outMessages: string[];
 };
 
 export type { IReceipt };

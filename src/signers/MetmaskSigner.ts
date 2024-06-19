@@ -1,5 +1,4 @@
 import invariant from "tiny-invariant";
-import type { ISignature } from "./types/ISignature.js";
 import type { ISigner } from "./types/ISigner.js";
 
 /**
@@ -27,21 +26,19 @@ class MetaMaskSigner implements ISigner {
     this.provider = window.ethereum;
   }
 
-  public sign(data: Uint8Array): ISignature {
+  public async sign(data: Uint8Array) {
     // mock signature
-    return {
-      signature: new Uint8Array(65),
-    };
+    return new Uint8Array(65);
   }
 
-  public getAddress(): string {
+  public async getAddress() {
     // mock address
-    return "0x";
+    return new Uint8Array(20);
   }
 
-  public getPublicKey() {
+  public async getPublicKey() {
     // mock public key
-    return "0x";
+    return new Uint8Array(33);
   }
 
   public async connect(): Promise<void> {
