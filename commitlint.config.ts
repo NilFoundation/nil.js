@@ -14,4 +14,5 @@ const config = {
   defaultIgnores: false,
 } satisfies UserConfig;
 
+// biome-ignore lint/style/noDefaultExport: <explanation>
 export default config;
