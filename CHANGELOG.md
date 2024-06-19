@@ -1,5 +1,11 @@
 # niljs
 
+## 0.3.0
+
+### Minor Changes
+
+- [#38](https://github.com/NilFoundation/nil.js/pull/38) [`6e15a95`](https://github.com/NilFoundation/nil.js/commit/6e15a95a40f2168ffeccafc0dea2e94e90eab78e) Thanks [@KlonD90](https://github.com/KlonD90)! - New external message format add wallet
+
 ## 0.2.2
 
 ### Patch Changes
