@@ -1,4 +1,4 @@
-import type { Hex } from "@noble/curves/abstract/utils";
+import type { Hex } from "../../index.js";
 
 /**
  * Deploy data is a data structure that contains information to deploy a contract.

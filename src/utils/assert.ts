@@ -1,10 +1,10 @@
-import type { Hex } from "@noble/curves/abstract/utils";
 import invariant from "tiny-invariant";
 import { masterShardId } from "../clients/constants.js";
 import type { IDeployData } from "../clients/types/IDeployData.js";
 import type { ISendMessage } from "../clients/types/ISendMessage.js";
+import type { Hex } from "../index.js";
 import type { IPrivateKey } from "../signers/index.js";
-import type { IBlock } from "../types/IBlock.js";
+import type { Block } from "../types/Block.js";
 import { isAddress } from "./address.js";
 import { isValidBlock } from "./block.js";
 import { isHexString } from "./hex.js";
@@ -124,7 +124,7 @@ const assertIsValidDeployData = (
 
   if (pubkey !== undefined) {
     invariant(
-      typeof pubkey === "string" || pubkey instanceof Uint8Array,
+      typeof pubkey === "string",
       message ?? `Expected a valid 'pubkey' but got ${pubkey}`,
     );
   }
@@ -149,7 +149,7 @@ const assertIsAddress = (address: string, message?: string): void => {
  * @param block - The block to check.
  * @param message - The message to throw if the block is invalid.
  */
-const assertIsValidBlock = (block: IBlock, message?: string): void => {
+const assertIsValidBlock = (block: Block, message?: string): void => {
   invariant(
     isValidBlock(block),
     message ?? `Expected a valid block but got ${block}`,

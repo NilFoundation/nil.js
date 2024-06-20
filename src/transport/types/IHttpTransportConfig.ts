@@ -8,12 +8,6 @@ type IHttpTransportConfig = {
    */
   endpoint: string;
   /**
-   * The polling interval is used to poll the network for new data.
-   * @example 1000
-   * @default 1000
-   */
-  pollingInterval?: number;
-  /**
    * The timeout is used to set the timeout for the request.
    * If the request is not completed within the timeout, it will be rejected.
    * @example 1000

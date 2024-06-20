@@ -53,9 +53,7 @@ const calculateAddress = (
   return new Uint8Array([...shardPart, ...hashPart.slice(14)]);
 };
 
-export const refineAddress = (
-  address: Uint8Array | `0x${string}`,
-): Uint8Array => {
+const refineAddress = (address: Uint8Array | `0x${string}`): Uint8Array => {
   if (typeof address === "string") {
     const bytes = hexToBytes(address);
     if (bytes.length !== 20) {
@@ -69,4 +67,4 @@ export const refineAddress = (
   return address;
 };
 
-export { isAddress, getShardIdFromAddress, calculateAddress };
+export { isAddress, getShardIdFromAddress, calculateAddress, refineAddress };
