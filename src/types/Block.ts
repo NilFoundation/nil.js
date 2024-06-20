@@ -1,9 +1,9 @@
-import type { Hex } from "@noble/curves/abstract/utils";
+import type { Hex } from "./Hex.js";
 
 /**
  * The block type.
  */
-type IBlock = {
+type Block = {
   id: string;
   prevBlock: Hex;
   smartContractsRoot: Hex;
@@ -18,4 +18,9 @@ type IBlock = {
   timestamp: number;
 };
 
-export type { IBlock };
+/**
+ * The block tag type.
+ */
+type BlockTag = "latest" | "earliest" | "pending";
+
+export type { Block, BlockTag };

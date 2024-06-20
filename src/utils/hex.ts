@@ -1,4 +1,4 @@
-import type { Hex } from "@noble/curves/abstract/utils";
+import type { Hex } from "../index.js";
 
 const HEX_REGEX = /^[0-9a-fA-F]+$/;
 
@@ -7,7 +7,7 @@ const HEX_REGEX = /^[0-9a-fA-F]+$/;
  * Otherwise, it returns false.
  * @param value - The value to check.
  */
-const isHexString = (value: Hex): value is Hex => {
+const isHexString = (value: unknown): value is Hex => {
   return (
     typeof value === "string" &&
     value.startsWith("0x") &&
@@ -20,12 +20,8 @@ const isHexString = (value: Hex): value is Hex => {
  * @param hex hex-string
  * @returns format: base16-string
  */
-const removeHexPrefix = <T extends Hex>(hex: T): T => {
-  if (typeof hex === "string") {
-    return (hex.startsWith("0x") ? hex.slice(2) : hex) as T;
-  }
-
-  return hex;
+const removeHexPrefix = (str: Hex | string): string => {
+  return str.startsWith("0x") ? str.slice(2) : str;
 };
 
 /**
@@ -33,8 +29,8 @@ const removeHexPrefix = <T extends Hex>(hex: T): T => {
  * @param hex base16-string
  * @returns format: hex-string
  */
-const addHexPrefix = (hex: string): `0x${string}` => {
-  return `0x${removeHexPrefix(hex)}`;
+const addHexPrefix = (str: Hex | string): Hex => {
+  return `0x${removeHexPrefix(str)}`;
 };
 
 export { isHexString, removeHexPrefix, addHexPrefix };

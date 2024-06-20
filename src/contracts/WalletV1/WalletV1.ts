@@ -1,63 +1,21 @@
-import type { Abi, Address } from "abitype";
-import { type Hex, bytesToHex, encodeFunctionData, hexToBytes } from "viem";
+import type { Abi } from "abitype";
+import invariant from "tiny-invariant";
+import { bytesToHex, encodeFunctionData, hexToBytes } from "viem";
 import type { PublicClient } from "../../clients/PublicClient.js";
 import { prepareDeployPart } from "../../encoding/deployPart.js";
+import { externalMessageEncode } from "../../encoding/externalMessage.js";
 import type { ISigner } from "../../signers/index.js";
-import { isAddress, refineAddress } from "../../utils/address.js";
-import { externalMessageEncode } from "../../utils/messageEncoding.js";
+import { refineAddress } from "../../utils/address.js";
 import { refineCompressedPublicKey, refineSalt } from "../../utils/refiners.js";
 import { code } from "./Wallet-bin.js";
 import WalletAbi from "./Wallet.abi.json";
-
-export type WalletV1Config = {
-  pubkey: Uint8Array | Hex;
-  shardId: number;
-  client: PublicClient;
-  signer: ISigner;
-  salt: Uint8Array | bigint;
-  address: Hex | Uint8Array;
-  calculatedAddress?: boolean;
-};
-
-export type CallParams = {
-  to: Address;
-  data: Uint8Array;
-  value: bigint;
-};
-
-export type SendMessageParams = {
-  to: Address | Uint8Array;
-  refundTo?: Address | Uint8Array;
-  data?: Uint8Array;
-  value: bigint;
-  gas: bigint;
-  deploy?: boolean;
-  seqno?: number;
-};
-
-export type SendSyncMessageParams = {
-  to: Address | Uint8Array;
-  data?: Uint8Array;
-  value: bigint;
-  gas: bigint;
-  seqno?: number;
-};
-
-export type RequestParams = {
-  data: Uint8Array;
-  deploy: boolean;
-  seqno?: number;
-};
-
-export type DeployParams = {
-  bytecode: Uint8Array;
-  abi?: Abi;
-  args?: unknown[];
-  salt: Uint8Array | bigint;
-  shardId: number;
-  gas: bigint;
-  value?: bigint;
-};
+import type {
+  DeployParams,
+  RequestParams,
+  SendMessageParams,
+  SendSyncMessageParams,
+  WalletV1Config,
+} from "./types/index.js";
 
 export class WalletV1 {
   static code = hexToBytes(code);
@@ -117,10 +75,9 @@ export class WalletV1 {
         .getCode(this.getAddressHex(), "latest")
         .catch(() => Uint8Array.from([])),
     ]);
-    if (code.length > 0) {
-      throw new Error("Contract already deployed");
-    }
-    if (balance <= 0n) throw new Error("Insufficient balance");
+
+    invariant(code.length === 0, "Contract already deployed");
+    invariant(balance > 0n, "Insufficient balance");
 
     const { data } = prepareDeployPart({
       abi: WalletAbi as Abi,
@@ -129,11 +86,13 @@ export class WalletV1 {
       salt: this.salt,
       shard: this.shardId,
     });
+
     const { hash } = await this.requestToWallet({
       data: data,
       deploy: true,
       seqno: 0,
     });
+
     if (waitTillConfirmation) {
       while (true) {
         const code = await this.client.getCode(this.getAddressHex(), "latest");
@@ -183,28 +142,8 @@ export class WalletV1 {
     gas,
     value,
   }: SendMessageParams) {
-    let hexTo: `0x${string}`;
-    if (typeof to === "string" && !isAddress(to)) {
-      throw new Error("Invalid address");
-    }
-    if (typeof to === "string") {
-      hexTo = to;
-    } else {
-      hexTo = bytesToHex(to);
-    }
-    let hexRefundTo: `0x${string}`;
-    if (refundTo) {
-      if (typeof refundTo === "string" && !isAddress(refundTo)) {
-        throw new Error("Invalid refund address");
-      }
-      if (typeof refundTo === "string") {
-        hexRefundTo = refundTo;
-      } else {
-        hexRefundTo = bytesToHex(refundTo);
-      }
-    } else {
-      hexRefundTo = this.getAddressHex();
-    }
+    const hexTo = bytesToHex(refineAddress(to));
+    const hexRefundTo = bytesToHex(refineAddress(refundTo ?? this.address));
 
     const callData = encodeFunctionData({
       abi: WalletAbi,
@@ -218,18 +157,22 @@ export class WalletV1 {
         data ? bytesToHex(data) : "0x",
       ],
     });
+
     const { hash } = await this.requestToWallet({
       data: hexToBytes(callData),
       deploy: false,
       seqno,
     });
+
     return bytesToHex(hash);
   }
+
   async sendRawInternalMessage(rawMessage: Uint8Array) {
     const { hash } = await this.requestToWallet({
       data: rawMessage,
       deploy: false,
     });
+
     return bytesToHex(hash);
   }
 
@@ -249,6 +192,7 @@ export class WalletV1 {
       args,
       salt,
     });
+
     const hash = await this.sendMessage({
       to: address,
       refundTo: this.getAddressHex(),
@@ -257,6 +201,7 @@ export class WalletV1 {
       deploy: true,
       gas,
     });
+
     return {
       hash,
       address: bytesToHex(address),
@@ -270,26 +215,20 @@ export class WalletV1 {
     gas,
     value,
   }: SendSyncMessageParams) {
-    let hexTo: `0x${string}`;
-    if (typeof to === "string" && !isAddress(to)) {
-      throw new Error("Invalid address");
-    }
-    if (typeof to === "string") {
-      hexTo = to;
-    } else {
-      hexTo = bytesToHex(to);
-    }
+    const hexTo = bytesToHex(refineAddress(to));
 
     const callData = encodeFunctionData({
       abi: WalletAbi,
       functionName: "syncCall",
       args: [hexTo, gas, value, data ? bytesToHex(data) : "0x"],
     });
+
     const { hash } = await this.requestToWallet({
       data: hexToBytes(callData),
       deploy: false,
       seqno,
     });
+
     return bytesToHex(hash);
   }
 
