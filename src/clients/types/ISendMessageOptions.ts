@@ -1,5 +1,5 @@
 /**
- * Options for sending a message.
+ * The options for sending a message.
  */
 type ISendMessageOptions = {
   /**

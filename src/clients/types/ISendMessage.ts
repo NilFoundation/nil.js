@@ -1,5 +1,5 @@
 /**
- * Data structure for the send message request
+ * The data structure for the send message request.
  */
 type ISendMessage = {
   to: string;

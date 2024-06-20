@@ -6,7 +6,7 @@ import type { ISigner } from "../../signers/types/ISigner.js";
  */
 type IClientBaseConfig = {
   /**
-   * The shardId is used to specify the shard in every call.
+   * The id of the shard with which the client interacts.
    * @example 0
    * @default 0
    */
@@ -27,8 +27,8 @@ type IPublicClientConfig = IClientBaseConfig;
 
 type IWalletClientConfig = IClientBaseConfig & {
   /**
-   * The instance of signer is used to sign messages and messages.
-   * If not included in the config, messages should be signed before passing to the client.
+   * An instance of Signer is used to sign messages.
+   * If a Signer is absent from the config, messages should be signed explicitly before being passed to the client.
    * @example
    * import { Signer } from '@nilfoundation/niljs';
    *

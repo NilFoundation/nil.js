@@ -1,23 +1,23 @@
 import type { Hex } from "@noble/curves/abstract/utils";
 
 /**
- * Deploy data is a data structure that contains information to deploy a contract.
+ * The data structure that contains the information necessary to deploy a contract.
  */
 type IDeployData = {
   /**
-   * Compiled contract bytecode.
+   * The compiled contract bytecode.
    */
   bytecode: Hex;
   /**
-   * Shard id.
+   * The id of the shard where the contract must be deployed.
    */
   shardId: number;
   /**
-   * Public key.
+   * The public key of the contract ordering deployment.
    */
   pubkey?: Hex;
   /**
-   * Sequence number.
+   * The sequence number of the deployment message.
    */
   seqno?: number;
 };

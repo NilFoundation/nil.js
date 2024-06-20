@@ -1,7 +1,7 @@
 import type { ISendMessageOptions } from "./ISendMessageOptions.js";
 
 /**
- * Options for signing a message.
+ * The options for signing a message.
  */
 type ISignMessageOptions = ISendMessageOptions;
 
