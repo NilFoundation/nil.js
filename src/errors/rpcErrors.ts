@@ -1,10 +1,10 @@
-import type { Hex } from "@noble/curves/abstract/utils";
+import type { Hex } from "../index.js";
 import { BaseError, type IBaseErrorParameters } from "./BaseError.js";
 
 /**
  * Interface for the parameters of the {@link BlockNotFoundError} constructor.
  */
-type IBlockNotFoundErrorParameters = {
+type BlockNotFoundErrorParameters = {
   blockNumberOrHash: number | Hex;
 } & IBaseErrorParameters;
 
@@ -13,7 +13,7 @@ type IBlockNotFoundErrorParameters = {
  * This error is thrown when a block is not found.
  */
 class BlockNotFoundError extends BaseError {
-  constructor({ blockNumberOrHash, ...rest }: IBlockNotFoundErrorParameters) {
+  constructor({ blockNumberOrHash, ...rest }: BlockNotFoundErrorParameters) {
     super(`Block not found: ${blockNumberOrHash}`, { ...rest });
   }
 }

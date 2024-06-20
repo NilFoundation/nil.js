@@ -1,11 +1,12 @@
-import { type Hex, bytesToHex } from "@noble/curves/abstract/utils";
+import { bytesToHex } from "@noble/curves/abstract/utils";
 import { hexToBytes } from "viem";
 import { hexToBigInt, hexToNumber } from "../encoding/index.js";
 import { BlockNotFoundError } from "../errors/rpcErrors.js";
+import type { Hex } from "../index.js";
 import type { IAddress } from "../signers/types/IAddress.js";
-import type { IBlock } from "../types/IBlock.js";
+import type { Block, BlockTag } from "../types/Block.js";
 import type { IReceipt } from "../types/IReceipt.js";
-import { addHexPrefix, removeHexPrefix } from "../utils/hex.js";
+import { addHexPrefix } from "../utils/hex.js";
 import { BaseClient } from "./BaseClient.js";
 import type { IPublicClientConfig } from "./types/ClientConfigs.js";
 
@@ -53,7 +54,7 @@ class PublicClient extends BaseClient {
     shardId = this.shardId,
   ) {
     try {
-      return await this.request<IBlock>({
+      return await this.request<Block>({
         method: "eth_getBlockByHash",
         params: [shardId, hash, fullTx],
       });
@@ -81,12 +82,12 @@ class PublicClient extends BaseClient {
    * const block = await client.getBlockByNumber(1);
    */
   public async getBlockByNumber(
-    blockNumber: string,
+    blockNumber: Hex,
     fullTx = false,
     shardId = this.shardId,
   ) {
     try {
-      return await this.request<IBlock>({
+      return await this.request<Block>({
         method: "eth_getBlockByNumber",
         params: [shardId, blockNumber, fullTx],
       });
@@ -162,7 +163,7 @@ class PublicClient extends BaseClient {
    *
    * const code = await client.getCode(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
    */
-  public async getCode(address: IAddress, blockNumberOrHash: Hex) {
+  public async getCode(address: IAddress, blockNumberOrHash: Hex | BlockTag) {
     const res = await this.request<`0x${string}`>({
       method: "eth_getCode",
       params: [address, blockNumberOrHash],
@@ -185,13 +186,16 @@ class PublicClient extends BaseClient {
    * const count = await client.getMessageCount(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
    *
    */
-  public async getMessageCount(address: IAddress, blockNumberOrHash: string) {
-    const res = await this.request<string>({
+  public async getMessageCount(
+    address: IAddress,
+    blockNumberOrHash: Hex | BlockTag,
+  ) {
+    const res = await this.request<Hex>({
       method: "eth_getTransactionCount",
       params: [address, blockNumberOrHash],
     });
 
-    return hexToNumber(removeHexPrefix(res));
+    return hexToNumber(res);
   }
 
   /**
@@ -208,7 +212,10 @@ class PublicClient extends BaseClient {
    *
    * const balance = await client.getBalance(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
    */
-  public async getBalance(address: IAddress, blockNumberOrHash: Hex) {
+  public async getBalance(
+    address: IAddress,
+    blockNumberOrHash: Hex | BlockTag,
+  ) {
     const res = await this.request<`0x${string}`>({
       method: "eth_getBalance",
       params: [addHexPrefix(address), blockNumberOrHash],
@@ -321,11 +328,11 @@ class PublicClient extends BaseClient {
    * @returns The chain id.
    */
   public async chainId(): Promise<number> {
-    const res = await this.request<string>({
+    const res = await this.request<Hex>({
       method: "eth_chainId",
       params: [],
     });
-    return hexToNumber(removeHexPrefix(res));
+    return hexToNumber(res);
   }
 }
 
