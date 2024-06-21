@@ -180,8 +180,7 @@ export class WalletV1 {
        WalletV1,
        generateRandomPrivateKey,
      } from "../src";
-   * 
-     const client = new PublicClient({
+   * const client = new PublicClient({
        transport: new HttpTransport({
          endpoint: "http://127.0.0.1:8529",
        }),
