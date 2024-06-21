@@ -12,7 +12,7 @@ import type { IClientBaseConfig } from "./types/ClientConfigs.js";
  */
 class BaseClient {
   /**
-   * The ITransport to be used in the client.
+   * The ITransport to be used in the client. See {@link ITransport}.
    *
    * @protected
    * @type {ITransport}
@@ -29,7 +29,7 @@ class BaseClient {
   /**
    * Creates an instance of BaseClient.
    * @constructor
-   * @param {IClientBaseConfig} config The config to be used in the client. It contains the transport and the shard ID.
+   * @param {IClientBaseConfig} config The config to be used in the client. It contains the transport and the shard ID. See {@link IClientBaseConfig}.
    */
   constructor(config: IClientBaseConfig) {
     this.transport = config.transport;

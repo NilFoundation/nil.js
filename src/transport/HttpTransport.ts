@@ -31,7 +31,7 @@ class HttpTransport implements ITransport {
    * Creates an instance of HttpTransport.
    *
    * @constructor
-   * @param {IHttpTransportConfig} config The transport config.
+   * @param {IHttpTransportConfig} config The transport config. See {@link IHttpTransportConfig}.
    */
   constructor(config: IHttpTransportConfig) {
     this.rpcClient = createRPCClient(config.endpoint);

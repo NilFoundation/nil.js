@@ -30,7 +30,7 @@ class PublicClient extends BaseClient {
    * Creates an instance of PublicClient.
    *
    * @constructor
-   * @param {IPublicClientConfig} config The config to be used in the client.
+   * @param {IPublicClientConfig} config The config to be used in the client. See {@link IPublicClientConfig}.
    */
   constructor(config: IPublicClientConfig) {
     super(config);

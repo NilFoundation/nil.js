@@ -132,7 +132,7 @@ export class WalletV1 {
    * Creates an instance of WalletV1.
    *
    * @constructor
-   * @param {WalletV1Config} param0 The object representing the initial wallet config.
+   * @param {WalletV1Config} param0 The object representing the initial wallet config. See {@link WalletV1Config}.
    * @param {WalletV1Config} param0.pubkey The wallet public key.
    * @param {WalletV1Config} param0.shardId The ID of the shard where the wallet is deployed.
    * @param {WalletV1Config} param0.address The wallet address.

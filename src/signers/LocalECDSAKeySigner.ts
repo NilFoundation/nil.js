@@ -49,7 +49,7 @@ class LocalECDSAKeySigner implements ISigner {
    * Creates an instance of LocalECDSAKeySigner.
    *
    * @constructor
-   * @param {ILocalKeySignerConfig} config
+   * @param {ILocalKeySignerConfig} config The config for the LocalECDSAKeySigner. See {@link ILocalKeySignerConfig}.
    */
   constructor(config: ILocalKeySignerConfig) {
     const { privateKey, mnemonic } = config;
