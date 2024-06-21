@@ -18,8 +18,11 @@ import type { IPublicClientConfig } from "./types/ClientConfigs.js";
  * import { PublicClient } from '@nilfoundation/niljs';
  *
  * const client = new PublicClient({
- *  endpoint: 'http://127.0.0.1:8529'
- * })
+ *   transport: new HttpTransport({
+ *     endpoint: "http://127.0.0.1:8529",
+ *   }),
+ *   shardId: 1,
+ * });
  */
 class PublicClient extends BaseClient {
   // biome-ignore lint/complexity/noUselessConstructor: may be useful in the future
@@ -40,11 +43,14 @@ class PublicClient extends BaseClient {
    * @param shardId The ID of the shard where the block was generated.
    * @returns Information about the block with the given hash.
    * @example
-   import { PublicClient } from '@nilfoundation/niljs';
+   * import { PublicClient } from '@nilfoundation/niljs';
    *
    * const client = new PublicClient({
-   *  endpoint: 'http://127.0.0.1:8529'
-   * })
+   *   transport: new HttpTransport({
+   *     endpoint: "http://127.0.0.1:8529",
+   *   }),
+   *   shardId: 1,
+   * });
    *
    * const block = await client.getBlockByHash(0x9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08);
    */

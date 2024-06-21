@@ -3,21 +3,43 @@
 <br />
 
 <p align="center">
-  =nil; Foundation Typescript client to interact with the Nil network.
+  The TypeScript client library for interacting with the =nil; network.
 </p>
 
-<p align="center">
+<row><p align="center">
   <a href="https://github.com/NilFoundation/nil.js/actions/workflows/build.yaml">
     <picture>
-      <img src="https://img.shields.io/github/actions/workflow/status/NilFoundation/nil.js/actions/workflows/build.yaml?color=%23212121">
+      <img src="https://img.shields.io/github/actions/workflow/status/NilFoundation/nil.js/actions/workflows/build.yaml?color=%23212121"/>
+    </picture>
+  </a>
+  <a href="https://github.com/NilFoundation/nil.js/actions/workflows/build.yaml">
+    <picture>
+      <img src="https://img.shields.io/npm/dy/niljs"/>
+    </picture>
+  </a>
+  <a href="https://github.com/NilFoundation/nil.js/actions/workflows/build.yaml">
+    <picture>
+      <img src="https://img.shields.io/github/stars/NilFoundation/nil.js"/>
+    </picture>
+  </a>
+  <a href="https://github.com/NilFoundation/nil.js/actions/workflows/build.yaml">
+    <picture>
+      <img src="https://img.shields.io/npm/v/niljs"/>
+    </picture>
+  </a>
+  <a href="https://github.com/NilFoundation/nil.js/actions/workflows/build.yaml">
+    <picture>
+      <img src="https://img.shields.io/github/forks/NilFoundation/nil.js"/>
     </picture>
   </a>
 </p>
+</row>
 
-## Table of Contents
+## Table of contents
 
 - [Installation](#installation)
 - [Getting started](#getting-started)
+- [Usage](#usage)
 - [License](#license)
 
 ### Installation
@@ -28,62 +50,106 @@ npm install @nilfoundation/niljs
 
 ### Getting started
 
-There are two clients in the library to interact with the Nil network.
-The first one is the `PublicClient` class, which is used to interact with the Nil network without the need for a private key. It is used to get information about the network, such as block number and block hash.
+`PublicClient` is used for performing read-only requests to =nil; that do not require authentication (e.g., attaining information about a block).
+
+To initialize a `PublicClient`:
 
 ```typescript
-import { PublicClient } from "@nilfoundation/niljs";
-
-const endpoint = "https://localhost:8259";
-const publicClient = new PublicClient({ endpoint });
-
-publicClient.getBalance("your_address").then((balance) => {
-  console.log(balance);
+const client = new PublicClient({
+  transport: new HttpTransport({
+    endpoint: "http://127.0.0.1:8529",
+  }),
+  shardId: 1,
 });
 ```
 
-The second one is the `WalletClient` class, which is used to interact with the Nil network with a private key. It is used to send messages to the network.
+`shardId` is a concept unique to =nil; in that it designates the execution shard where the wallet should be deployed. Execution shards manage portions of the global state and are coordinated by the main shard.
+
+`WalletV1` is a class representing a wallet (in =nil; a wallet is just a smart contract) that allows for signing messages and performing requests that require authentication.
+
+To deploy a wallet:
 
 ```typescript
-import { WalletClient } from "@nilfoundation/niljs";
+const pubkey = await signer.getPublicKey();
 
-const endpoint = "https://localhost:8259";
-const walletClient = new WalletClient({ endpoint });
-
-walletClient
-  .sendMessage({
-    from: "your_address",
-    to: "recipient_address",
-    amount: 100,
-  })
-  .then((tx) => {
-    console.log(tx);
-  });
+const wallet = new WalletV1({
+  pubkey: pubkey,
+  salt: 100n,
+  shardId: 1,
+  client,
+  signer,
+  address: WalletV1.calculateWalletAddress({
+    pubKey: pubkey,
+    shardId: 1,
+    salt: 100n,
+  }),
+});
+const walletAddress = await wallet.getAddressHex();
 ```
 
-Initialize the Signer with the private key of the account you want to use to sign messages.
+The `Faucet` contract is for 'topping up' an address on the =nil; devnet. The faucet contract is always deployed at a pre-defined static address. To initialize a faucet instance:
 
 ```typescript
-import { Signer } from "@nilfoundation/niljs";
-
-const privateKey = "your_private_key";
-const signer = new Signer({ privateKey });
-
-signer.sign(new Uint8Array(32));
+await faucet.withdrawTo(walletAddress, 100000n);
+const faucet = new Faucet(client);
 ```
 
-You can also sign messages automatically by passing the Signer instance to the WalletClient.
+In =nil;, the address for a wallet must be 'topped up' first before deploying the wallet. To 'top up' an existing address:
 
 ```typescript
-import { WalletClient } from "@nilfoundation/niljs";
-import { Signer } from "@nilfoundation/niljs";
-
-const endpoint = "https://localhost:8259";
-const privateKey = "your_private_key";
-
-const signer = new Signer({ privateKey });
-const walletClient = new WalletClient({ endpoint, signer });
+const deploymentMessage = externalDeploymentMessage(
+  {
+    salt: 100n,
+    shard: 1,
+    bytecode: WalletV1.code,
+    abi: WalletV1.abi,
+    args: [bytesToHex(pubkey)],
+  },
+  chainId,
+);
+const addr = bytesToHex(deploymentMessage.to);
+console.log("walletAddress", addr);
 ```
+
+## Usage
+
+In =nil;, it is possible to call functions asynchronously. When a contract makes an async call, a new transaction is spawned. When this transaction is processed, the function call itself is executed. 
+
+It is possible to make async calls within the confines of the same shard or between contracts deployed on different shards.
+
+To perform an async call:
+
+```typescript
+const anotherAddress = WalletV1.calculateWalletAddress({
+  pubKey: pubkey,
+  shardId: 1,
+  salt: 200n,
+});
+
+await wallet.sendMessage({
+  to: anotherAddress,
+  value: 10n,
+  gas: 100000n,
+});
+```
+
+To perform a sync call:
+
+```typescript
+const anotherAddress = WalletV1.calculateWalletAddress({
+  pubKey: pubkey,
+  shardId: 1,
+  salt: 200n,
+});
+
+await wallet.syncSendMessage({
+  to: anotherAddress,
+  value: 10n,
+  gas: 100000n,
+});
+```
+
+It is only possible to perform sync calls within the confines of one shard.
 
 ## Licence
 
