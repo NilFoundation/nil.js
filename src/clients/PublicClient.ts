@@ -324,8 +324,8 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * Returns the chain id.
-   * @returns The chain id.
+   * Returns the chain ID.
+   * @returns The chain ID.
    */
   public async chainId(): Promise<number> {
     const res = await this.request<Hex>({

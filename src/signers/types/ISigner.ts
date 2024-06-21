@@ -13,7 +13,7 @@ interface ISigner {
   sign(data: Uint8Array): Promise<Uint8Array>;
   /**
    * Retrieves the public key.
-   * @param shardId - The shard id.
+   * @param shardId - The shard ID.
    * @returns The public key.
    * @example
    * const address = signer.getPublicKey();
@@ -21,7 +21,7 @@ interface ISigner {
   getPublicKey(params: unknown): Promise<Uint8Array>;
   /**
    * Retrieves the address.
-   * @param shardId - The shard id.
+   * @param shardId - The shard ID.
    * @returns The address.
    * @example
    * const address = signer.getAddress();

@@ -27,7 +27,7 @@ export class ExternalMessageEnvelope {
    */
   to: Uint8Array;
   /**
-   * The chain id.
+   * The chain ID.
    *
    * @type {number}
    */
@@ -39,7 +39,7 @@ export class ExternalMessageEnvelope {
    */
   seqno: number;
   /**
-   * The message number.
+   * The message data.
    *
    * @type {Uint8Array}
    */
@@ -57,7 +57,7 @@ export class ExternalMessageEnvelope {
    * @param {ExternalMessage} param0 The object representing the external message.
    * @param {ExternalMessage} param0.isDeploy The flag that determines whether the external message is a deployment message.
    * @param {ExternalMessage} param0.to The destination address of the message.
-   * @param {ExternalMessage} param0.chainId The chain id.
+   * @param {ExternalMessage} param0.chainId The chain ID.
    * @param {ExternalMessage} param0.seqno The message sequence number.
    * @param {ExternalMessage} param0.data The message number.
    * @param {ExternalMessage} param0.authData The auth data attached to the message.
@@ -216,7 +216,7 @@ export class InternalMessageEnvelope {}
  * Creates a new external deployment message.
  *
  * @param {IDeployData} data The message data.
- * @param {number} chainId The chain id.
+ * @param {number} chainId The chain ID.
  * @returns {ExternalMessageEnvelope} The envelope of the external deployment message.
  */
 export const externalDeploymentMessage = (

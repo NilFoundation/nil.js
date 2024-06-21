@@ -29,7 +29,7 @@ class BaseClient {
   /**
    * Creates an instance of BaseClient.
    * @constructor
-   * @param {IClientBaseConfig} config The config to be used in the client. It contains the transport and the shard id.
+   * @param {IClientBaseConfig} config The config to be used in the client. It contains the transport and the shard ID.
    */
   constructor(config: IClientBaseConfig) {
     this.transport = config.transport;
@@ -46,8 +46,8 @@ class BaseClient {
   }
 
   /**
-   * Returns the shard id.
-   * @returns The shard id.
+   * Returns the shard ID.
+   * @returns The shard ID.
    */
   public getShardId(): number {
     return this.shardId;
