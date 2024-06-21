@@ -40,7 +40,7 @@ export class Faucet {
    * Withdraws the specified value to the given address.
    *
    * @async
-   * @param {Hex} address The address to which the withdrawal must be made.
+   * @param {Hex} address The address to which the withdrawal should be made.
    * @param {bigint} [value=1000000000000000000n] The value that should be withdrawn to the given address.
    * @param {?number} [seqno] The sequence number of the withdrawal message.
    * @returns {Uint8Array} The hash of the withdrawal message.

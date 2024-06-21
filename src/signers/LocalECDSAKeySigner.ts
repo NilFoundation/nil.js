@@ -107,7 +107,7 @@ class LocalECDSAKeySigner implements ISigner {
    *
    * @public
    * @async
-   * @param {number} shardId The id of the shard where the wallet is deployed.
+   * @param {number} shardId The ID of the shard where the wallet is deployed.
    * @returns {unknown} The wallet address.
    */
   public async getAddress(shardId: number) {

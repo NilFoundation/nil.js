@@ -50,7 +50,7 @@ export class WalletV1 {
    *     salt: Uint8Array | bigint;
    *   }} param0 The object representing the config for address calculation.
    * @param {Uint8Array} param0.pubKey The wallet public key.
-   * @param {number} param0.shardId The id of the shard where the wallet should be deployed.
+   * @param {number} param0.shardId The ID of the shard where the wallet should be deployed.
    * @param {Uint8Array | bigint} param0.salt Arbitrary data change the address.
    * @returns {Uint8Array} The address of the new wallet.
    */
@@ -80,7 +80,7 @@ export class WalletV1 {
    */
   pubkey: Uint8Array;
   /**
-   * The id of the shard where the wallet is deployed.
+   * The ID of the shard where the wallet is deployed.
    *
    * @type {number}
    */
@@ -116,7 +116,7 @@ export class WalletV1 {
    * @constructor
    * @param {WalletV1Config} param0 The object representing the initial wallet config.
    * @param {WalletV1Config} param0.pubkey The wallet public key.
-   * @param {WalletV1Config} param0.shardId The id of the shard where the wallet is deployed.
+   * @param {WalletV1Config} param0.shardId The ID of the shard where the wallet is deployed.
    * @param {WalletV1Config} param0.address The wallet address.
    * @param {WalletV1Config} param0.client The client for interacting with the wallet.
    * @param {WalletV1Config} param0.salt The arbitrary data for changing the wallet address.
@@ -302,7 +302,7 @@ export class WalletV1 {
    *
    * @async
    * @param {DeployParams} param0 The object representing the contract deployment params.
-   * @param {DeployParams} param0.shardId The id of the shard where the contract must be deployed.
+   * @param {DeployParams} param0.shardId The ID of the shard where the contract should be deployed.
    * @param {DeployParams} param0.bytecode The contract bytecode.
    * @param {DeployParams} param0.abi The contract ABI.
    * @param {DeployParams} param0.args The arbitrary arguments for deployment.

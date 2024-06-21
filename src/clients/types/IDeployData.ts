@@ -9,7 +9,7 @@ type IDeployData = {
    */
   bytecode: Hex;
   /**
-   * The id of the shard where the contract must be deployed.
+   * The ID of the shard where the contract should be deployed.
    */
   shardId: number;
   /**

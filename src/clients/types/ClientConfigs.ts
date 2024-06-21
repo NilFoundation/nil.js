@@ -2,11 +2,11 @@ import type { ITransport } from "../../index.js";
 import type { ISigner } from "../../signers/types/ISigner.js";
 
 /**
- * Client configuration that is shared between public and private clients.
+ * The client configuration that is shared between public and private clients.
  */
 type IClientBaseConfig = {
   /**
-   * The id of the shard with which the client interacts.
+   * The ID of the shard with which the client interacts.
    * @example 0
    * @default 0
    */
