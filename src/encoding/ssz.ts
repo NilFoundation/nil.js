@@ -37,6 +37,11 @@ setHasher({
   },
 });
 
+/**
+ * The basic types used in the library.
+ *
+ * @type {{ Uint8: any; Uint32: any; Uint64: any; UintBn256: any; Bool: any; }}
+ */
 const basicTypes = {
   Uint8: new UintNumberType(1),
   Uint32: new UintNumberType(4),
@@ -45,10 +50,15 @@ const basicTypes = {
   Bool: new BooleanType(),
 };
 
+/**
+ * The const representing a byte vector with 20 elements.
+ *
+ * @type {*}
+ */
 const Bytes20 = new ByteVectorType(20);
 
 /**
- * SSZ schema for a message object. It includes all the fields of a message object.
+ * The SSZ schema for a message object.
  */
 const SszMessageSchema = new ContainerType({
   deploy: basicTypes.Bool,
@@ -59,7 +69,7 @@ const SszMessageSchema = new ContainerType({
 });
 
 /**
- * SSZ schema for a message object. It includes all the fields of a message object.
+ * SSZ schema for a signed message object. Includes auth data in addition to all other message fields.
  */
 const SszSignedMessageSchema = new ContainerType({
   ...SszMessageSchema.fields,

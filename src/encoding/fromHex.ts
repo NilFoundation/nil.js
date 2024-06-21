@@ -3,7 +3,7 @@ import { addHexPrefix, removeHexPrefix } from "../utils/hex.js";
 
 /**
  * Convert a hex string to a number.
- * @param hex - The hex string to convert to a number.
+ * @param hex - The hex string to convert.
  * @returns The number representation of the input.
  */
 const hexToNumber = (hex: Hex): number => {
@@ -12,7 +12,7 @@ const hexToNumber = (hex: Hex): number => {
 
 /**
  * Convert a hex string to a bigint.
- * @param hex - The hex string to convert to a bigint.
+ * @param hex - The hex string to convert.
  * @returns The bigint representation of the input.
  */
 const hexToBigInt = (hex: Hex): bigint => {
