@@ -1,7 +1,7 @@
 import type { ILog } from "./ILog.js";
 
 /**
- * Receipt interface.
+ * The receipt interface.
  */
 type IReceipt = {
   success: boolean;

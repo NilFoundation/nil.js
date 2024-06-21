@@ -1,3 +1,8 @@
+/**
+ * The external message type.
+ *
+ * @typedef {ExternalMessage}
+ */
 type ExternalMessage = {
   isDeploy: boolean;
   to: Uint8Array;
