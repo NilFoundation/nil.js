@@ -2,6 +2,12 @@ import type { Abi, Address } from "abitype";
 import type { ISigner, PublicClient } from "../../../index.js";
 import type { Hex } from "../../../types/index.js";
 
+/**
+ * Represents the wallet configuration.
+ *
+ * @export
+ * @typedef {WalletV1Config}
+ */
 export type WalletV1Config = {
   pubkey: Uint8Array | Hex;
   shardId: number;
@@ -12,12 +18,24 @@ export type WalletV1Config = {
   calculatedAddress?: boolean;
 };
 
+/**
+ * Represents the message call params.
+ *
+ * @export
+ * @typedef {CallParams}
+ */
 export type CallParams = {
   to: Address;
   data: Uint8Array;
   value: bigint;
 };
 
+/**
+ * Represents the params for sending a message.
+ *
+ * @export
+ * @typedef {SendMessageParams}
+ */
 export type SendMessageParams = {
   to: Address | Uint8Array;
   refundTo?: Address | Uint8Array;
@@ -28,6 +46,12 @@ export type SendMessageParams = {
   seqno?: number;
 };
 
+/**
+ * Represents the params for sending a message synchronously.
+ *
+ * @export
+ * @typedef {SendSyncMessageParams}
+ */
 export type SendSyncMessageParams = {
   to: Address | Uint8Array;
   data?: Uint8Array;
@@ -36,12 +60,24 @@ export type SendSyncMessageParams = {
   seqno?: number;
 };
 
+/**
+ * Represents the params for making a request to the wallet.
+ *
+ * @export
+ * @typedef {RequestParams}
+ */
 export type RequestParams = {
   data: Uint8Array;
   deploy: boolean;
   seqno?: number;
 };
 
+/**
+ * Represents the params for deploying a smart contract.
+ *
+ * @export
+ * @typedef {DeployParams}
+ */
 export type DeployParams = {
   bytecode: Uint8Array;
   abi?: Abi;

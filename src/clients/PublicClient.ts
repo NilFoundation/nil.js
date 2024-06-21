@@ -27,17 +27,17 @@ class PublicClient extends BaseClient {
    * Creates an instance of PublicClient.
    *
    * @constructor
-   * @param {IPublicClientConfig} config - The config to be used in the client.
+   * @param {IPublicClientConfig} config The config to be used in the client.
    */
   constructor(config: IPublicClientConfig) {
     super(config);
   }
 
   /**
-   * getBlockByHash returns the block by the given hash.
-   * @param hash - The hash of the block whose information is requested.
-   * @param fullTx - The flag that determines whether full transaction information is returned in the output.
-   * @param shardId - The ID of the shard where the block was generated.
+   * Returns the block with the given hash.
+   * @param hash The hash of the block whose information is requested.
+   * @param fullTx The flag that determines whether full transaction information is returned in the output.
+   * @param shardId The ID of the shard where the block was generated.
    * @returns Information about the block with the given hash.
    * @example
    import { PublicClient } from '@nilfoundation/niljs';
@@ -67,10 +67,10 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * getBlockByNumber returns the block by the given number.
-   * @param blockNumber - The number of the block whose information is requested.
-   * @param fullTx - The flag that determines whether full transaction information is returned in the output.
-   * @param shardId - The ID of the shard where the block was generated.
+   * Returns the block with the given number.
+   * @param blockNumber The number of the block whose information is requested.
+   * @param fullTx The flag that determines whether full transaction information is returned in the output.
+   * @param shardId The ID of the shard where the block was generated.
    * @returns Returns information about a block with the given number.
    * @example
    import { PublicClient } from '@nilfoundation/niljs';
@@ -100,8 +100,8 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * getBlockMessageCountByNumber returns the total number of messages recorded in the block with the given number.
-   * @param number - The number of the block whose information is requested.
+   * Returns the total number of messages recorded in the block with the given number.
+   * @param number The number of the block whose information is requested.
    * @returns The number of messages contained within the block.
    * @example
    * import { PublicClient } from '@nilfoundation/niljs';
@@ -126,9 +126,9 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * getBlockMessageCountByHash returns the total number of messages recorded in the block with the given hash.
-   * @param hash - The hash of the block whose information is requested.
-   * @param shardId - The ID of the shard where the block was generated.
+   * Returns the total number of messages recorded in the block with the given hash.
+   * @param hash The hash of the block whose information is requested.
+   * @param shardId The ID of the shard where the block was generated.
    * @returns The number of messages contained within the block.
    * @example
    * import { PublicClient } from '@nilfoundation/niljs';
@@ -149,10 +149,10 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * getCode returns the bytecode of the contract with the given address and at the given block.
-   * @param address - The address of the account or contract.
-   * @param blockNumberOrHash - The number/hash of the block.
-   * @param shardId - The ID of the shard where the block was generated.
+   * Returns the bytecode of the contract with the given address and at the given block.
+   * @param address The address of the account or contract.
+   * @param blockNumberOrHash The number/hash of the block.
+   * @param shardId The ID of the shard where the block was generated.
    * @returns The bytecode of the contract.
    * @example
    * import { PublicClient } from '@nilfoundation/niljs';
@@ -172,9 +172,9 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * getMessageCount returns the transaction count of the account with the given address and at the given block.
-   * @param address - The address of the account or contract.
-   * @param blockNumberOrHash - The number/hash of the block.
+   * Returns the transaction count of the account with the given address and at the given block.
+   * @param address The address of the account or contract.
+   * @param blockNumberOrHash The number/hash of the block.
    * @returns The number of transactions contained within the block.
    * @example
    * import { PublicClient } from '@nilfoundation/niljs';
@@ -199,9 +199,9 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * getBalance Returns the balance of the given address and at the given block.
-   * @param address - The address of the account or contract.
-   * @param blockNumberOrHash - The number/hash of the block.
+   * Returns the balance of the given address and at the given block.
+   * @param address The address of the account or contract.
+   * @param blockNumberOrHash The number/hash of the block.
    * @returns The balance of the address.
    * @example
    * import { PublicClient } from '@nilfoundation/niljs';
@@ -225,7 +225,7 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * getMessageByHash returns the structure of the internal message with the given hash.
+   * Returns the structure of the internal message with the given hash.
    * @param hash - The hash of the message.
    * @param shardId - The ID of the shard where the message was recorded.
    * @returns The message whose information is requested.
@@ -248,7 +248,7 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * getMessageReceiptByHash returns the receipt for the message with the given hash.
+   * Returns the receipt for the message with the given hash.
    * @param hash - The hash of the message.
    * @param shardId - The ID of the shard where the message was recorded.
    * @returns The receipt whose structure is requested.
@@ -276,7 +276,7 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * sendRawMessage creates a new message or creates a contract for a previously signed message.
+   * Creates a new message or creates a contract for a previously signed message.
    * @param message - The encoded bytecode of the message.
    * @returns The hash of the message.
    * @example
@@ -304,7 +304,7 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * getGasPrice returns the gas price in wei.
+   * Returns the gas price in wei.
    * @returns The gas price.
    */
   public async getGasPrice(): Promise<bigint> {
@@ -314,7 +314,7 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * estimateGasLimit returns the gas limit.
+   * Returns the gas limit.
    * @returns The gas limit.
    */
   public async estimateGasLimit(): Promise<bigint> {
@@ -324,7 +324,7 @@ class PublicClient extends BaseClient {
   }
 
   /**
-   * chainId returns the chain id.
+   * Returns the chain id.
    * @returns The chain id.
    */
   public async chainId(): Promise<number> {

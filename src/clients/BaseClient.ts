@@ -29,7 +29,7 @@ class BaseClient {
   /**
    * Creates an instance of BaseClient.
    * @constructor
-   * @param {IClientBaseConfig} config - The config to be used in the client. It contains the transport and the shard id.
+   * @param {IClientBaseConfig} config The config to be used in the client. It contains the transport and the shard id.
    */
   constructor(config: IClientBaseConfig) {
     this.transport = config.transport;
@@ -38,7 +38,7 @@ class BaseClient {
 
   /**
    * Sends a request.
-   * @param requestObject - The request object. It contains the method and parameters.
+   * @param requestObject The request object. It contains the method and parameters.
    * @returns The response.
    */
   protected async request<T>(requestObject: RequestArguments): Promise<T> {
@@ -55,7 +55,7 @@ class BaseClient {
 
   /**
    * Sets the shard id.
-   * @param shardId - The shard id.
+   * @param shardId The shard id.
    * @throws Will throw an error if provided the shard id is invalid.
    * @example
    * client.setShardId(1);
