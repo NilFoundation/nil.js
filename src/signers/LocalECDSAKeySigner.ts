@@ -11,9 +11,8 @@ import type { ILocalKeySignerConfig } from "./types/ILocalKeySignerConfig.js";
 import type { ISigner } from "./types/ISigner.js";
 
 /**
- * LocalKeySigner is a class that allows you to sign the data with the private key.
- * It is an abstraction of signing the data with the private key.
- * It uses the secp256k1 curve implementation by @noble/curves/secp256k1 library under the hood.
+ * LocalKeySigner is a class that allows for signing data with the private key.
+ * It uses the secp256k1 curve implementation by the @noble/curves/secp256k1 library.
  * @example
  * import { LocalKeySigner, generatePrivateKey } from '@nilfoundation/niljs';
  *
@@ -21,10 +20,34 @@ import type { ISigner } from "./types/ISigner.js";
  * const signer = new LocalKeySigner({ privateKey });
  */
 class LocalECDSAKeySigner implements ISigner {
+  /**
+   * The private key to be used for signing.
+   *
+   * @private
+   * @type {Hex}
+   */
   private privateKey: Hex;
+  /**
+   * The public key to be used for signing.
+   *
+   * @private
+   * @type {?Hex}
+   */
   private publicKey?: Hex = undefined;
+  /**
+   * The wallet address.
+   *
+   * @private
+   * @type {?IAddress}
+   */
   private address?: IAddress = undefined;
 
+  /**
+   * Creates an instance of LocalECDSAKeySigner.
+   *
+   * @constructor
+   * @param {ILocalKeySignerConfig} config
+   */
   constructor(config: ILocalKeySignerConfig) {
     const { privateKey, mnemonic } = config;
 
@@ -42,6 +65,14 @@ class LocalECDSAKeySigner implements ISigner {
     this.privateKey = privKey;
   }
 
+  /**
+   * Signs the data.
+   *
+   * @public
+   * @async
+   * @param {Uint8Array} data The input data.
+   * @returns {Promise<Uint8Array>} The signed data.
+   */
   public async sign(data: Uint8Array): Promise<Uint8Array> {
     const signature = secp256k1.sign(data, removeHexPrefix(this.privateKey));
     const { r, s, recovery } = signature;
@@ -53,6 +84,13 @@ class LocalECDSAKeySigner implements ISigner {
     );
   }
 
+  /**
+   * Retrieves the public key.
+   *
+   * @public
+   * @async
+   * @returns {unknown} The publc key of the signer.
+   */
   public async getPublicKey() {
     if (this.publicKey) {
       return hexToBytes(this.publicKey);
@@ -64,6 +102,14 @@ class LocalECDSAKeySigner implements ISigner {
     return hexToBytes(this.publicKey);
   }
 
+  /**
+   * Retrieves the wallet address.
+   *
+   * @public
+   * @async
+   * @param {number} shardId The id of the shard where the wallet is deployed.
+   * @returns {unknown} The wallet address.
+   */
   public async getAddress(shardId: number) {
     if (this.address) {
       return hexToBytes(this.address);

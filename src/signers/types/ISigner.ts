@@ -1,5 +1,5 @@
 /**
- * Interface for the Signer class
+ * The interface for the Signer class
  */
 interface ISigner {
   /**
@@ -12,15 +12,15 @@ interface ISigner {
    */
   sign(data: Uint8Array): Promise<Uint8Array>;
   /**
-   * Returns the address.
+   * Retrieves the public key.
    * @param shardId - The shard id.
-   * @returns The address.
+   * @returns The public key.
    * @example
-   * const address = signer.getAddress();
+   * const address = signer.getPublicKey();
    */
   getPublicKey(params: unknown): Promise<Uint8Array>;
   /**
-   * Returns the address.
+   * Retrieves the address.
    * @param shardId - The shard id.
    * @returns The address.
    * @example

@@ -4,7 +4,7 @@ import type { IPrivateKey } from "./types/IPrivateKey.js";
 
 /**
  * Generate a new private key.
- * @returns Hex - Private key
+ * @returns The new private key
  * @example
  * const privateKey = generatePrivateKey();
  */
