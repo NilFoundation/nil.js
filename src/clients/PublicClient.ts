@@ -12,7 +12,7 @@ import type { IPublicClientConfig } from "./types/ClientConfigs.js";
 
 /**
  * PublicClient is a class that allows for interacting with the network via the JSON-RPC API.
- * It provides an abstraction of the connection to =nil;
+ * It provides an abstraction of the connection to =nil;.
  * PublicClient enables using API requests that do not require signing data (or otherwise using one's private key).
  * @example
  * import { PublicClient } from '@nilfoundation/niljs';
