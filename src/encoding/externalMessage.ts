@@ -218,6 +218,32 @@ export class InternalMessageEnvelope {}
  * @param {IDeployData} data The message data.
  * @param {number} chainId The chain ID.
  * @returns {ExternalMessageEnvelope} The envelope of the external deployment message.
+ * @example
+ * import {
+     Faucet,
+     LocalECDSAKeySigner,
+     HttpTransport,
+     PublicClient
+     WalletV1,
+     externalDeploymentMessage,
+     generateRandomPrivateKey,
+   } from "../src";
+ * const signer = new LocalECDSAKeySigner({
+     privateKey: generateRandomPrivateKey(),
+   });
+
+   const pubkey = await signer.getPublicKey();
+ * const chainId = await client.chainId();
+ * const deploymentMessage = externalDeploymentMessage(
+     {
+       salt: 100n,
+       shard: 1,
+       bytecode: WalletV1.code,
+       abi: WalletV1.abi,
+       args: [bytesToHex(pubkey)],
+     },
+     chainId,
+   );
  */
 export const externalDeploymentMessage = (
   data: IDeployData,

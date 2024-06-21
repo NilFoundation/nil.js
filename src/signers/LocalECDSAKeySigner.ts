@@ -14,10 +14,13 @@ import type { ISigner } from "./types/ISigner.js";
  * LocalKeySigner is a class that allows for signing data with the private key.
  * It uses the secp256k1 curve implementation by the @noble/curves/secp256k1 library.
  * @example
- * import { LocalKeySigner, generatePrivateKey } from '@nilfoundation/niljs';
- *
- * const privateKey = genratePrivateKey();
- * const signer = new LocalKeySigner({ privateKey });
+ * import {
+ *   LocalECDSAKeySigner,
+ *   generateRandomPrivateKey,
+ * } from "../src";
+ * const signer = new LocalECDSAKeySigner({
+ *   privateKey: generateRandomPrivateKey(),
+ * });
  */
 class LocalECDSAKeySigner implements ISigner {
   /**

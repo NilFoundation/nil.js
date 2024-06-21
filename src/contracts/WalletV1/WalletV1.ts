@@ -53,6 +53,24 @@ export class WalletV1 {
    * @param {number} param0.shardId The ID of the shard where the wallet should be deployed.
    * @param {Uint8Array | bigint} param0.salt Arbitrary data change the address.
    * @returns {Uint8Array} The address of the new wallet.
+   * @example
+   * import {
+       LocalECDSAKeySigner,
+       WalletV1,
+       generateRandomPrivateKey,
+     } from "../src";
+
+   * const signer = new LocalECDSAKeySigner({
+       privateKey: generateRandomPrivateKey(),
+     });
+
+     const pubkey = await signer.getPublicKey();
+
+   * const anotherAddress = WalletV1.calculateWalletAddress({
+       pubKey: pubkey,
+       shardId: 1,
+       salt: 200n,
+     });
    */
   static calculateWalletAddress({
     pubKey,
@@ -153,6 +171,41 @@ export class WalletV1 {
    * @async
    * @param {boolean} [waitTillConfirmation=true] The flag that determines whether the function waits for deployment confirmation before exiting.
    * @returns {Uint8Array} The hash of the deployment transaction.
+   * @example
+   * import {
+       Faucet,
+       HttpTransport,
+       LocalECDSAKeySigner,
+       PublicClient,
+       WalletV1,
+       generateRandomPrivateKey,
+     } from "../src";
+   * 
+     const client = new PublicClient({
+       transport: new HttpTransport({
+         endpoint: "http://127.0.0.1:8529",
+       }),
+       shardId: 1,
+     });
+   * const signer = new LocalECDSAKeySigner({
+       privateKey: generateRandomPrivateKey(),
+     });
+   * const faucet = new Faucet(client);
+   * await faucet.withdrawTo(walletAddress, 100000n);
+   * const pubkey = await signer.getPublicKey();
+   * const wallet = new WalletV1({
+       pubkey: pubkey,
+       salt: 100n,
+       shardId: 1,
+       client,
+       signer,
+       address: WalletV1.calculateWalletAddress({
+         pubKey: pubkey,
+         shardId: 1,
+         salt: 100n,
+       }),
+     });
+   * await wallet.selfDeploy(true);
    */
   async selfDeploy(waitTillConfirmation = true) {
     const [balance, code] = await Promise.all([
@@ -245,7 +298,18 @@ export class WalletV1 {
    * @param {SendMessageParams} param0.seqno The message sequence number.
    * @param {SendMessageParams} param0.gas The message gas. 
    * @param {SendMessageParams} param0.value The message value.
-   * @returns {unknown}
+   * @returns {unknown} The message hash.
+   * @example
+   * const anotherAddress = WalletV1.calculateWalletAddress({
+   *     pubKey: pubkey,
+   *     shardId: 1,
+   *     salt: 200n,
+   *   });
+   * await wallet.sendMessage({
+   *     to: anotherAddress,
+   *     value: 10n,
+   *     gas: 100000n,
+   *   });
    */
   async sendMessage({
     to,
@@ -354,6 +418,17 @@ export class WalletV1 {
    * @param {SendMessageParams} param0.gas The message gas. 
    * @param {SendMessageParams} param0.value The message value.
    * @returns {unknown} The message hash.
+   * @example
+   * const anotherAddress = WalletV1.calculateWalletAddress({
+   *     pubKey: pubkey,
+   *     shardId: 1,
+   *     salt: 200n,
+   *   });
+   * await wallet.sendMessage({
+   *     to: anotherAddress,
+   *     value: 10n,
+   *     gas: 100000n,
+   *   });
    */
   async syncSendMessage({
     to,
