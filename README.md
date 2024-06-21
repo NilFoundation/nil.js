@@ -6,7 +6,7 @@
   The TypeScript client library for interacting with the =nil; network.
 </p>
 
-<row><p align="center">
+<row style="display: flex; gap: 10px;"><p align="center">
   <a href="https://github.com/NilFoundation/nil.js/actions/workflows/build.yaml">
     <picture>
       <img src="https://img.shields.io/github/actions/workflow/status/NilFoundation/nil.js/actions/workflows/build.yaml?color=%23212121"/>
