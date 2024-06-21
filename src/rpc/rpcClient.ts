@@ -1,9 +1,9 @@
 import { Client, HTTPTransport, RequestManager } from "@open-rpc/client-js";
 
 /**
- * Creates a new rpc client to leverage network json-rpc API.
- * RPC client uses http transport to send requests to the network.
- * Currently, the only supported transport is HTTP.
+ * Creates a new RPC client to interact with the network using the RPC API.
+ * The RPC client uses an HTTP transport to send requests to the network.
+ * HTTP is currently the only supported transport.
  * @example const client = createRPCClient("http://127.0.0.1:8529");
  */
 const createRPCClient = (endpoint: string) => {
