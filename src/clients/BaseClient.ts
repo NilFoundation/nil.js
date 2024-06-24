@@ -19,7 +19,7 @@ class BaseClient {
    */
   protected transport: ITransport;
   /**
-   * The ID of the shard with which the client needs to interact.
+   * The ID of the shard which the client needs to interact with.
    * The shard with this ID will be used in every call made by the client.
    * @protected
    * @type {number}
@@ -56,7 +56,7 @@ class BaseClient {
   /**
    * Sets the shard ID.
    * @param shardId The shard ID.
-   * @throws Will throw an error if provided the shard ID is invalid.
+   * @throws Will throw an error if the provided shard ID is invalid.
    * @example
    * client.setShardId(1);
    */

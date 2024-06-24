@@ -7,7 +7,7 @@ import type { ISigner } from "../../signers/types/ISigner.js";
 type IClientBaseConfig = {
   /**
    * The ID of the shard with which the client interacts.
-   * @example 0
+   * @example 1
    * @default 0
    */
   shardId: number;
