@@ -227,7 +227,7 @@ export class InternalMessageEnvelope {}
      WalletV1,
      externalDeploymentMessage,
      generateRandomPrivateKey,
-   } from 'nil.js';
+   } from '@nilfoundation/niljs';
  * const signer = new LocalECDSAKeySigner({
      privateKey: generateRandomPrivateKey(),
    });

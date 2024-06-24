@@ -58,7 +58,7 @@ export class WalletV1 {
        LocalECDSAKeySigner,
        WalletV1,
        generateRandomPrivateKey,
-     } from 'nil.js';
+     } from '@nilfoundation/niljs';
 
    * const signer = new LocalECDSAKeySigner({
        privateKey: generateRandomPrivateKey(),
@@ -179,7 +179,7 @@ export class WalletV1 {
        PublicClient,
        WalletV1,
        generateRandomPrivateKey,
-     } from 'nil.js';
+     } from '@nilfoundation/niljs';
    * const client = new PublicClient({
        transport: new HttpTransport({
          endpoint: "http://127.0.0.1:8529",

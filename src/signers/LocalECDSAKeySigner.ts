@@ -17,7 +17,7 @@ import type { ISigner } from "./types/ISigner.js";
  * import {
  *   LocalECDSAKeySigner,
  *   generateRandomPrivateKey,
- * } from 'nil.js';
+ * } from '@nilfoundation/niljs';
  * const signer = new LocalECDSAKeySigner({
  *   privateKey: generateRandomPrivateKey(),
  * });
