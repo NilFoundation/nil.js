@@ -264,7 +264,7 @@ export const externalDeploymentMessage = (
  * Encodes the given external message.
  *
  * @async
- * @param {Omit<ExternalMessage, "authData">} params The external message to be encoded without its auth data. 
+ * @param {Omit<ExternalMessage, "authData">} params The external message to be encoded without its auth data.
  * @param {ISigner} signer The message signer.
  * @returns {Promise<{ raw: Uint8Array; hash: Uint8Array }>} The message bytecode and the message hash.
  */

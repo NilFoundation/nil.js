@@ -3,8 +3,6 @@ import type { ITransport } from "../transport/index.js";
 import { assertIsValidShardId } from "../utils/assert.js";
 import type { IClientBaseConfig } from "./types/ClientConfigs.js";
 
-
-
 /**
  * BaseClient is the base class for any client tasked with interacting with =nil; *
  * @class BaseClient

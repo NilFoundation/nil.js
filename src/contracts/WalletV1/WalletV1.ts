@@ -295,7 +295,7 @@ export class WalletV1 {
    * @param {SendMessageParams} param0.data The message bytecode.
    * @param {SendMessageParams} param0.deploy The flag that determines whether the message is a deploy message.
    * @param {SendMessageParams} param0.seqno The message sequence number.
-   * @param {SendMessageParams} param0.gas The message gas. 
+   * @param {SendMessageParams} param0.gas The message gas.
    * @param {SendMessageParams} param0.value The message value.
    * @returns {unknown} The message hash.
    * @example
@@ -414,7 +414,7 @@ export class WalletV1 {
    * @param {SendSyncMessageParams} param0.to The address where the message should be sent.
    * @param {SendSyncMessageParams} param0.data The message bytecode.
    * @param {SendMessageParams} param0.seqno The message sequence number.
-   * @param {SendMessageParams} param0.gas The message gas. 
+   * @param {SendMessageParams} param0.gas The message gas.
    * @param {SendMessageParams} param0.value The message value.
    * @returns {unknown} The message hash.
    * @example
@@ -454,7 +454,7 @@ export class WalletV1 {
   }
 
   /**
-   * Returns the wallet balance. 
+   * Returns the wallet balance.
    *
    * @async
    * @returns {unknown} The wallet balance.
