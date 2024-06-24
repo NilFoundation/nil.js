@@ -40,7 +40,6 @@ setHasher({
 /**
  * The basic types used in the library.
  *
- * @type {{ Uint8: any; Uint32: any; Uint64: any; UintBn256: any; Bool: any; }}
  */
 const basicTypes = {
   Uint8: new UintNumberType(1),
@@ -53,7 +52,6 @@ const basicTypes = {
 /**
  * The const representing a byte vector with 20 elements.
  *
- * @type {*}
  */
 const Bytes20 = new ByteVectorType(20);
 

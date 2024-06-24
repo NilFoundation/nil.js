@@ -6,7 +6,7 @@ import FaucetAbi from "./Faucet.abi.json";
 /**
  * Faucet is a special contract that is used to top up other contracts in the =nil; devnet.
  *
- * @export
+ 
  * @class Faucet
  * @typedef {Faucet}
  */

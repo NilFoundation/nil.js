@@ -5,7 +5,7 @@ import type { Hex } from "../../../types/index.js";
 /**
  * Represents the wallet configuration.
  *
- * @export
+ 
  * @typedef {WalletV1Config}
  */
 export type WalletV1Config = {
@@ -21,7 +21,7 @@ export type WalletV1Config = {
 /**
  * Represents the message call params.
  *
- * @export
+ 
  * @typedef {CallParams}
  */
 export type CallParams = {
@@ -33,7 +33,6 @@ export type CallParams = {
 /**
  * Represents the params for sending a message.
  *
- * @export
  * @typedef {SendMessageParams}
  */
 export type SendMessageParams = {
@@ -49,7 +48,6 @@ export type SendMessageParams = {
 /**
  * Represents the params for sending a message synchronously.
  *
- * @export
  * @typedef {SendSyncMessageParams}
  */
 export type SendSyncMessageParams = {
@@ -63,7 +61,6 @@ export type SendSyncMessageParams = {
 /**
  * Represents the params for making a request to the wallet.
  *
- * @export
  * @typedef {RequestParams}
  */
 export type RequestParams = {
@@ -75,7 +72,6 @@ export type RequestParams = {
 /**
  * Represents the params for deploying a smart contract.
  *
- * @export
  * @typedef {DeployParams}
  */
 export type DeployParams = {

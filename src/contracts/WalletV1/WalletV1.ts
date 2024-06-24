@@ -20,7 +20,7 @@ import type {
 /**
  * WalletV1 is a class used for performing operations on the cluster that require authentication. 
  *
- * @export
+ 
  * @class WalletV1
  * @typedef {WalletV1}
  */
@@ -58,7 +58,7 @@ export class WalletV1 {
        LocalECDSAKeySigner,
        WalletV1,
        generateRandomPrivateKey,
-     } from "../src";
+     } from 'nil.js';
 
    * const signer = new LocalECDSAKeySigner({
        privateKey: generateRandomPrivateKey(),
@@ -159,7 +159,7 @@ export class WalletV1 {
   /**
    * Converts the wallet address into a hexadecimal.
    *
-   * @returns {*}
+   * @returns {String}
    */
   getAddressHex() {
     return bytesToHex(this.address);
@@ -179,7 +179,7 @@ export class WalletV1 {
        PublicClient,
        WalletV1,
        generateRandomPrivateKey,
-     } from "../src";
+     } from 'nil.js';
    * const client = new PublicClient({
        transport: new HttpTransport({
          endpoint: "http://127.0.0.1:8529",

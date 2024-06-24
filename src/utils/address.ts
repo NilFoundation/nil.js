@@ -6,7 +6,6 @@ import type { IAddress } from "../signers/types/IAddress.js";
 /**
  * The regular expression for matching addresses.
  *
- * @type {{}}
  */
 const ADDRESS_REGEX = /^0x[0-9a-fA-F]{40}$/;
 

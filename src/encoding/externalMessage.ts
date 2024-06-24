@@ -9,7 +9,7 @@ import { SszMessageSchema, SszSignedMessageSchema } from "./ssz.js";
 /**
  * The envelope for an external message (a message sent by a user, a dApp, etc.)
  *
- * @export
+ 
  * @class ExternalMessageEnvelope
  * @typedef {ExternalMessageEnvelope}
  */
@@ -206,7 +206,7 @@ export class ExternalMessageEnvelope {
 /**
  * The envelope for an internal message (a message sent by a smart contract to another smart contract).
  *
- * @export
+ 
  * @class InternalMessageEnvelope
  * @typedef {InternalMessageEnvelope}
  */
@@ -227,7 +227,7 @@ export class InternalMessageEnvelope {}
      WalletV1,
      externalDeploymentMessage,
      generateRandomPrivateKey,
-   } from "../src";
+   } from 'nil.js';
  * const signer = new LocalECDSAKeySigner({
      privateKey: generateRandomPrivateKey(),
    });
