@@ -2,7 +2,7 @@ import invariant from "tiny-invariant";
 import { masterShardId } from "../clients/constants.js";
 import type { IDeployData } from "../clients/types/IDeployData.js";
 import type { ISendMessage } from "../clients/types/ISendMessage.js";
-import type { Hex } from "../index.js";
+import { type Hex, InvalidShardIdError } from "../index.js";
 import type { IPrivateKey } from "../signers/index.js";
 import type { Block } from "../types/Block.js";
 import { isAddress } from "./address.js";
@@ -129,7 +129,7 @@ const assertIsValidDeployData = (
     );
   }
 
-  assertIsValidShardId(shardId, message);
+  assertIsValidShardId(shardId);
 };
 
 /**
@@ -159,16 +159,18 @@ const assertIsValidBlock = (block: Block, message?: string): void => {
 /**
  * Checks if the shard id is valid. If the shard id is valid, it returns nothing.
  * @param shardId - The shard id to check.
- * @param message - The message to throw if the shard id is invalid.
  */
-const assertIsValidShardId = (shardId: number, message?: string): void => {
-  invariant(
+const assertIsValidShardId = (shardId?: number): void => {
+  const isValid =
+    typeof shardId === "number" &&
     Number.isInteger(shardId) &&
-      shardId >= 0 &&
-      shardId < 2 ** 16 &&
-      shardId !== masterShardId,
-    message ?? `Expected a valid shard id but got ${shardId}`,
-  );
+    shardId >= 0 &&
+    shardId < 2 ** 16 &&
+    shardId !== masterShardId;
+
+  if (!isValid) {
+    throw new InvalidShardIdError({ shardId });
+  }
 };
 
 export {

@@ -1,8 +1,8 @@
 import { bytesToHex } from "@noble/curves/abstract/utils";
 import { hexToBytes } from "viem";
 import { hexToBigInt, hexToNumber } from "../encoding/index.js";
-import { BlockNotFoundError } from "../errors/rpcErrors.js";
-import type { Hex } from "../index.js";
+import { BlockNotFoundError } from "../errors/block.js";
+import { type Hex, assertIsValidShardId } from "../index.js";
 import type { IAddress } from "../signers/types/IAddress.js";
 import type { Block, BlockTag } from "../types/Block.js";
 import type { IReceipt } from "../types/IReceipt.js";
@@ -59,6 +59,8 @@ class PublicClient extends BaseClient {
     fullTx = false,
     shardId = this.shardId,
   ) {
+    assertIsValidShardId(shardId);
+
     try {
       return await this.request<Block>({
         method: "eth_getBlockByHash",
@@ -92,6 +94,8 @@ class PublicClient extends BaseClient {
     fullTx = false,
     shardId = this.shardId,
   ) {
+    assertIsValidShardId(shardId);
+
     try {
       return await this.request<Block>({
         method: "eth_getBlockByNumber",
@@ -123,6 +127,8 @@ class PublicClient extends BaseClient {
     blockNumber: string,
     shardId = this.shardId,
   ) {
+    assertIsValidShardId(shardId);
+
     const res = await this.request<number>({
       method: "eth_getBlockTransactionCountByNumber",
       params: [shardId, blockNumber],
@@ -146,6 +152,8 @@ class PublicClient extends BaseClient {
    * const count = await client.getBlockMessageCountByHash(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
   public async getBlockMessageCountByHash(hash: Hex, shardId = this.shardId) {
+    assertIsValidShardId(shardId);
+
     const res = await this.request<number>({
       method: "eth_getBlockTransactionCountByHash",
       params: [shardId, hash],
@@ -174,6 +182,7 @@ class PublicClient extends BaseClient {
       method: "eth_getCode",
       params: [address, blockNumberOrHash],
     });
+
     return hexToBytes(res);
   }
 
@@ -245,6 +254,8 @@ class PublicClient extends BaseClient {
    * const message = await client.getMessageByHash(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
   public async getMessageByHash(hash: Hex, shardId = this.shardId) {
+    assertIsValidShardId(shardId);
+
     const res = await this.request<Uint8Array>({
       method: "eth_getInMessageByHash",
       params: [shardId, hash],
@@ -268,6 +279,8 @@ class PublicClient extends BaseClient {
    * const receipt = await client.getMessageReceiptByHash(1, Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
   public async getMessageReceiptByHash(hash: Hex, shardId = this.shardId) {
+    assertIsValidShardId(shardId);
+
     const res = await this.request<IReceipt | null>({
       method: "eth_getInMessageReceipt",
       params: [

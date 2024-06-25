@@ -24,34 +24,25 @@ test("getBlockByNumber", async ({ expect }) => {
   expect(block).toBeDefined();
 });
 
-// not implemented on the node
-// test("getBlockMessageCountByNumber", async ({ expect }) => {
-//   const count = await client.getBlockMessageCountByNumber(
-//     masterShardId,
-//     "0x1b4",
-//   );
+test("getBlockMessageCountByNumber", async ({ expect }) => {
+  const count = await client.getBlockMessageCountByNumber("0x1b4", 1);
 
-//   expect(count).toBeDefined();
-// });
+  expect(count).toBeDefined();
+});
 
-// not implemented on the node
-// test("getBlockMessageCountByHash", async ({ expect }) => {
-//   const count = await client.getBlockMessageCountByHash(
-//     "0x158c4be17b52b92dc03cef7e8cd9cec64c6413175df3cce9f6ae1fb0d12106fa",
-//   );
+test("getBlockMessageCountByHash", async ({ expect }) => {
+  const count = await client.getBlockMessageCountByHash(
+    "0x158c4be17b52b92dc03cef7e8cd9cec64c6413175df3cce9f6ae1fb0d12106fa",
+  );
 
-//   expect(count).toBeDefined();
-// });
+  expect(count).toBeDefined();
+});
 
-// not implemented on the node
-// test("getCode", async ({ expect }) => {
-//   const code = await client.getCode(
-//     addHexPrefix(defaultAddress),
-//     "0x1b4",
-//   );
+test("getCode", async ({ expect }) => {
+  const code = await client.getCode(addHexPrefix(defaultAddress), "0x1b4");
 
-//   expect(code).toBeDefined();
-// });
+  expect(code).toBeDefined();
+});
 
 test("getMessageCount", async ({ expect }) => {
   const count = await client.getMessageCount(

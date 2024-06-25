@@ -8,9 +8,8 @@ type IClientBaseConfig = {
   /**
    * The ID of the shard with which the client interacts.
    * @example 1
-   * @default 0
    */
-  shardId: number;
+  shardId?: number;
   /**
    * The transport is used to send requests to the network.
    * @example
