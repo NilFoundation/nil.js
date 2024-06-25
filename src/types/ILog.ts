@@ -1,5 +1,5 @@
 /**
- * Log interface.
+ * The log interface.
  */
 type ILog = {
   address: string;

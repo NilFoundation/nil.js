@@ -3,6 +3,12 @@ import type { IDeployData } from "../types/IDeployData.js";
 import { calculateAddress } from "../utils/address.js";
 import { refineSalt } from "../utils/refiners.js";
 
+/**
+ * Refines the provided salt and generates the full bytecode for deployment. Returns the bytecode and the deployment address.
+ *
+ * @param {IDeployData} data The deployment data.
+ * @returns {{ data: Uint8Array; address: Uint8Array }} The object containing the final bytecode and the deployment address.
+ */
 export const prepareDeployPart = (
   data: IDeployData,
 ): { data: Uint8Array; address: Uint8Array } => {

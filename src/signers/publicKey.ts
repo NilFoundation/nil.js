@@ -4,9 +4,9 @@ import {
   numberToBytesBE,
 } from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
-import type { Hex } from "viem";
 import { poseidonHash } from "../encoding/poseidon.js";
 import { toHex } from "../encoding/toHex.js";
+import type { Hex } from "../types/Hex.js";
 import { assertIsValidShardId } from "../utils/assert.js";
 import { addHexPrefix, removeHexPrefix } from "../utils/hex.js";
 import type { IAddress } from "./types/IAddress.js";

@@ -1,4 +1,4 @@
-import type { Hex } from "@noble/curves/abstract/utils";
+import type { Hex } from "../../index.js";
 
 /**
  * The data structure that contains the information necessary to deploy a contract.
@@ -9,7 +9,7 @@ type IDeployData = {
    */
   bytecode: Hex;
   /**
-   * The id of the shard where the contract must be deployed.
+   * The ID of the shard where the contract should be deployed.
    */
   shardId: number;
   /**

@@ -1,10 +1,9 @@
 import { poseidon } from "@iden3/js-crypto";
 
 /**
- * Poseidon hash function.
- * @param inputs - The inputs to hash.
- * @param params - The parameters to hash.
- * @returns The hash.
+ * Creates the Poseidon hash of the given bytes.
+ * @param byes - The bytes to hash.
+ * @returns The Poseidon hash.
  */
 const poseidonHash = (bytes: Uint8Array) => {
   return poseidon.hashBytesX(bytes, 16);

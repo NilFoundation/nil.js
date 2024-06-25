@@ -3,20 +3,24 @@ import { hexToBytes } from "viem";
 import { poseidonHash } from "../encoding/poseidon.js";
 import type { IAddress } from "../signers/types/IAddress.js";
 
+/**
+ * The regular expression for matching addresses.
+ *
+ */
 const ADDRESS_REGEX = /^0x[0-9a-fA-F]{40}$/;
 
-/*
- * Checks if the value is an address. If the value is an address, it returns true.
- * Otherwise, it returns false.
- * @param value - The value to check.
+/**
+ * Checks if the value is an address. If the value is an address, returns true.
+ * Otherwise, returns false.
+ * @param value The value to check.
  */
 const isAddress = (value: Hex): value is IAddress => {
   return typeof value === "string" && ADDRESS_REGEX.test(value);
 };
 
 /**
- * Returns the shard ID from the provided address.
- * @param address - The address.
+ * Returns the ID of the shard containing the provided address.
+ * @param address The address.
  */
 const getShardIdFromAddress = (address: Hex): number => {
   if (typeof address === "string") {
@@ -26,6 +30,14 @@ const getShardIdFromAddress = (address: Hex): number => {
   return (address[0] << 8) | address[1];
 };
 
+/**
+ * Calculates an address.
+ *
+ * @param {number} shardId The ID of the shard containing the address.
+ * @param {Uint8Array} code The bytecode to be deployed at the address.
+ * @param {Uint8Array} salt Arbitrary data for address generation.
+ * @returns {Uint8Array} The address.
+ */
 const calculateAddress = (
   shardId: number,
   code: Uint8Array,
@@ -53,9 +65,13 @@ const calculateAddress = (
   return new Uint8Array([...shardPart, ...hashPart.slice(14)]);
 };
 
-export const refineAddress = (
-  address: Uint8Array | `0x${string}`,
-): Uint8Array => {
+/**
+ * Refines the address.
+ *
+ * @param {(Uint8Array | `0x`)} address The address to refine.
+ * @returns {Uint8Array} The refined address.
+ */
+const refineAddress = (address: Uint8Array | `0x${string}`): Uint8Array => {
   if (typeof address === "string") {
     const bytes = hexToBytes(address);
     if (bytes.length !== 20) {
@@ -69,4 +85,4 @@ export const refineAddress = (
   return address;
 };
 
-export { isAddress, getShardIdFromAddress, calculateAddress };
+export { isAddress, getShardIdFromAddress, calculateAddress, refineAddress };

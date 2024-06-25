@@ -1,7 +1,7 @@
 import type { Abi } from "abitype";
 
 /**
- * Deploy data is a data structure that contains information to deploy a contract.
+ * IDeployData is a data structure that contains information to deploy a contract.
  */
 type IDeployData = {
   bytecode: Uint8Array;

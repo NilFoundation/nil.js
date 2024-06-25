@@ -1,13 +1,13 @@
-import type { Hex } from "@noble/curves/abstract/utils";
+import type { Hex } from "../index.js";
 
 const HEX_REGEX = /^[0-9a-fA-F]+$/;
 
 /**
- * Checks if the value is a hex string. If the value is a hex string, it returns true.
- * Otherwise, it returns false.
- * @param value - The value to check.
+ * Checks if the value is a hex string. If the value is a hex string, returns true.
+ * Otherwise, returns false.
+ * @param value The value to check.
  */
-const isHexString = (value: Hex): value is Hex => {
+const isHexString = (value: unknown): value is Hex => {
   return (
     typeof value === "string" &&
     value.startsWith("0x") &&
@@ -16,25 +16,21 @@ const isHexString = (value: Hex): value is Hex => {
 };
 
 /**
- * Remove a hex prefix from a hex string.
- * @param hex hex-string
- * @returns format: base16-string
+ * Remove the hex prefix from the hex string.
+ * @param hex The string whose hex prefix should be removed.
+ * @returns The base-16 string.
  */
-const removeHexPrefix = <T extends Hex>(hex: T): T => {
-  if (typeof hex === "string") {
-    return (hex.startsWith("0x") ? hex.slice(2) : hex) as T;
-  }
-
-  return hex;
+const removeHexPrefix = (str: Hex | string): string => {
+  return str.startsWith("0x") ? str.slice(2) : str;
 };
 
 /**
- * Add a hex prefix to a hex string.
- * @param hex base16-string
- * @returns format: hex-string
+ * Add the hex prefix to the hex string.
+ * @param hex The string to which the prefix should be added.
+ * @returns The string with the prefix.
  */
-const addHexPrefix = (hex: string): `0x${string}` => {
-  return `0x${removeHexPrefix(hex)}`;
+const addHexPrefix = (str: Hex | string): Hex => {
+  return `0x${removeHexPrefix(str)}`;
 };
 
 export { isHexString, removeHexPrefix, addHexPrefix };

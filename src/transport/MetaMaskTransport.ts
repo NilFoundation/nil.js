@@ -1,21 +1,43 @@
 import type { RequestArguments } from "@open-rpc/client-js/build/ClientInterface.js";
 import invariant from "tiny-invariant";
-import { startPollingUntilCondition } from "../utils/polling.js";
 import type { IHttpTransportConfig } from "./types/IHttpTransportConfig.js";
 import type { ITransport } from "./types/ITransport.js";
 
+/**
+ * MetaMask transport represents the MetaMask transport for connecting to the network.
+ * MetaMask transport can be used in browser only.
+ * @class MetaMaskTransport
+ * @typedef {MetaMaskTransport}
+ * @implements {ITransport}
+ */
 class MetaMaskTransport implements ITransport {
+  /**
+   * The provider for the transport.
+   *
+   * @private
+   * @type {*}
+   */
   private provider;
+  /**
+   * The request timeout.
+   *
+   * @private
+   * @type {number}
+   */
   private timeout: number;
-  private pollingInterval: number;
 
+  /**
+   * Creates an instance of MetaMaskTransport.
+   *
+   * @constructor
+   * @param {IHttpTransportConfig} config The transport config.
+   */
   constructor(config: IHttpTransportConfig) {
     this.timeout = config.timeout !== undefined ? config.timeout : 20000;
-    this.pollingInterval = config.pollingInterval ?? 1000;
 
     invariant(
       typeof window !== "undefined",
-      "MetaMaskSigner can be used in the browser only",
+      "MetaMaskTransport can be used in the browser only",
     );
 
     invariant(
@@ -26,30 +48,35 @@ class MetaMaskTransport implements ITransport {
     this.provider = window.ethereum;
   }
 
+  /**
+   * Sends a request to the network.
+   *
+   * @public
+   * @async
+   * @template T
+   * @param {RequestArguments} requestObject The request object.
+   * @returns {Promise<T>} The response.
+   */
   public async request<T>(requestObject: RequestArguments): Promise<T> {
     return this.provider.request(requestObject);
   }
 
+  /**
+   * Connects to the network.
+   *
+   * @public
+   */
   public connect(): void {
     this.provider.request({ method: "eth_requestAccounts" });
   }
 
+  /**
+   * Closes the connection to the network.
+   *
+   * @public
+   */
   public closeConnection(): void {
     //
-  }
-
-  public startPollingUntil<T>(
-    cb: () => Promise<T>,
-    condition: (result: T) => boolean,
-    interval = this.pollingInterval,
-    pollingTimeout = this.timeout,
-  ): Promise<T> {
-    return startPollingUntilCondition<T>(
-      cb,
-      condition,
-      interval,
-      pollingTimeout,
-    );
   }
 }
 

@@ -1,5 +1,5 @@
 /**
- * Interface for the Signature. It contains the r, s, and yParity values.
+ * The interface for the signature. It contains the r, s, and yParity values.
  */
 type ISignature = {
   signature: Uint8Array;

@@ -2,7 +2,7 @@ import { bytesToHex, numberToHexUnpadded } from "@noble/curves/abstract/utils";
 
 /**
  * Convert a string to a hex string.
- * @param str - The input string to convert to hex
+ * @param str - The input string to convert.
  * @returns The hex string representation of the input.
  */
 const stringToHex = (str: string): string => {
@@ -17,7 +17,7 @@ const stringToHex = (str: string): string => {
 
 /**
  * Convert a string, number, bigint, boolean, or ByteArrayType to a hex string.
- * @param str - The input string to convert to hex
+ * @param str - The input string to convert.
  * @returns The hex string representation of the input.
  */
 const toHex = <T extends string | number | bigint | boolean | Uint8Array>(

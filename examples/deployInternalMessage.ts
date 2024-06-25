@@ -37,6 +37,7 @@ const wallet = new WalletV1({
 });
 const walletAddress = await wallet.getAddressHex();
 
+// biome-ignore lint/nursery/noConsole: <explanation>
 console.log("walletAddress", walletAddress);
 
 await faucet.withdrawTo(walletAddress, 10000000n);
@@ -50,6 +51,7 @@ while (true) {
 }
 await wallet.selfDeploy(true);
 
+// biome-ignore lint/nursery/noConsole: <explanation>
 console.log("Wallet deployed successfully");
 
 const { address } = await wallet.deployContract({
@@ -65,12 +67,15 @@ const { address } = await wallet.deployContract({
 while (true) {
   const balance = await client.getBalance(address, "latest");
   if (balance > 0) {
+    // biome-ignore lint/nursery/noConsole: <explanation>
     console.log("balance", balance);
     const code = await client.getCode(address, "latest");
+    // biome-ignore lint/nursery/noConsole: <explanation>
     console.log("code", bytesToHex(code));
     break;
   }
   await new Promise((resolve) => setTimeout(resolve, 1000));
 }
 
+// biome-ignore lint/nursery/noConsole: <explanation>
 console.log("Another wallet deployed successfully");

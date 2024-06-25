@@ -1,10 +1,10 @@
 import { bytesToHex } from "viem";
-import type { PublicClient } from "./clients/PublicClient.js";
-import { prepareDeployPart } from "./encoding/deployPart.js";
-import { SszMessageSchema, SszSignedMessageSchema } from "./encoding/ssz.js";
-import type { ISigner } from "./signers/index.js";
-import type { ExternalMessage } from "./types/ExternalMessage.js";
-import type { IDeployData } from "./types/IDeployData.js";
+import type { PublicClient } from "../clients/PublicClient.js";
+import type { ISigner } from "../signers/index.js";
+import type { ExternalMessage } from "../types/ExternalMessage.js";
+import type { IDeployData } from "../types/IDeployData.js";
+import { prepareDeployPart } from "./deployPart.js";
+import { SszMessageSchema, SszSignedMessageSchema } from "./ssz.js";
 
 /**
  * The envelope for an external message (a message sent by a user, a dApp, etc.)
@@ -159,7 +159,6 @@ export class ExternalMessageEnvelope {
     });
     return { raw, hash };
   }
-  // return signature
   /**
    * Signs the external message.
    *
@@ -207,6 +206,7 @@ export class ExternalMessageEnvelope {
 /**
  * The envelope for an internal message (a message sent by a smart contract to another smart contract).
  *
+ 
  * @class InternalMessageEnvelope
  * @typedef {InternalMessageEnvelope}
  */
@@ -258,4 +258,24 @@ export const externalDeploymentMessage = (
     data: deployData,
     authData: new Uint8Array(0),
   });
+};
+
+/**
+ * Encodes the given external message.
+ *
+ * @async
+ * @param {Omit<ExternalMessage, "authData">} params The external message to be encoded without its auth data.
+ * @param {ISigner} signer The message signer.
+ * @returns {Promise<{ raw: Uint8Array; hash: Uint8Array }>} The message bytecode and the message hash.
+ */
+export const externalMessageEncode = async (
+  params: Omit<ExternalMessage, "authData">,
+  signer: ISigner,
+): Promise<{ raw: Uint8Array; hash: Uint8Array }> => {
+  const message = new ExternalMessageEnvelope({
+    ...params,
+    authData: new Uint8Array(0),
+  });
+  const res = await message.encodeWithSignature(signer);
+  return res;
 };

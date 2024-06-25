@@ -3,8 +3,6 @@ import type { ITransport } from "../transport/index.js";
 import { assertIsValidShardId } from "../utils/assert.js";
 import type { IClientBaseConfig } from "./types/ClientConfigs.js";
 
-
-
 /**
  * BaseClient is the base class for any client tasked with interacting with =nil; *
  * @class BaseClient
@@ -12,15 +10,15 @@ import type { IClientBaseConfig } from "./types/ClientConfigs.js";
  */
 class BaseClient {
   /**
-   * The ITransport to be used in the client.
+   * The ITransport to be used in the client. See {@link ITransport}.
    *
    * @protected
    * @type {ITransport}
    */
   protected transport: ITransport;
   /**
-   * The id of the shard with which the client needs to interact.
-   * The shard with this id will be used in every call made by the client.
+   * The ID of the shard which the client needs to interact with.
+   * The shard with this ID will be used in every call made by the client.
    * @protected
    * @type {number}
    */
@@ -29,7 +27,7 @@ class BaseClient {
   /**
    * Creates an instance of BaseClient.
    * @constructor
-   * @param {IClientBaseConfig} config - The config to be used in the client. It contains the transport and the shard id.
+   * @param {IClientBaseConfig} config The config to be used in the client. It contains the transport and the shard ID. See {@link IClientBaseConfig}.
    */
   constructor(config: IClientBaseConfig) {
     this.transport = config.transport;
@@ -38,7 +36,7 @@ class BaseClient {
 
   /**
    * Sends a request.
-   * @param requestObject - The request object. It contains the method and parameters.
+   * @param requestObject The request object. It contains the method and parameters.
    * @returns The response.
    */
   protected async request<T>(requestObject: RequestArguments): Promise<T> {
@@ -46,17 +44,17 @@ class BaseClient {
   }
 
   /**
-   * Returns the shard id.
-   * @returns The shard id.
+   * Returns the shard ID.
+   * @returns The shard ID.
    */
   public getShardId(): number {
     return this.shardId;
   }
 
   /**
-   * Sets the shard id.
-   * @param shardId - The shard id.
-   * @throws Will throw an error if provided the shard id is invalid.
+   * Sets the shard ID.
+   * @param shardId The shard ID.
+   * @throws Will throw an error if the provided shard ID is invalid.
    * @example
    * client.setShardId(1);
    */
