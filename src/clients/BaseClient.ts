@@ -20,9 +20,9 @@ class BaseClient {
    * The ID of the shard which the client needs to interact with.
    * The shard with this ID will be used in every call made by the client.
    * @protected
-   * @type {number}
+   * @type {number | undefined}
    */
-  protected shardId: number;
+  protected shardId?: number;
 
   /**
    * Creates an instance of BaseClient.
@@ -47,7 +47,7 @@ class BaseClient {
    * Returns the shard ID.
    * @returns The shard ID.
    */
-  public getShardId(): number {
+  public getShardId() {
     return this.shardId;
   }
 
