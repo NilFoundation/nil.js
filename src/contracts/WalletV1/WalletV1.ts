@@ -291,7 +291,9 @@ export class WalletV1 {
    * @async
    * @param {SendMessageParams} param0 The object representing the message params.
    * @param {SendMessageParams} param0.to The address where the message should be sent.
-   * @param {SendMessageParams} param0.refundTo The address where gas should be refunded in case of failure.
+   * @param {SendMessageParams} param0.refundTo The address where the gas cost should be refunded.
+   * @param {SendMessageParams} param0.bounceTo The address where the message value should be refunded in case of failure.
+   * @param {SendMessageParams} param0.tokens The tokens to be sent with the message.
    * @param {SendMessageParams} param0.data The message bytecode.
    * @param {SendMessageParams} param0.deploy The flag that determines whether the message is a deploy message.
    * @param {SendMessageParams} param0.seqno The message sequence number.
@@ -313,14 +315,22 @@ export class WalletV1 {
   async sendMessage({
     to,
     refundTo,
+    bounceTo,
     data,
     deploy,
     seqno,
     gas,
     value,
+    tokens,
   }: SendMessageParams) {
     const hexTo = bytesToHex(refineAddress(to));
     const hexRefundTo = bytesToHex(refineAddress(refundTo ?? this.address));
+    const hexBounceTo = bytesToHex(refineAddress(bounceTo ?? this.address));
+    const hexData = data
+      ? data instanceof Uint8Array
+        ? bytesToHex(data)
+        : data
+      : "0x";
 
     const callData = encodeFunctionData({
       abi: WalletAbi,
@@ -328,10 +338,12 @@ export class WalletV1 {
       args: [
         hexTo,
         hexRefundTo,
+        hexBounceTo,
         gas,
         !!deploy,
-        value,
-        data ? bytesToHex(data) : "0x",
+        tokens ?? [],
+        value ?? 0n,
+        hexData,
       ],
     });
 
@@ -437,11 +449,16 @@ export class WalletV1 {
     value,
   }: SendSyncMessageParams) {
     const hexTo = bytesToHex(refineAddress(to));
+    const hexData = data
+      ? data instanceof Uint8Array
+        ? bytesToHex(data)
+        : data
+      : "0x";
 
     const callData = encodeFunctionData({
       abi: WalletAbi,
       functionName: "syncCall",
-      args: [hexTo, gas, value, data ? bytesToHex(data) : "0x"],
+      args: [hexTo, gas, value, hexData],
     });
 
     const { hash } = await this.requestToWallet({

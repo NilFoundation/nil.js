@@ -1,3 +1,4 @@
+import type { Hex } from "./Hex.js";
 import type { ILog } from "./ILog.js";
 
 /**
@@ -8,12 +9,14 @@ type IReceipt = {
   gasUsed: number;
   bloom: string;
   logs: ILog[];
-  msgHash: string;
+  messageHash: Hex;
   contractAddress: string;
   blockHash: string;
   blockNumber: bigint;
   msgIndex: bigint;
-  outMessages: string[];
+  outMessages: Hex[] | null;
+  outputReceipts: IReceipt[] | null;
+  shardId: number;
 };
 
 export type { IReceipt };

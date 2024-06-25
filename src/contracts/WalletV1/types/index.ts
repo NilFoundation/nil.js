@@ -1,5 +1,6 @@
 import type { Abi, Address } from "abitype";
 import type { ISigner, PublicClient } from "../../../index.js";
+import type { Token } from "../../../types/Token.js";
 import type { Hex } from "../../../types/index.js";
 
 /**
@@ -38,9 +39,11 @@ export type CallParams = {
 export type SendMessageParams = {
   to: Address | Uint8Array;
   refundTo?: Address | Uint8Array;
-  data?: Uint8Array;
-  value: bigint;
+  bounceTo?: Address | Uint8Array;
+  data?: Uint8Array | Hex;
+  value?: bigint;
   gas: bigint;
+  tokens?: Token[];
   deploy?: boolean;
   seqno?: number;
 };
@@ -52,7 +55,7 @@ export type SendMessageParams = {
  */
 export type SendSyncMessageParams = {
   to: Address | Uint8Array;
-  data?: Uint8Array;
+  data?: Uint8Array | Hex;
   value: bigint;
   gas: bigint;
   seqno?: number;

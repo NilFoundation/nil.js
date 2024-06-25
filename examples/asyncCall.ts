@@ -6,6 +6,7 @@ import {
   PublicClient,
   WalletV1,
   generateRandomPrivateKey,
+  waitTillCompleted,
 } from "../src";
 
 const client = new PublicClient({
@@ -40,14 +41,9 @@ const walletAddress = await wallet.getAddressHex();
 // biome-ignore lint/nursery/noConsole: <explanation>
 console.log("walletAddress", walletAddress);
 
-await faucet.withdrawTo(walletAddress, 100000n);
+const faucetHash = await faucet.withdrawTo(walletAddress, 100_000_000n);
 
-while (true) {
-  const balance = await client.getBalance(walletAddress, "latest");
-  if (balance > 0) {
-    break;
-  }
-}
+await waitTillCompleted(client, 1, bytesToHex(faucetHash));
 await wallet.selfDeploy(true);
 
 // biome-ignore lint/nursery/noConsole: <explanation>
@@ -55,25 +51,21 @@ console.log("Wallet deployed successfully");
 
 const anotherAddress = WalletV1.calculateWalletAddress({
   pubKey: pubkey,
-  shardId: 1,
+  shardId: 2,
   salt: 200n,
 });
 
-await wallet.sendMessage({
+const hash = await wallet.sendMessage({
   to: anotherAddress,
-  value: 10n,
-  gas: 100000n,
+  value: 10_000_000n,
+  gas: 100_000n,
 });
 
-while (true) {
-  const balance = await client.getBalance(bytesToHex(anotherAddress), "latest");
-  if (balance > 0) {
-    // biome-ignore lint/nursery/noConsole: <explanation>
-    console.log("balance", balance);
-    break;
-  }
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-}
+await waitTillCompleted(client, 1, hash);
+
+const balance = await client.getBalance(bytesToHex(anotherAddress), "latest");
+// biome-ignore lint/nursery/noConsole: <explanation>
+console.log("balance", balance);
 
 // biome-ignore lint/nursery/noConsole: <explanation>
 console.log("Message sent successfully");
