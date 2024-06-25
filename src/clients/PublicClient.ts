@@ -353,6 +353,30 @@ class PublicClient extends BaseClient {
     });
     return hexToNumber(res);
   }
+
+  /**
+   * Returns all tokens by the given address.
+   * @param address The address of the account.
+   * @param blockNumberOrHash The number/hash of the block.
+   * @returns The list of tokens.
+   */
+  public async getCurrencies(
+    address: IAddress,
+    blockNumberOrHash: Hex | BlockTag,
+  ) {
+    const res = await this.request<{ [id: string]: `0x${string}` } | null>({
+      method: "eth_getCurrencies",
+      params: [address, blockNumberOrHash],
+    });
+    const tokenMap: Record<string, bigint> = {};
+    if (res) {
+      for (const [key, value] of Object.entries(res)) {
+        tokenMap[key] = hexToBigInt(value);
+      }
+    }
+
+    return tokenMap;
+  }
 }
 
 export { PublicClient };
