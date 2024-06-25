@@ -25,13 +25,13 @@ import type { IPublicClientConfig } from "./types/ClientConfigs.js";
  * });
  */
 class PublicClient extends BaseClient {
-  // biome-ignore lint/complexity/noUselessConstructor: may be useful in the future
   /**
    * Creates an instance of PublicClient.
    *
    * @constructor
    * @param {IPublicClientConfig} config The config to be used in the client. See {@link IPublicClientConfig}.
    */
+  // biome-ignore lint/complexity/noUselessConstructor: may be useful in the future
   constructor(config: IPublicClientConfig) {
     super(config);
   }
