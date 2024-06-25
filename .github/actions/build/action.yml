@@ -7,9 +7,6 @@ runs:
     - name: Lint
       shell: bash
       run: npm run lint
-    - name: Format
-      shell: bash
-      run: npm run format
     # - name: Test
     #   shell: bash
     #   run: npm run test:ci

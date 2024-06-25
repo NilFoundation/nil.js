@@ -33,9 +33,8 @@
     "test:coverage": "npm run test:ci -- --coverage",
     "build": "rimraf dist && rollup -c ./rollup/rollup.config.js --bundleConfigAsCjs",
     "prepare": "npx simple-git-hooks",
-    "format": "biome format .",
     "lint": "biome check .",
-    "biome:fix": "biome check --write .",
+    "lint:fix": "biome check --write .",
     "changeset": "changeset",
     "changeset:publish": "changeset publish",
     "git-hooks:update": "git config core.hooksPath .git/hooks/ && rm -rf .git/hooks && npx --no-install simple-git-hooks",
@@ -72,7 +71,6 @@
   },
   "simple-git-hooks": {
     "pre-commit": "npm run lint",
-    "pre-push": "npm run format",
     "commit-msg": "npx --no-install commitlint --edit $1",
     "preserveUnused": [
       "commit-msg"
