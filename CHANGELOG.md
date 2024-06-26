@@ -1,5 +1,17 @@
 # niljs
 
+## 0.4.0
+
+### Minor Changes
+
+- [#49](https://github.com/NilFoundation/nil.js/pull/49) [`dea3836`](https://github.com/NilFoundation/nil.js/commit/dea38368a50b5d658e198f5a68e66945981f7dcd) Thanks [@KlonD90](https://github.com/KlonD90)! - Add bounce, getCurrencies, waitTillCompleted
+
+### Patch Changes
+
+- [#46](https://github.com/NilFoundation/nil.js/pull/46) [`b07cf72`](https://github.com/NilFoundation/nil.js/commit/b07cf72e9fb96b7423118547ceeef942a2e1b15e) Thanks [@ukorvl](https://github.com/ukorvl)! - Make shardId optional when initializing public client
+
+- [#39](https://github.com/NilFoundation/nil.js/pull/39) [`c6b8205`](https://github.com/NilFoundation/nil.js/commit/c6b82050d518417590ed7e95bc274f6523587d0a) Thanks [@ukorvl](https://github.com/ukorvl)! - Update biomejs and apply some code style rules
+
 ## 0.3.0
 
 ### Minor Changes
