@@ -78,7 +78,7 @@ export type RequestParams = {
  * @typedef {DeployParams}
  */
 export type DeployParams = {
-  bytecode: Uint8Array;
+  bytecode: Uint8Array | Hex;
   abi?: Abi;
   args?: unknown[];
   salt: Uint8Array | bigint;

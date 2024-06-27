@@ -55,28 +55,42 @@ const hashMessage = await wallet.sendMessage({
   data: encodeFunctionData({
     abi: MINTER_ABI,
     functionName: "create",
-    args: [100_000_000n, walletAddress],
+    args: [100_000_000n, walletAddress, "MY_TOKEN", walletAddress],
   }),
 });
 
 await waitTillCompleted(client, 1, hashMessage);
 
 const n = hexToBigInt(walletAddress);
-const hashSendMessage = await wallet.sendMessage({
-  to: MINTER_ADDRESS,
-  gas: 1_000_000n,
-  value: 100_000_000n,
-  data: encodeFunctionData({
-    abi: MINTER_ABI,
-    functionName: "transfer",
-    args: [n, 100_000_000n, walletAddress],
-  }),
-});
-
-const receipts = await waitTillCompleted(client, 1, hashSendMessage);
-// biome-ignore lint/nursery/noConsole: <explanation>
-console.log("receipts", receipts);
 
 const tokens = await client.getCurrencies(walletAddress, "latest");
 // biome-ignore lint/nursery/noConsole: <explanation>
 console.log("tokens", tokens);
+
+const anotherAddress = WalletV1.calculateWalletAddress({
+  pubKey: pubkey,
+  shardId: 2,
+  salt: 200n,
+});
+
+const sendHash = await wallet.sendMessage({
+  to: anotherAddress,
+  value: 10_000_000n,
+  gas: 100_000n,
+  tokens: [
+    {
+      id: n,
+      amount: 100_00n,
+    },
+  ],
+});
+
+await waitTillCompleted(client, 1, sendHash);
+
+const anotherTokens = await client.getCurrencies(
+  bytesToHex(anotherAddress),
+  "latest",
+);
+
+// biome-ignore lint/nursery/noConsole: <explanation>
+console.log("anotherTokens", anotherTokens);
