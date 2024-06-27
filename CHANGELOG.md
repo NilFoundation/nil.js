@@ -1,5 +1,11 @@
 # niljs
 
+## 0.5.0
+
+### Minor Changes
+
+- [#59](https://github.com/NilFoundation/nil.js/pull/59) [`fd90707`](https://github.com/NilFoundation/nil.js/commit/fd9070739aa3b53c8f004209987de6ddbaf8a953) Thanks [@KlonD90](https://github.com/KlonD90)! - update wallet from nil + minter
+
 ## 0.4.0
 
 ### Minor Changes
