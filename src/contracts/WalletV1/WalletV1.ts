@@ -397,7 +397,7 @@ export class WalletV1 {
   }: DeployParams) {
     const { data, address } = prepareDeployPart({
       shard: shardId,
-      bytecode: bytecode,
+      bytecode: typeof bytecode === "string" ? hexToBytes(bytecode) : bytecode,
       abi,
       args,
       salt,

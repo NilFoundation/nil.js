@@ -1,12 +1,13 @@
 import type { PublicClient } from "../clients/PublicClient.js";
 import type { Hex } from "../types/Hex.js";
+import type { IReceipt } from "../types/IReceipt.js";
 
 export const waitTillCompleted = async (
   client: PublicClient,
   shardId: number,
   hash: Hex,
 ) => {
-  const receipts = [];
+  const receipts: IReceipt[] = [];
   const hashes: [number, Hex][] = [[shardId, hash]];
   let cur = 0;
   while (cur !== hashes.length) {
