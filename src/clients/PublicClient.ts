@@ -308,15 +308,13 @@ class PublicClient extends BaseClient {
    * const message = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
    */
   public async sendRawMessage(message: `0x${string}` | Uint8Array) {
-    let hexMessage: `0x${string}`;
-    if (typeof message !== "string") {
-      hexMessage = `0x${bytesToHex(message)}`;
-    } else {
-      hexMessage = message;
-    }
     const res = await this.request<Uint8Array>({
       method: "eth_sendRawTransaction",
-      params: [hexMessage],
+      params: [
+        typeof message === "string"
+          ? message
+          : addHexPrefix(bytesToHex(message)),
+      ],
     });
 
     return res;
@@ -351,6 +349,7 @@ class PublicClient extends BaseClient {
       method: "eth_chainId",
       params: [],
     });
+
     return hexToNumber(res);
   }
 
@@ -369,6 +368,7 @@ class PublicClient extends BaseClient {
       params: [address, blockNumberOrHash],
     });
     const tokenMap: Record<string, bigint> = {};
+
     if (res) {
       for (const [key, value] of Object.entries(res)) {
         tokenMap[key] = hexToBigInt(value);

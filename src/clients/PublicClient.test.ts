@@ -89,3 +89,19 @@ test("estimateGasLimit", async ({ expect }) => {
 
   expect(gasLimit).toBeDefined();
 });
+
+test("chainId", async ({ expect }) => {
+  const chainId = await client.chainId();
+
+  expect(chainId).toBeDefined();
+});
+
+test("getCurrencies", async ({ expect }) => {
+  const currencies = await client.getCurrencies(
+    addHexPrefix(defaultAddress),
+    "latest",
+  );
+
+  expect(currencies).toBeDefined();
+  expect(currencies).toBeInstanceOf(Object);
+});
