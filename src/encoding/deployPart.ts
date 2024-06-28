@@ -18,12 +18,18 @@ export const prepareDeployPart = (
     constructorData = hexToBytes(
       encodeDeployData({
         abi: data.abi,
-        bytecode: bytesToHex(data.bytecode),
+        bytecode:
+          typeof data.bytecode === "string"
+            ? data.bytecode
+            : bytesToHex(data.bytecode),
         args: data.args || [],
       }),
     );
   } else {
-    constructorData = data.bytecode;
+    constructorData =
+      typeof data.bytecode === "string"
+        ? hexToBytes(data.bytecode)
+        : data.bytecode;
   }
   const bytecode = new Uint8Array([...constructorData, ...byteSalt]);
   const address = calculateAddress(data.shard, constructorData, byteSalt);

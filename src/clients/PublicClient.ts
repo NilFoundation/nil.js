@@ -308,7 +308,7 @@ class PublicClient extends BaseClient {
    * const message = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
    */
   public async sendRawMessage(message: `0x${string}` | Uint8Array) {
-    const res = await this.request<Uint8Array>({
+    const res = await this.request<Hex>({
       method: "eth_sendRawTransaction",
       params: [
         typeof message === "string"
