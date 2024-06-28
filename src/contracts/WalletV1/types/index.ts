@@ -3,22 +3,30 @@ import type { ISigner, PublicClient } from "../../../index.js";
 import type { Token } from "../../../types/Token.js";
 import type { Hex } from "../../../types/index.js";
 
+type WaletV1BaseConfig = {
+  pubkey: Uint8Array | Hex;
+  client: PublicClient;
+  signer: ISigner;
+};
+
+type WalletV1ConfigCalculated = WaletV1BaseConfig & {
+  salt: Uint8Array | bigint;
+  shardId: number;
+  address?: undefined;
+};
+
+type WalletV1ConfigAddress = WaletV1BaseConfig & {
+  address: Address | Uint8Array;
+  salt?: undefined;
+  shardId?: undefined;
+};
 /**
  * Represents the wallet configuration.
  *
  
  * @typedef {WalletV1Config}
  */
-export type WalletV1Config = {
-  pubkey: Uint8Array | Hex;
-  shardId: number;
-  client: PublicClient;
-  signer: ISigner;
-  salt: Uint8Array | bigint;
-  address: Hex | Uint8Array;
-  calculatedAddress?: boolean;
-};
-
+export type WalletV1Config = WalletV1ConfigCalculated | WalletV1ConfigAddress;
 /**
  * Represents the message call params.
  *
@@ -46,6 +54,7 @@ export type SendMessageParams = {
   tokens?: Token[];
   deploy?: boolean;
   seqno?: number;
+  chainId?: number;
 };
 
 /**
@@ -70,6 +79,7 @@ export type RequestParams = {
   data: Uint8Array;
   deploy: boolean;
   seqno?: number;
+  chainId?: number;
 };
 
 /**
@@ -85,4 +95,6 @@ export type DeployParams = {
   shardId: number;
   gas: bigint;
   value?: bigint;
+  seqno?: number;
+  chainId?: number;
 };

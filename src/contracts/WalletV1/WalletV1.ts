@@ -5,7 +5,8 @@ import type { PublicClient } from "../../clients/PublicClient.js";
 import { prepareDeployPart } from "../../encoding/deployPart.js";
 import { externalMessageEncode } from "../../encoding/externalMessage.js";
 import type { ISigner } from "../../signers/index.js";
-import { refineAddress } from "../../utils/address.js";
+import type { IDeployData } from "../../types/IDeployData.js";
+import { getShardIdFromAddress, refineAddress } from "../../utils/address.js";
 import { refineCompressedPublicKey, refineSalt } from "../../utils/refiners.js";
 import { code } from "./Wallet-bin.js";
 import WalletAbi from "./Wallet.abi.json";
@@ -114,7 +115,7 @@ export class WalletV1 {
    *
    * @type {Uint8Array}
    */
-  salt: Uint8Array;
+  salt?: Uint8Array;
   /**
    * The wallet signer.
    *
@@ -135,7 +136,7 @@ export class WalletV1 {
    * @param {WalletV1Config} param0 The object representing the initial wallet config. See {@link WalletV1Config}.
    * @param {WalletV1Config} param0.pubkey The wallet public key.
    * @param {WalletV1Config} param0.shardId The ID of the shard where the wallet is deployed.
-   * @param {WalletV1Config} param0.address The wallet address.
+   * @param {WalletV1Config} param0.address The wallet address. If address is not provided it will be calculated with salt.
    * @param {WalletV1Config} param0.client The client for interacting with the wallet.
    * @param {WalletV1Config} param0.salt The arbitrary data for changing the wallet address.
    * @param {WalletV1Config} param0.signer The wallet signer.
@@ -149,11 +150,23 @@ export class WalletV1 {
     signer,
   }: WalletV1Config) {
     this.pubkey = refineCompressedPublicKey(pubkey);
-    this.shardId = shardId;
     this.client = client;
-    this.salt = refineSalt(salt);
     this.signer = signer;
-    this.address = refineAddress(address);
+    invariant(
+      !(salt && address),
+      "You should use salt and shard for calculating address or address itself, not both to avoid issue.",
+    );
+    this.address = address
+      ? refineAddress(address)
+      : WalletV1.calculateWalletAddress({
+          pubKey: this.pubkey,
+          shardId,
+          salt,
+        });
+    if (salt) {
+      this.salt = refineSalt(salt);
+    }
+    this.shardId = getShardIdFromAddress(this.address);
   }
 
   /**
@@ -207,6 +220,11 @@ export class WalletV1 {
    * await wallet.selfDeploy(true);
    */
   async selfDeploy(waitTillConfirmation = true) {
+    invariant(
+      typeof this.salt !== "undefined",
+      "Salt is required for external deployment. Please provide salt for walelt",
+    );
+
     const [balance, code] = await Promise.all([
       await this.client.getBalance(this.getAddressHex(), "latest"),
       await this.client
@@ -269,7 +287,7 @@ export class WalletV1 {
     const [seqno, chainId] = await Promise.all([
       requestParams.seqno ??
         this.client.getMessageCount(this.getAddressHex(), "latest"),
-      this.client.chainId(),
+      requestParams.chainId ?? this.client.chainId(),
     ]);
     const encodedMessage = await externalMessageEncode(
       {
@@ -322,6 +340,7 @@ export class WalletV1 {
     gas,
     value,
     tokens,
+    chainId,
   }: SendMessageParams) {
     const hexTo = bytesToHex(refineAddress(to));
     const hexRefundTo = bytesToHex(refineAddress(refundTo ?? this.address));
@@ -351,6 +370,7 @@ export class WalletV1 {
       data: hexToBytes(callData),
       deploy: false,
       seqno,
+      chainId,
     });
 
     return bytesToHex(hash);
@@ -394,14 +414,31 @@ export class WalletV1 {
     salt,
     value,
     gas,
+    seqno,
+    chainId,
   }: DeployParams) {
-    const { data, address } = prepareDeployPart({
-      shard: shardId,
-      bytecode: typeof bytecode === "string" ? hexToBytes(bytecode) : bytecode,
-      abi,
-      args,
-      salt,
-    });
+    let deployData: IDeployData;
+    if (abi && args) {
+      deployData = {
+        shard: shardId,
+        bytecode,
+        abi: abi,
+        args: args,
+        salt,
+      };
+    } else {
+      invariant(
+        abi || args,
+        "ABI and args should be provided together or not provided at all.",
+      );
+      deployData = {
+        shard: shardId,
+        bytecode,
+        salt,
+      };
+    }
+
+    const { data, address } = prepareDeployPart(deployData);
 
     const hash = await this.sendMessage({
       to: address,
@@ -410,6 +447,8 @@ export class WalletV1 {
       value: value ?? 0n,
       deploy: true,
       gas,
+      seqno,
+      chainId,
     });
 
     return {
@@ -419,7 +458,7 @@ export class WalletV1 {
   }
 
   /**
-   * Send a message synchronously via the wallet.
+   * Send a message synchron  ously via the wallet.
    *
    * @async
    * @param {SendSyncMessageParams} param0 The object representing the message params.
