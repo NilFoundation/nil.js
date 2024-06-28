@@ -1,0 +1,36 @@
+name: Version pull request
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  version-pull-request:
+    name: Version Pull Request
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+        with:
+          node_version: 20
+      - name: Build
+        uses: ./.github/actions/build
+      - name: Create Pull Request with changeset
+        uses: changesets/action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPOSITORY_ACCESS_TOKEN }}
+        with:
+          title: "Version Packages"
+          commit: "version packages"
