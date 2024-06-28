@@ -30,11 +30,6 @@ const wallet = new WalletV1({
   shardId: 1,
   client,
   signer,
-  address: WalletV1.calculateWalletAddress({
-    pubKey: pubkey,
-    shardId: 1,
-    salt: 100n,
-  }),
 });
 const walletAddress = await wallet.getAddressHex();
 
@@ -44,11 +39,6 @@ const anotherWallet = new WalletV1({
   shardId: 1,
   client,
   signer,
-  address: WalletV1.calculateWalletAddress({
-    pubKey: pubkey,
-    shardId: 1,
-    salt: 200n,
-  }),
 });
 
 // biome-ignore lint/nursery/noConsole: <explanation>
