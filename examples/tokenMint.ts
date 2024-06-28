@@ -32,11 +32,6 @@ const wallet = new WalletV1({
   shardId: 1,
   client,
   signer,
-  address: WalletV1.calculateWalletAddress({
-    pubKey: pubkey,
-    shardId: 1,
-    salt: 100n,
-  }),
 });
 const walletAddress = await wallet.getAddressHex();
 const faucetHash = await faucet.withdrawTo(walletAddress, 1_000_000_000_000n);
