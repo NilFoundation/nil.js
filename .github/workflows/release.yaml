@@ -1,6 +1,8 @@
 name: Release
 
 on:
+  pull_request:
+    types: [closed]
   workflow_dispatch:
 
 concurrency:
@@ -8,8 +10,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  version-pull-request:
-    name: Version Pull Request
+  release:
+    # Only run this job if the pull request was pull request from changesets
+    if: |
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event.pull_request.merged == true &&
+      github.event.pull_request.title == 'Version Packages' &&
+      github.event.pull_request.head.ref == 'master')
+    name: Release on GitHub and publish to npm
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -24,13 +32,12 @@ jobs:
           node_version: 20
       - name: Build
         uses: ./.github/actions/build
-      - name: Create Pull Request and Publish
+      - name: Create Release and Publish
         uses: changesets/action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.REPOSITORY_ACCESS_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
         with:
-          title: "Version Packages"
-          commit: "version packages"
           createGithubReleases: true
           publish: "npm run changeset:publish"
