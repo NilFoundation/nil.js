@@ -17,11 +17,8 @@ const createBanner = (version, year) => {
 /**
  * Get all dependencies except dev from the package.json file.
  */
-const listDependencies = (packageJson) => {
-  return [
-    ...Object.keys(packageJson.peerDependencies),
-    ...Object.keys(packageJson.dependencies),
-  ];
+const listDependencies = ({ peerDependencies = {}, dependencies = {} }) => {
+  return [...Object.keys(peerDependencies), ...Object.keys(dependencies)];
 };
 
 export { createBanner, listDependencies };
