@@ -317,6 +317,7 @@ export class WalletV1 {
    * @param {SendMessageParams} param0.seqno The message sequence number.
    * @param {SendMessageParams} param0.gas The message gas.
    * @param {SendMessageParams} param0.value The message value.
+   * @param {SendMessageParams} param0.chainId The message chain id.
    * @returns {unknown} The message hash.
    * @example
    * const anotherAddress = WalletV1.calculateWalletAddress({
@@ -404,6 +405,8 @@ export class WalletV1 {
    * @param {DeployParams} param0.salt The arbitrary data for changing the contract address.
    * @param {DeployParams} param0.value The deployment message value.
    * @param {DeployParams} param0.gas The deployment message gas.
+   * @param {DeployParams} param0.seqno The deployment message seqno.
+   * @param {DeployParams} param0.chainId The deployment message chain id.
    * @returns {unknown} The object containing the deployment message hash and the contract address.
    */
   async deployContract({
@@ -458,7 +461,7 @@ export class WalletV1 {
   }
 
   /**
-   * Send a message synchron  ously via the wallet.
+   * Send a message synchronously via the wallet.
    *
    * @async
    * @param {SendSyncMessageParams} param0 The object representing the message params.

@@ -2,19 +2,19 @@ import type { RequestArguments } from "@open-rpc/client-js/build/ClientInterface
 import type { ITransport } from "./types/ITransport.js";
 
 /**
- * HttpTransport represents the HTTP transport for connecting to the network.
+ * MockTransport using for testing purposes.
  *
- * @class HttpTransport
- * @typedef {HttpTransport}
+ * @class MockTransport
+ * @typedef {MockTransport}
  * @implements {ITransport}
  */
 class MockTransport implements ITransport {
   private handler: (args: RequestArguments) => unknown;
   /**
-   * Creates an instance of HttpTransport.
+   * Creates an instance of MockTransport.
    *
    * @constructor
-   * @param {IHttpTransportConfig} config The transport config. See {@link IHttpTransportConfig}.
+   * @param {function} handler testing handler.
    */
   constructor(handler: (args: RequestArguments) => unknown) {
     this.handler = handler;
