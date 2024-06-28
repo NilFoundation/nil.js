@@ -62,10 +62,18 @@ class PublicClient extends BaseClient {
     assertIsValidShardId(shardId);
 
     try {
-      return await this.request<Block>({
+      const block = await this.request<Block>({
         method: "eth_getBlockByHash",
         params: [shardId, hash, fullTx],
       });
+
+      if (!block) {
+        throw new BlockNotFoundError({
+          blockNumberOrHash: hash,
+        });
+      }
+
+      return block;
     } catch (error) {
       throw new BlockNotFoundError({
         blockNumberOrHash: hash,
@@ -97,10 +105,18 @@ class PublicClient extends BaseClient {
     assertIsValidShardId(shardId);
 
     try {
-      return await this.request<Block>({
+      const block = await this.request<Block>({
         method: "eth_getBlockByNumber",
         params: [shardId, blockNumber, fullTx],
       });
+
+      if (!block) {
+        throw new BlockNotFoundError({
+          blockNumberOrHash: blockNumber,
+        });
+      }
+
+      return block;
     } catch (error) {
       throw new BlockNotFoundError({
         blockNumberOrHash: blockNumber,
