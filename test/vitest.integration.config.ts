@@ -4,8 +4,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     environment: "node",
-    include: ["src/**/*.test.ts"],
-    exclude: ["src/integrations/*.test.ts"],
+    include: ["src/integrations/*.test.ts"],
     hookTimeout: 20_000,
     testTimeout: 20_000,
     globals: true,
@@ -13,6 +12,15 @@ export default defineConfig({
       reportsDirectory: "./test/coverage",
       provider: "v8",
       reportOnFailure: true,
+    },
+    sequence: {
+      concurrent: false,
+    },
+    poolOptions: {
+      max: 1,
+      threads: {
+        singleThread: true,
+      },
     },
   },
 });
