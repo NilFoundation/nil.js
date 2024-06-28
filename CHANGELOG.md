@@ -1,5 +1,17 @@
 # niljs
 
+## 0.6.0
+
+### Minor Changes
+
+- [#62](https://github.com/NilFoundation/nil.js/pull/62) [`5165b65`](https://github.com/NilFoundation/nil.js/commit/5165b650f5a83cb47e5190e7f6625c65390feb19) Thanks [@KlonD90](https://github.com/KlonD90)! - Change wallet configuration. Now address will be automatically calculated from shard and salt if it's not provided. Also additionally now deploy data receive a hex as alternative data. Added tests to wallet. Added mock transport.
+
+### Patch Changes
+
+- [#64](https://github.com/NilFoundation/nil.js/pull/64) [`653d1de`](https://github.com/NilFoundation/nil.js/commit/653d1de6f879908245417002e3d1ef1f81c902b5) Thanks [@KlonD90](https://github.com/KlonD90)! - Add integration tests
+
+- [#65](https://github.com/NilFoundation/nil.js/pull/65) [`d93cd03`](https://github.com/NilFoundation/nil.js/commit/d93cd03062b75c94e33f3c85b2e24cc8088ac576) Thanks [@ukorvl](https://github.com/ukorvl)! - Remove peerDependencies and run npm audit
+
 ## 0.5.0
 
 ### Minor Changes
