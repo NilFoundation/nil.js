@@ -36,9 +36,8 @@ const walletAddress = await wallet.getAddressHex();
 // biome-ignore lint/nursery/noConsole: <explanation>
 console.log("walletAddress", walletAddress);
 
-const faucetHash = await faucet.withdrawTo(walletAddress, 100_000_000n);
+await faucet.withdrawToWithRetry(walletAddress, 100_000_000n);
 
-await waitTillCompleted(client, 1, bytesToHex(faucetHash));
 await wallet.selfDeploy(true);
 
 // biome-ignore lint/nursery/noConsole: <explanation>

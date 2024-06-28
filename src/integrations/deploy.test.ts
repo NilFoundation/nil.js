@@ -105,9 +105,7 @@ test("External deployment", async ({ expect }) => {
   const addr = bytesToHex(deploymentMessage.to);
   expect(addr).toBeDefined();
 
-  const faucetHash = await faucet.withdrawTo(addr, convertEthToWei(0.1));
-
-  await waitTillCompleted(client, 1, bytesToHex(faucetHash));
+  await faucet.withdrawToWithRetry(addr, convertEthToWei(0.1));
 
   const hash = await deploymentMessage.send(client);
 

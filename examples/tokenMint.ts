@@ -34,9 +34,8 @@ const wallet = new WalletV1({
   signer,
 });
 const walletAddress = await wallet.getAddressHex();
-const faucetHash = await faucet.withdrawTo(walletAddress, 1_000_000_000_000n);
+await faucet.withdrawToWithRetry(walletAddress, 1_000_000_000_000n);
 
-await waitTillCompleted(client, 1, bytesToHex(faucetHash));
 await wallet.selfDeploy(true);
 // biome-ignore lint/nursery/noConsole: <explanation>
 console.log("Wallet deployed successfully");
