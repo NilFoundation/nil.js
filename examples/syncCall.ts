@@ -5,6 +5,7 @@ import {
   LocalECDSAKeySigner,
   PublicClient,
   WalletV1,
+  convertEthToWei,
   generateRandomPrivateKey,
 } from "../src";
 
@@ -35,15 +36,7 @@ const walletAddress = await wallet.getAddressHex();
 // biome-ignore lint/nursery/noConsole: <explanation>
 console.log("walletAddress", walletAddress);
 
-await faucet.withdrawTo(walletAddress, 100000n);
-
-while (true) {
-  const balance = await client.getBalance(walletAddress, "latest");
-  if (balance > 0) {
-    break;
-  }
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-}
+await faucet.withdrawToWithRetry(walletAddress, convertEthToWei(0.1));
 await wallet.selfDeploy(true);
 
 // biome-ignore lint/nursery/noConsole: <explanation>
@@ -58,7 +51,7 @@ const anotherAddress = WalletV1.calculateWalletAddress({
 await wallet.syncSendMessage({
   to: anotherAddress,
   value: 10n,
-  gas: 100000n,
+  gas: 100_000n,
 });
 
 while (true) {

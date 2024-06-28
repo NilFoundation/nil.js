@@ -39,15 +39,7 @@ const addr = bytesToHex(deploymentMessage.to);
 // biome-ignore lint/nursery/noConsole: <explanation>
 console.log("walletAddress", addr);
 
-await faucet.withdrawTo(addr, 100000n);
-
-while (true) {
-  const balance = await client.getBalance(addr, "latest");
-  if (balance > 0) {
-    break;
-  }
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-}
+await faucet.withdrawToWithRetry(addr, 100000n);
 
 await deploymentMessage.send(client);
 

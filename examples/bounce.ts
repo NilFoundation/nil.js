@@ -46,17 +46,9 @@ console.log("walletAddress", walletAddress);
 // biome-ignore lint/nursery/noConsole: <explanation>
 console.log("anotherWallet", anotherWallet.getAddressHex());
 
-const seqno = await client.getMessageCount(Faucet.address, "latest");
+await faucet.withdrawToWithRetry(walletAddress, 100_000_000n);
+await faucet.withdrawToWithRetry(anotherWallet.getAddressHex(), 100_000_000n);
 
-const faucetHash1 = await faucet.withdrawTo(walletAddress, 100_000_000n, seqno);
-const faucetHash2 = await faucet.withdrawTo(
-  anotherWallet.getAddressHex(),
-  100_000_000n,
-  seqno + 1,
-);
-
-await waitTillCompleted(client, 1, bytesToHex(faucetHash1));
-await waitTillCompleted(client, 1, bytesToHex(faucetHash2));
 await wallet.selfDeploy(true);
 await anotherWallet.selfDeploy(true);
 

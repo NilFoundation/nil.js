@@ -43,21 +43,14 @@ test("bounce", async () => {
     signer,
   });
 
-  const seqno = await client.getMessageCount(Faucet.address, "latest");
+  await Promise.all([
+    faucet.withdrawToWithRetry(walletAddress, convertEthToWei(0.1)),
+    faucet.withdrawToWithRetry(
+      anotherWallet.getAddressHex(),
+      convertEthToWei(0.1),
+    ),
+  ]);
 
-  const faucetHash1 = await faucet.withdrawTo(
-    walletAddress,
-    convertEthToWei(0.1),
-    seqno,
-  );
-  const faucetHash2 = await faucet.withdrawTo(
-    anotherWallet.getAddressHex(),
-    convertEthToWei(0.1),
-    seqno + 1,
-  );
-
-  await waitTillCompleted(client, 1, bytesToHex(faucetHash1));
-  await waitTillCompleted(client, 1, bytesToHex(faucetHash2));
   await wallet.selfDeploy(true);
   await anotherWallet.selfDeploy(true);
 

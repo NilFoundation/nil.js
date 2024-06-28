@@ -35,15 +35,7 @@ const walletAddress = await wallet.getAddressHex();
 // biome-ignore lint/nursery/noConsole: <explanation>
 console.log("walletAddress", walletAddress);
 
-await faucet.withdrawTo(walletAddress, 100000n);
-
-while (true) {
-  const balance = await client.getBalance(walletAddress, "latest");
-  if (balance > 0) {
-    break;
-  }
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-}
+await faucet.withdrawToWithRetry(walletAddress, 100000n);
 await wallet.selfDeploy(true);
 
 const code = await client.getCode(walletAddress, "latest");

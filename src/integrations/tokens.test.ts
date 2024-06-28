@@ -36,12 +36,8 @@ test("mint and transfer tokens", async () => {
     signer,
   });
   const walletAddress = await wallet.getAddressHex();
-  const faucetHash = await faucet.withdrawTo(
-    walletAddress,
-    convertEthToWei(0.1),
-  );
+  await faucet.withdrawToWithRetry(walletAddress, convertEthToWei(0.1));
 
-  await waitTillCompleted(client, 1, bytesToHex(faucetHash));
   await wallet.selfDeploy(true);
 
   const mintCount = 100_000_000n;
