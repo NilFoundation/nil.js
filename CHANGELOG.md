@@ -1,5 +1,11 @@
 # niljs
 
+## 0.7.0
+
+### Minor Changes
+
+- [#69](https://github.com/NilFoundation/nil.js/pull/69) [`1cb7640`](https://github.com/NilFoundation/nil.js/commit/1cb7640914ae615d78ea2799d54c77ad8df7b4ea) Thanks [@KlonD90](https://github.com/KlonD90)! - deperecate Faucet.withdrawTo to Faucet.withdrawToWithRetry that actually await and retry
+
 ## 0.6.0
 
 ### Minor Changes
