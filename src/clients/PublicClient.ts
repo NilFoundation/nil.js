@@ -1,11 +1,14 @@
 import { bytesToHex } from "@noble/curves/abstract/utils";
-import { hexToBytes } from "viem";
+import { hexToBytes, numberToHex } from "viem";
 import { hexToBigInt, hexToNumber } from "../encoding/index.js";
 import { BlockNotFoundError } from "../errors/block.js";
 import { type Hex, assertIsValidShardId } from "../index.js";
 import type { IAddress } from "../signers/types/IAddress.js";
 import type { Block, BlockTag } from "../types/Block.js";
+import type { CallArgs } from "../types/CallArgs.js";
 import type { IReceipt } from "../types/IReceipt.js";
+import type { ProcessedMessage } from "../types/ProcessedMessage.js";
+import type { RPCMessage } from "../types/RPCMessage.js";
 import { addHexPrefix } from "../utils/hex.js";
 import { BaseClient } from "./BaseClient.js";
 import type { IPublicClientConfig } from "./types/ClientConfigs.js";
@@ -253,15 +256,26 @@ class PublicClient extends BaseClient {
    *
    * const message = await client.getMessageByHash(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
-  public async getMessageByHash(hash: Hex, shardId = this.shardId) {
+  public async getMessageByHash(
+    hash: Hex,
+    shardId = this.shardId,
+  ): Promise<ProcessedMessage> {
     assertIsValidShardId(shardId);
 
-    const res = await this.request<Uint8Array>({
+    const res = await this.request<RPCMessage>({
       method: "eth_getInMessageByHash",
       params: [shardId, hash],
     });
 
-    return res;
+    return {
+      ...res,
+      value: BigInt(res.value),
+      gasLimit: BigInt(res.gasLimit),
+      gasUsed: hexToBigInt(res.gasUsed),
+      gasPrice: BigInt(res.gasPrice),
+      seqno: hexToBigInt(res.seqno),
+      index: res.index ? hexToNumber(res.index) : 0,
+    };
   }
 
   /**
@@ -376,6 +390,36 @@ class PublicClient extends BaseClient {
     }
 
     return tokenMap;
+  }
+
+  /**
+   * Returns the result of the call.
+   * @param callArgs The arguments for the call.
+   * @param callArgs.from The address of the sender.
+   * @param callArgs.to The address of the receiver.
+   * @param callArgs.data The data to be sent.
+   * @param callArgs.value The value to be sent.
+   * @param callArgs.gasLimit The gas limit.
+   * @param blockNumberOrHash The number/hash of the block.
+   */
+  public async call(callArgs: CallArgs, blockNumberOrHash: Hex | BlockTag) {
+    const sendData = {
+      from: callArgs.from,
+      to: callArgs.to,
+      data:
+        typeof callArgs.data === "string"
+          ? callArgs.data
+          : addHexPrefix(bytesToHex(callArgs.data)),
+      value: numberToHex(callArgs.value || 0n),
+      gasLimit: numberToHex(callArgs.gasLimit || 5_000_000n),
+    };
+
+    const res = await this.request<`0x${string}`>({
+      method: "eth_call",
+      params: [sendData, blockNumberOrHash],
+    });
+
+    return res;
   }
 }
 
