@@ -1,5 +1,13 @@
 # niljs
 
+## 0.8.0
+
+### Minor Changes
+
+- [#75](https://github.com/NilFoundation/nil.js/pull/75) [`6ad4927`](https://github.com/NilFoundation/nil.js/commit/6ad4927d9f4278aa2641beaf1fead091d8d9df0a) Thanks [@KlonD90](https://github.com/KlonD90)! - Add support of eth_call operation
+
+- [#75](https://github.com/NilFoundation/nil.js/pull/75) [`6ad4927`](https://github.com/NilFoundation/nil.js/commit/6ad4927d9f4278aa2641beaf1fead091d8d9df0a) Thanks [@KlonD90](https://github.com/KlonD90)! - Change message typing
+
 ## 0.7.0
 
 ### Minor Changes
