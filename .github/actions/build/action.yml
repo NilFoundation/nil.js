@@ -7,6 +7,9 @@ runs:
     - name: Lint
       shell: bash
       run: npm run lint
+    - name: Npm audit
+      shell: bash
+      run: npm audit --audit-level=moderate
     # - name: Test
     #   shell: bash
     #   run: npm run test:ci
