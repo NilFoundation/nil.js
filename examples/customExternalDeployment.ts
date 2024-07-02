@@ -1,4 +1,9 @@
-import { bytesToHex, encodeFunctionData, hexToBytes } from "viem";
+import {
+  bytesToHex,
+  decodeFunctionResult,
+  encodeFunctionData,
+  hexToBytes,
+} from "viem";
 import {
   Faucet,
   HttpTransport,
@@ -269,3 +274,142 @@ const message = await client.getMessageByHash(productsMessageHash, 4);
 
 // biome-ignore lint/nursery/noConsole: <explanation>
 console.log(message);
+
+const resultsCall = await client.call(
+  {
+    from: addrM,
+    to: addrM,
+    data: encodeFunctionData({
+      abi: [
+        {
+          inputs: [
+            { internalType: "bytes", name: "_pubkey", type: "bytes" },
+            {
+              internalType: "address",
+              name: "_retailerContractAddress",
+              type: "address",
+            },
+          ],
+          stateMutability: "payable",
+          type: "constructor",
+        },
+        {
+          inputs: [{ internalType: "string", name: "name", type: "string" }],
+          name: "createProduct",
+          outputs: [{ internalType: "bool", name: "", type: "bool" }],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getProducts",
+          outputs: [
+            { internalType: "uint256[]", name: "", type: "uint256[]" },
+            { internalType: "string[]", name: "", type: "string[]" },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "nextProductId",
+          outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+          name: "products",
+          outputs: [
+            { internalType: "uint256", name: "id", type: "uint256" },
+            { internalType: "string", name: "name", type: "string" },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            { internalType: "uint256", name: "hash", type: "uint256" },
+            { internalType: "bytes", name: "signature", type: "bytes" },
+          ],
+          name: "verifyExternal",
+          outputs: [{ internalType: "bool", name: "", type: "bool" }],
+          stateMutability: "view",
+          type: "function",
+        },
+        { stateMutability: "payable", type: "receive" },
+      ] as Abi,
+      functionName: "getProducts",
+      args: [],
+    }),
+  },
+  "latest",
+);
+
+// biome-ignore lint/nursery/noConsole: <explanation>
+console.log(
+  "getProducts",
+  decodeFunctionResult({
+    abi: [
+      {
+        inputs: [
+          { internalType: "bytes", name: "_pubkey", type: "bytes" },
+          {
+            internalType: "address",
+            name: "_retailerContractAddress",
+            type: "address",
+          },
+        ],
+        stateMutability: "payable",
+        type: "constructor",
+      },
+      {
+        inputs: [{ internalType: "string", name: "name", type: "string" }],
+        name: "createProduct",
+        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "getProducts",
+        outputs: [
+          { internalType: "uint256[]", name: "", type: "uint256[]" },
+          { internalType: "string[]", name: "", type: "string[]" },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "nextProductId",
+        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+        name: "products",
+        outputs: [
+          { internalType: "uint256", name: "id", type: "uint256" },
+          { internalType: "string", name: "name", type: "string" },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          { internalType: "uint256", name: "hash", type: "uint256" },
+          { internalType: "bytes", name: "signature", type: "bytes" },
+        ],
+        name: "verifyExternal",
+        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+        stateMutability: "view",
+        type: "function",
+      },
+      { stateMutability: "payable", type: "receive" },
+    ] as Abi,
+    functionName: "getProducts",
+    data: resultsCall,
+  }),
+);
