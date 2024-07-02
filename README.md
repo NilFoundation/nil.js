@@ -57,7 +57,7 @@ To initialize a `PublicClient`:
 ```typescript
 const client = new PublicClient({
   transport: new HttpTransport({
-    endpoint: "http://127.0.0.1:8529",
+    endpoint: "{NIL_ENDPOINT}",
   }),
   shardId: 1,
 });
@@ -78,11 +78,6 @@ const wallet = new WalletV1({
   shardId: 1,
   client,
   signer,
-  address: WalletV1.calculateWalletAddress({
-    pubKey: pubkey,
-    shardId: 1,
-    salt: 100n,
-  }),
 });
 const walletAddress = await wallet.getAddressHex();
 ```
@@ -150,6 +145,48 @@ await wallet.syncSendMessage({
 ```
 
 It is only possible to perform sync calls within the confines of one shard.
+
+## Multi-currency and bouncing
+
+=nil; provides a multi-currency mechanism. A contract can be the owner of one custom currency, and owners can freely send custom currencies to other contracts. As a result, the balance of a given contract may contain standard =nil; tokens, and several custom tokens created by other contracts.
+
+To create a currency and withdraw it:
+
+```ts
+const hashMessage = await wallet.sendMessage({
+  to: MINTER_ADDRESS,
+  gas: 1_000_000n,
+  value: 100_000_000n,
+  data: encodeFunctionData({
+    abi: MINTER_ABI,
+    functionName: "create",
+    args: [100_000_000n, walletAddress, "MY_TOKEN", walletAddress],
+  }),
+});
+
+await waitTillCompleted(client, 1, hashMessage);
+```
+
+To send a currency to another contract:
+
+```ts
+const sendHash = await wallet.sendMessage({
+  to: anotherAddress,
+  value: 10_000_000n,
+  gas: 100_000n,
+  tokens: [
+    {
+      id: n,
+      amount: 100_00n,
+    },
+  ],
+});
+
+await waitTillCompleted(client, 1, sendHash);
+```
+
+=nil; also supports token bouncing. If a message carries custom tokens, and it is unsuccesful, the funds will be returned to the address specified in the `bounceTo` parameter when sending the message.
+
 
 ## Licence
 
