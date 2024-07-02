@@ -9,25 +9,25 @@
 <row style="display: flex; gap: 10px;"><p align="center">
   <a href="https://github.com/NilFoundation/nil.js/actions/workflows/build.yaml">
     <picture>
-      <img src="https://img.shields.io/github/actions/workflow/status/NilFoundation/nil.js/actions/workflows/build.yaml?color=%23212121"/>
+      <img src="https://img.shields.io/github/actions/workflow/status/NilFoundation/nil.js/.github%2Fworkflows%2Fbuild.yaml"/>
     </picture>
   </a>
-  <a href="https://github.com/NilFoundation/nil.js/actions/workflows/build.yaml">
+  <a href="https://www.npmjs.com/package/@nilfoundation/niljs">
     <picture>
-      <img src="https://img.shields.io/npm/dy/niljs"/>
+      <img src="https://img.shields.io/npm/dy/%40nilfoundation%2Fniljs"/>
     </picture>
   </a>
-  <a href="https://github.com/NilFoundation/nil.js/actions/workflows/build.yaml">
+  <a href="https://github.com/NilFoundation/nil.js">
     <picture>
       <img src="https://img.shields.io/github/stars/NilFoundation/nil.js"/>
     </picture>
   </a>
   <a href="https://github.com/NilFoundation/nil.js/actions/workflows/build.yaml">
     <picture>
-      <img src="https://img.shields.io/npm/v/niljs"/>
+      <img src="https://img.shields.io/npm/v/%40nilfoundation%2Fniljs"/>
     </picture>
   </a>
-  <a href="https://github.com/NilFoundation/nil.js/actions/workflows/build.yaml">
+  <a href="https://github.com/NilFoundation/nil.js">
     <picture>
       <img src="https://img.shields.io/github/forks/NilFoundation/nil.js"/>
     </picture>
