@@ -148,7 +148,7 @@ It is only possible to perform sync calls within the confines of one shard.
 
 ## Multi-currency and bouncing
 
-=nil; provides a multi-currency mechanism. A contract can be the owner of one custom currency, and owners can freely send custom currencies to other contracts. As a result, the balance of a given contract may contain standard =nil; tokens, and several custom tokens created by other contracts.
+=nil; provides a multi-currency mechanism. A contract can be the owner of one custom currency, and owners can freely send custom currencies to other contracts. As a result, the balance of a given contract may contain standard tokens, and several custom tokens created by other contracts.
 
 To create a currency and withdraw it:
 
