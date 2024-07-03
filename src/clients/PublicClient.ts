@@ -411,7 +411,7 @@ class PublicClient extends BaseClient {
           ? callArgs.data
           : addHexPrefix(bytesToHex(callArgs.data)),
       value: numberToHex(callArgs.value || 0n),
-      gasLimit: numberToHex(callArgs.gasLimit || 5_000_000n),
+      gasLimit: (callArgs.gasLimit || 5_000_000n).toString(10),
     };
 
     const res = await this.request<`0x${string}`>({
