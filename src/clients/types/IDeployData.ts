@@ -1,7 +1,7 @@
 import type { Hex } from "../../index.js";
 
 /**
- * The data structure that contains the information necessary to deploy a contract.
+ * The type that contains the information necessary to deploy a contract.
  */
 type IDeployData = {
   /**
