@@ -1,5 +1,11 @@
 # niljs
 
+## 0.9.0
+
+### Minor Changes
+
+- [#83](https://github.com/NilFoundation/nil.js/pull/83) [`899c2c0`](https://github.com/NilFoundation/nil.js/commit/899c2c0dfe0e7ae19eb4f735ba61a4c2845b1196) Thanks [@KlonD90](https://github.com/KlonD90)! - fix call
+
 ## 0.8.0
 
 ### Minor Changes
