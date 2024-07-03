@@ -33,4 +33,16 @@ const addHexPrefix = (str: Hex | string): Hex => {
   return `0x${removeHexPrefix(str)}`;
 };
 
-export { isHexString, removeHexPrefix, addHexPrefix };
+/**
+ * Concatenates an array of hex strings. The hex strings are concatenated without the "0x" prefix.
+ * The resulting hex string will have the "0x" prefix.
+ * @param values - An array of hex strings.
+ * @returns The concatenated hex string.
+ */
+const concatHex = (values: readonly Hex[]): Hex => {
+  return addHexPrefix(
+    (values as Hex[]).reduce((acc, x) => acc + x.replace("0x", ""), ""),
+  );
+};
+
+export { isHexString, removeHexPrefix, addHexPrefix, concatHex };

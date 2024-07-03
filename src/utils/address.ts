@@ -1,6 +1,6 @@
-import { type Hex, numberToBytesBE } from "@noble/curves/abstract/utils";
-import { hexToBytes } from "viem";
+import { numberToBytesBE } from "@noble/curves/abstract/utils";
 import { poseidonHash } from "../encoding/poseidon.js";
+import { hexToBytes } from "../index.js";
 import type { IAddress } from "../signers/types/IAddress.js";
 
 /**
@@ -14,7 +14,7 @@ const ADDRESS_REGEX = /^0x[0-9a-fA-F]{40}$/;
  * Otherwise, returns false.
  * @param value The value to check.
  */
-const isAddress = (value: Hex): value is IAddress => {
+const isAddress = (value: string): value is IAddress => {
   return typeof value === "string" && ADDRESS_REGEX.test(value);
 };
 
@@ -22,7 +22,7 @@ const isAddress = (value: Hex): value is IAddress => {
  * Returns the ID of the shard containing the provided address.
  * @param address The address.
  */
-const getShardIdFromAddress = (address: Hex): number => {
+const getShardIdFromAddress = (address: string): number => {
   if (typeof address === "string") {
     return Number.parseInt(address.slice(2, 6), 16);
   }

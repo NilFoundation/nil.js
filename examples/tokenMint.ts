@@ -1,4 +1,4 @@
-import { bytesToHex, encodeFunctionData, hexToBigInt } from "viem";
+import { encodeFunctionData } from "viem";
 import {
   Faucet,
   HttpTransport,
@@ -7,7 +7,9 @@ import {
   MINTER_ADDRESS,
   PublicClient,
   WalletV1,
+  bytesToHex,
   generateRandomPrivateKey,
+  hexToBigInt,
   waitTillCompleted,
 } from "../src";
 

@@ -1,13 +1,15 @@
-import { bytesToHex } from "viem";
-import { generatePrivateKey } from "viem/accounts";
 import { PublicClient } from "../../clients/index.js";
-import { LocalECDSAKeySigner } from "../../signers/index.js";
+import { bytesToHex } from "../../index.js";
+import {
+  LocalECDSAKeySigner,
+  generateRandomPrivateKey,
+} from "../../signers/index.js";
 import { MockTransport } from "../../transport/MockTransport.js";
 import { WalletV1 } from "../WalletV1/WalletV1.js";
 import { Faucet } from "./Faucet.js";
 
 const signer = new LocalECDSAKeySigner({
-  privateKey: generatePrivateKey(),
+  privateKey: generateRandomPrivateKey(),
 });
 
 test("Faucet with retry", async () => {

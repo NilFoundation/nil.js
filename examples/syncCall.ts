@@ -1,10 +1,10 @@
-import { bytesToHex } from "viem";
 import {
   Faucet,
   HttpTransport,
   LocalECDSAKeySigner,
   PublicClient,
   WalletV1,
+  bytesToHex,
   convertEthToWei,
   generateRandomPrivateKey,
 } from "../src";

@@ -1,9 +1,10 @@
 import type { Abi } from "abitype";
 import invariant from "tiny-invariant";
-import { bytesToHex, encodeFunctionData, hexToBytes } from "viem";
+import { bytesToHex, encodeFunctionData } from "viem";
 import type { PublicClient } from "../../clients/PublicClient.js";
 import { prepareDeployPart } from "../../encoding/deployPart.js";
 import { externalMessageEncode } from "../../encoding/externalMessage.js";
+import { hexToBytes, toHex } from "../../index.js";
 import type { ISigner } from "../../signers/index.js";
 import type { IDeployData } from "../../types/IDeployData.js";
 import { getShardIdFromAddress, refineAddress } from "../../utils/address.js";
@@ -19,9 +20,8 @@ import type {
 } from "./types/index.js";
 
 /**
- * WalletV1 is a class used for performing operations on the cluster that require authentication. 
+ * WalletV1 is a class used for performing operations on the cluster that require authentication.
  *
- 
  * @class WalletV1
  * @typedef {WalletV1}
  */
@@ -166,7 +166,7 @@ export class WalletV1 {
     if (salt) {
       this.salt = refineSalt(salt);
     }
-    this.shardId = getShardIdFromAddress(this.address);
+    this.shardId = getShardIdFromAddress(toHex(this.address));
   }
 
   /**
