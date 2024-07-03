@@ -1,7 +1,7 @@
 import { concatBytes, numberToBytesBE } from "@noble/curves/abstract/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import invariant from "tiny-invariant";
-import { type Hex, bytesToHex, hexToBytes } from "viem";
+import { type Hex, bytesToHex, hexToBytes } from "../index.js";
 import { assertIsValidPrivateKey } from "../utils/assert.js";
 import { addHexPrefix, removeHexPrefix } from "../utils/hex.js";
 import { privateKeyFromPhrase } from "./mnemonic.js";

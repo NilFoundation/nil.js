@@ -1,6 +1,7 @@
-import { type Hex, bytesToHex, encodeFunctionData, hexToBytes } from "viem";
+import { type Hex, bytesToHex, encodeFunctionData } from "viem";
 import type { PublicClient } from "../../clients/PublicClient.js";
 import { ExternalMessageEnvelope } from "../../encoding/externalMessage.js";
+import { hexToBytes } from "../../index.js";
 import type { IReceipt } from "../../types/IReceipt.js";
 import { getShardIdFromAddress } from "../../utils/address.js";
 import { waitTillCompleted } from "../../utils/receipt.js";
@@ -9,7 +10,6 @@ import FaucetAbi from "./Faucet.abi.json";
 /**
  * Faucet is a special contract that is used to top up other contracts in the =nil; devnet.
  *
- 
  * @class Faucet
  * @typedef {Faucet}
  */

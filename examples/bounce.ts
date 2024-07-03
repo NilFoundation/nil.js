@@ -1,10 +1,11 @@
-import { bytesToHex, encodeFunctionData } from "viem";
+import { encodeFunctionData } from "viem";
 import {
   Faucet,
   HttpTransport,
   LocalECDSAKeySigner,
   PublicClient,
   WalletV1,
+  bytesToHex,
   generateRandomPrivateKey,
   waitTillCompleted,
 } from "../src";

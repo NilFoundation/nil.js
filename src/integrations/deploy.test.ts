@@ -1,5 +1,4 @@
 import type { Abi } from "abitype";
-import { bytesToHex } from "viem";
 import { testEnv } from "../../test/testEnv.js";
 import {
   Faucet,
@@ -7,6 +6,7 @@ import {
   LocalECDSAKeySigner,
   PublicClient,
   WalletV1,
+  bytesToHex,
   convertEthToWei,
   externalDeploymentMessage,
   generateRandomPrivateKey,

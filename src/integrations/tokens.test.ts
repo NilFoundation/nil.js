@@ -1,4 +1,4 @@
-import { bytesToHex, encodeFunctionData, hexToBigInt, numberToHex } from "viem";
+import { encodeFunctionData } from "viem";
 import { testEnv } from "../../test/testEnv.js";
 import {
   Faucet,
@@ -8,8 +8,11 @@ import {
   MINTER_ADDRESS,
   PublicClient,
   WalletV1,
+  bytesToHex,
   convertEthToWei,
   generateRandomPrivateKey,
+  hexToBigInt,
+  toHex,
   waitTillCompleted,
 } from "../index.js";
 const client = new PublicClient({
@@ -61,8 +64,8 @@ test("mint and transfer tokens", async () => {
 
   expect(tokens).toBeDefined();
   expect(Object.keys(tokens).length).toBeGreaterThan(0);
-  expect(tokens[numberToHex(n)]).toBeDefined();
-  expect(tokens[numberToHex(n)]).toBe(mintCount);
+  expect(tokens[toHex(n)]).toBeDefined();
+  expect(tokens[toHex(n)]).toBe(mintCount);
 
   const anotherAddress = WalletV1.calculateWalletAddress({
     pubKey: pubkey,
@@ -93,6 +96,6 @@ test("mint and transfer tokens", async () => {
 
   expect(anotherTokens).toBeDefined();
   expect(Object.keys(anotherTokens).length).toBeGreaterThan(0);
-  expect(anotherTokens[numberToHex(n)]).toBeDefined();
-  expect(anotherTokens[numberToHex(n)]).toBe(transferCount);
+  expect(anotherTokens[toHex(n)]).toBeDefined();
+  expect(anotherTokens[toHex(n)]).toBe(transferCount);
 });

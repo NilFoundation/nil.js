@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { hexToBytes } from "viem";
+import { hexToBytes } from "../index.js";
 import { addHexPrefix } from "./hex.js";
 
 const refineSalt = (salt: Uint8Array | bigint): Uint8Array => {

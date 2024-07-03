@@ -1,12 +1,12 @@
-import { generatePrivateKey } from "viem/accounts";
 import { PublicClient } from "../../clients/index.js";
+import { generateRandomPrivateKey } from "../../index.js";
 import { LocalECDSAKeySigner } from "../../signers/LocalECDSAKeySigner.js";
 import { MockTransport } from "../../transport/MockTransport.js";
 import { HttpTransport } from "../../transport/index.js";
 import { WalletV1 } from "./WalletV1.js";
 
 const signer = new LocalECDSAKeySigner({
-  privateKey: generatePrivateKey(),
+  privateKey: generateRandomPrivateKey(),
 });
 const pubkey = await signer.getPublicKey();
 const client = new PublicClient({

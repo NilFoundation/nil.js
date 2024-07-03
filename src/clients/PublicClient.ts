@@ -1,6 +1,10 @@
-import { bytesToHex } from "@noble/curves/abstract/utils";
-import { hexToBytes, numberToHex } from "viem";
-import { hexToBigInt, hexToNumber } from "../encoding/index.js";
+import {
+  bytesToHex,
+  hexToBigInt,
+  hexToBytes,
+  hexToNumber,
+  toHex,
+} from "../encoding/index.js";
 import { BlockNotFoundError } from "../errors/block.js";
 import { type Hex, assertIsValidShardId } from "../index.js";
 import type { IAddress } from "../signers/types/IAddress.js";
@@ -410,7 +414,7 @@ class PublicClient extends BaseClient {
         typeof callArgs.data === "string"
           ? callArgs.data
           : addHexPrefix(bytesToHex(callArgs.data)),
-      value: numberToHex(callArgs.value || 0n),
+      value: toHex(callArgs.value || 0n),
       gasLimit: (callArgs.gasLimit || 5_000_000n).toString(10),
     };
 

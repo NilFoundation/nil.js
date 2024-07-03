@@ -1,4 +1,3 @@
-import { bytesToHex } from "viem";
 import { testEnv } from "../../test/testEnv.js";
 import {
   Faucet,
@@ -6,6 +5,7 @@ import {
   LocalECDSAKeySigner,
   PublicClient,
   WalletV1,
+  bytesToHex,
   convertEthToWei,
   generateRandomPrivateKey,
   waitTillCompleted,

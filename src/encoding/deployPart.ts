@@ -1,7 +1,9 @@
-import { bytesToHex, encodeDeployData, hexToBytes } from "viem";
+import { encodeDeployData } from "viem";
 import type { IDeployData } from "../types/IDeployData.js";
 import { calculateAddress } from "../utils/address.js";
 import { refineSalt } from "../utils/refiners.js";
+import { bytesToHex } from "./fromBytes.js";
+import { hexToBytes } from "./fromHex.js";
 
 /**
  * Refines the provided salt and generates the full bytecode for deployment. Returns the bytecode and the deployment address.

@@ -1,15 +1,14 @@
-import { bytesToHex } from "viem";
 import type { PublicClient } from "../clients/PublicClient.js";
 import type { ISigner } from "../signers/index.js";
 import type { ExternalMessage } from "../types/ExternalMessage.js";
 import type { IDeployData } from "../types/IDeployData.js";
 import { prepareDeployPart } from "./deployPart.js";
+import { bytesToHex } from "./fromBytes.js";
 import { SszMessageSchema, SszSignedMessageSchema } from "./ssz.js";
 
 /**
  * The envelope for an external message (a message sent by a user, a dApp, etc.)
  *
- 
  * @class ExternalMessageEnvelope
  * @typedef {ExternalMessageEnvelope}
  */
@@ -206,7 +205,6 @@ export class ExternalMessageEnvelope {
 /**
  * The envelope for an internal message (a message sent by a smart contract to another smart contract).
  *
- 
  * @class InternalMessageEnvelope
  * @typedef {InternalMessageEnvelope}
  */

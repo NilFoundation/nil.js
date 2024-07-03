@@ -1,7 +1,7 @@
-import { bytesToHex } from "viem";
 import type { PublicClient } from "./clients/PublicClient.js";
 import { prepareDeployPart } from "./encoding/deployPart.js";
 import { SszMessageSchema, SszSignedMessageSchema } from "./encoding/ssz.js";
+import { bytesToHex } from "./index.js";
 import type { ISigner } from "./signers/index.js";
 import type { ExternalMessage } from "./types/ExternalMessage.js";
 import type { IDeployData } from "./types/IDeployData.js";
@@ -9,7 +9,6 @@ import type { IDeployData } from "./types/IDeployData.js";
 /**
  * The envelope for an external message (a message sent by a user, a dApp, etc.)
  *
- 
  * @class ExternalMessageEnvelope
  * @typedef {ExternalMessageEnvelope}
  */
