@@ -22,8 +22,14 @@ type IClientBaseConfig = {
   transport: ITransport;
 };
 
+/**
+ * The type representing the config for the public client.
+ */
 type IPublicClientConfig = IClientBaseConfig;
 
+/**
+ * The type representing the config for the basic wallet.
+ */
 type IWalletClientConfig = IClientBaseConfig & {
   /**
    * An instance of Signer is used to sign messages.

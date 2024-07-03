@@ -2,6 +2,17 @@ import type { PublicClient } from "../clients/PublicClient.js";
 import type { Hex } from "../types/Hex.js";
 import type { IReceipt } from "../types/IReceipt.js";
 
+/**
+ * Makes it so that the client waits until the processing of the message whose hash is passed.
+ *
+ * @async
+ * @param {PublicClient} client The client that must wait for action completion.
+ * @param {number} shardId The ID of the shard where the message is processed.
+ * @param {Hex} hash The message hash.
+ * @returns {unknown}
+ * @example
+ * await waitTillCompleted(client, 1, hash);
+ */
 export const waitTillCompleted = async (
   client: PublicClient,
   shardId: number,
