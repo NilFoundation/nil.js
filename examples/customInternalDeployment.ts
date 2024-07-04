@@ -172,7 +172,7 @@ await waitTillCompleted(client, 1, hashM);
 console.log(`Manufacturer address: ${addressM}`);
 
 const hashFunds = await faucet.withdrawToWithRetry(
-  addressR,
+  addressM,
   convertEthToWei(1),
 );
 
@@ -208,7 +208,7 @@ const hashProduct = await wallet.sendMessage({
     args: [addressM, "another-product"],
   }),
   gas: 100_000n,
-  value: 1_000_000n,
+  value: 5_000_000n,
 });
 
 await waitTillCompleted(client, 1, hashProduct);
@@ -218,10 +218,8 @@ console.log("Product created!");
 
 const resultsCall = await client.call(
   {
-    from: walletAddress,
+    from: addressM,
     to: addressM,
-    gasLimit: 100_000n,
-    value: 1_000_000n,
     data: encodeFunctionData({
       abi: [
         {
