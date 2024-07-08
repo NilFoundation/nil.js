@@ -17,7 +17,8 @@ import {
 
 const client = new PublicClient({
   transport: new HttpTransport({
-    endpoint: "http://127.0.0.1:8529",
+    endpoint:
+      "https://api.devnet.nil.foundation/api/khannanov/5b68db962f4ca117c69a04a37dc95e0c",
   }),
   shardId: 1,
 });
@@ -218,8 +219,8 @@ console.log("Product created!");
 
 const resultsCall = await client.call(
   {
-    from: addressM,
-    to: addressM,
+    from: "0x00030ed99fdd98e9af9e8601cbdb60e67c15a08d",
+    to: "0x00030ed99fdd98e9af9e8601cbdb60e67c15a08d",
     data: encodeFunctionData({
       abi: [
         {

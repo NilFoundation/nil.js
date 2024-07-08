@@ -1,4 +1,4 @@
-import { bytesToHex, encodeFunctionData, hexToBigInt } from "viem";
+import { encodeFunctionData } from "viem";
 import {
   Faucet,
   HttpTransport,
@@ -7,6 +7,7 @@ import {
   MINTER_ADDRESS,
   PublicClient,
   WalletV1,
+  convertEthToWei,
   generateRandomPrivateKey,
   waitTillCompleted,
 } from "../src";
@@ -28,63 +29,59 @@ const pubkey = await signer.getPublicKey();
 
 const wallet = new WalletV1({
   pubkey: pubkey,
-  salt: 100n,
+  salt: BigInt(Math.floor(Math.random() * 10000)),
   shardId: 1,
   client,
   signer,
 });
 const walletAddress = await wallet.getAddressHex();
-await faucet.withdrawToWithRetry(walletAddress, 1_000_000_000_000n);
 
+await faucet.withdrawToWithRetry(walletAddress, convertEthToWei(1));
 await wallet.selfDeploy(true);
-// biome-ignore lint/nursery/noConsole: <explanation>
-console.log("Wallet deployed successfully");
-// biome-ignore lint/nursery/noConsole: <explanation>
-console.log("walletAddress", walletAddress);
 
-const hashMessage = await wallet.sendMessage({
+const walletTwo = new WalletV1({
+  pubkey: pubkey,
+  salt: BigInt(Math.floor(Math.random() * 10000)),
+  shardId: 1,
+  client,
+  signer,
+});
+const walletTwoAddress = await walletTwo.getAddressHex();
+
+await faucet.withdrawToWithRetry(walletTwoAddress, convertEthToWei(1));
+await walletTwo.selfDeploy(true);
+
+// biome-ignore lint/nursery/noConsole: <explanation>
+console.log(walletAddress);
+// biome-ignore lint/nursery/noConsole: <explanation>
+console.log(walletTwoAddress);
+
+const currencyCreationMessage = await wallet.sendMessage({
   to: MINTER_ADDRESS,
-  gas: 1_000_000n,
+  gas: 500_000n,
   value: 100_000_000n,
   data: encodeFunctionData({
     abi: MINTER_ABI,
     functionName: "create",
-    args: [100_000_000n, walletAddress, "MY_TOKEN", walletAddress],
+    args: [10_000n, walletAddress, "token", walletAddress],
   }),
 });
 
-await waitTillCompleted(client, 1, hashMessage);
+await waitTillCompleted(client, 1, currencyCreationMessage);
 
-const n = hexToBigInt(walletAddress);
+const currencyCreationMessageTwo = await walletTwo.sendMessage({
+  to: MINTER_ADDRESS,
+  gas: 500_000n,
+  value: 100_000_000n,
+  data: encodeFunctionData({
+    abi: MINTER_ABI,
+    functionName: "create",
+    args: [20_000n, walletTwoAddress, "new-token", walletAddress],
+  }),
+});
+
+await waitTillCompleted(client, 1, currencyCreationMessageTwo);
 
 const tokens = await client.getCurrencies(walletAddress, "latest");
 // biome-ignore lint/nursery/noConsole: <explanation>
-console.log("tokens", tokens);
-
-const anotherAddress = WalletV1.calculateWalletAddress({
-  pubKey: pubkey,
-  shardId: 2,
-  salt: 200n,
-});
-
-const sendHash = await wallet.sendMessage({
-  to: anotherAddress,
-  value: 10_000_000n,
-  gas: 100_000n,
-  tokens: [
-    {
-      id: n,
-      amount: 100_00n,
-    },
-  ],
-});
-
-await waitTillCompleted(client, 1, sendHash);
-
-const anotherTokens = await client.getCurrencies(
-  bytesToHex(anotherAddress),
-  "latest",
-);
-
-// biome-ignore lint/nursery/noConsole: <explanation>
-console.log("anotherTokens", anotherTokens);
+console.log("tokens of Wallet 1: ", tokens);
