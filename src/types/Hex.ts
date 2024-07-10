@@ -3,6 +3,6 @@
  *
  * @typedef {Hex}
  */
-type Hex = `0x${string}`;
+type Hex = Hex;
 
 export type { Hex };

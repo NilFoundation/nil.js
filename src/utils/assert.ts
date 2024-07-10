@@ -2,8 +2,8 @@ import invariant from "tiny-invariant";
 import { masterShardId } from "../clients/constants.js";
 import type { IDeployData } from "../clients/types/IDeployData.js";
 import type { ISendMessage } from "../clients/types/ISendMessage.js";
-import { type Hex, InvalidShardIdError } from "../index.js";
-import type { IPrivateKey } from "../signers/index.js";
+import { InvalidShardIdError } from "../index.js";
+import type { Hex } from "../signers/index.js";
 import type { Block } from "../types/Block.js";
 import { isAddress } from "./address.js";
 import { isValidBlock } from "./block.js";
@@ -41,10 +41,7 @@ const assertIsBuffer = (value: Uint8Array, message?: string): void => {
  * @param privateKey - The private key to check.
  * @param message - The message to throw if the private key is invalid.
  */
-const assertIsValidPrivateKey = (
-  privateKey: IPrivateKey,
-  message?: string,
-): void => {
+const assertIsValidPrivateKey = (privateKey: Hex, message?: string): void => {
   invariant(
     isHexString(privateKey) && privateKey.length === 32 * 2 + 2,
     message ?? `Expected a valid private key, but got ${privateKey}`,

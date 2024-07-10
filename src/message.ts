@@ -186,9 +186,9 @@ export class ExternalMessageEnvelope {
    * Returns the hex address of the given bytes.
    *
    * @public
-   * @returns {`0x${string}`} The hex address.
+   * @returns {Hex} The hex address.
    */
-  public hexAddress(): `0x${string}` {
+  public hexAddress(): Hex {
     return bytesToHex(this.to);
   }
   /**

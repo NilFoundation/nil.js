@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { hexToBytes } from "../index.js";
+import { type Hex, hexToBytes } from "../index.js";
 import { addHexPrefix } from "./hex.js";
 
 const refineSalt = (salt: Uint8Array | bigint): Uint8Array => {
@@ -15,9 +15,7 @@ const refineSalt = (salt: Uint8Array | bigint): Uint8Array => {
   return salt;
 };
 
-const refineCompressedPublicKey = (
-  pubkey: Uint8Array | `0x${string}`,
-): Uint8Array => {
+const refineCompressedPublicKey = (pubkey: Uint8Array | Hex): Uint8Array => {
   const res = typeof pubkey === "string" ? hexToBytes(pubkey) : pubkey;
   invariant(pubkey.length === 33, "Invalid pubkey length");
 

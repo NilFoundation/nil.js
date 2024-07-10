@@ -6,16 +6,15 @@ import {
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { poseidonHash } from "../encoding/poseidon.js";
 import { toHex } from "../encoding/toHex.js";
-import type { Hex } from "../types/Hex.js";
 import { assertIsValidShardId } from "../utils/assert.js";
 import { addHexPrefix, removeHexPrefix } from "../utils/hex.js";
+import type { Hex } from "./types/Hex.js";
 import type { IAddress } from "./types/IAddress.js";
-import type { IPrivateKey } from "./types/IPrivateKey.js";
 
 /**
  * Returns the public key from the private key using the secp256k1 curve.
  */
-const getPublicKey = (privateKey: IPrivateKey, isCompressed = false): Hex => {
+const getPublicKey = (privateKey: Hex, isCompressed = false): Hex => {
   const publicKey = secp256k1.getPublicKey(
     removeHexPrefix(privateKey),
     isCompressed,

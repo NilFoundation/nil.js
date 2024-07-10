@@ -1,4 +1,4 @@
-import type { IPrivateKey } from "./IPrivateKey.js";
+import type { Hex } from "../../index.js";
 
 /**
  * The interface for the configuration object of LocalKeySigner.
@@ -8,7 +8,7 @@ type ILocalKeySignerConfig = {
    * The private key to sign the data.
    * @example '4b3b4c4d4e4f505152535455565758595a6162636465666768696a6b6c6d6e6f'
    */
-  privateKey: IPrivateKey;
+  privateKey: Hex;
   /**
    * The mnemonic to derive the private key.
    * If the mnemonic is provided, privateKey will be ignored.

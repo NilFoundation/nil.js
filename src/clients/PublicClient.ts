@@ -185,7 +185,7 @@ class PublicClient extends BaseClient {
    * const code = await client.getCode(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
    */
   public async getCode(address: IAddress, blockNumberOrHash: Hex | BlockTag) {
-    const res = await this.request<`0x${string}`>({
+    const res = await this.request<Hex>({
       method: "eth_getCode",
       params: [address, blockNumberOrHash],
     });
@@ -238,7 +238,7 @@ class PublicClient extends BaseClient {
     address: IAddress,
     blockNumberOrHash: Hex | BlockTag,
   ) {
-    const res = await this.request<`0x${string}`>({
+    const res = await this.request<Hex>({
       method: "eth_getBalance",
       params: [addHexPrefix(address), blockNumberOrHash],
     });
@@ -325,7 +325,7 @@ class PublicClient extends BaseClient {
    *
    * const message = Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
    */
-  public async sendRawMessage(message: `0x${string}` | Uint8Array) {
+  public async sendRawMessage(message: Hex | Uint8Array) {
     const res = await this.request<Hex>({
       method: "eth_sendRawTransaction",
       params: [
@@ -381,7 +381,7 @@ class PublicClient extends BaseClient {
     address: IAddress,
     blockNumberOrHash: Hex | BlockTag,
   ) {
-    const res = await this.request<{ [id: string]: `0x${string}` } | null>({
+    const res = await this.request<{ [id: string]: Hex } | null>({
       method: "eth_getCurrencies",
       params: [address, blockNumberOrHash],
     });
@@ -418,7 +418,7 @@ class PublicClient extends BaseClient {
       gasLimit: (callArgs.gasLimit || 5_000_000n).toString(10),
     };
 
-    const res = await this.request<`0x${string}`>({
+    const res = await this.request<Hex>({
       method: "eth_call",
       params: [sendData, blockNumberOrHash],
     });

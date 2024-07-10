@@ -71,7 +71,7 @@ const calculateAddress = (
  * @param {(Uint8Array | `0x`)} address The address to refine.
  * @returns {Uint8Array} The refined address.
  */
-const refineAddress = (address: Uint8Array | `0x${string}`): Uint8Array => {
+const refineAddress = (address: Uint8Array | Hex): Uint8Array => {
   if (typeof address === "string") {
     const bytes = hexToBytes(address);
     if (bytes.length !== 20) {
