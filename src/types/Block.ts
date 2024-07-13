@@ -1,21 +1,18 @@
 import type { Hex } from "./Hex.js";
+import type { ProcessedMessage } from "./ProcessedMessage.js";
 
 /**
  * The block type.
+ * Type `T` determines whether the block contains processed messages or just message hashes.
  */
-type Block = {
-  id: string;
-  prevBlock: Hex;
-  smartContractsRoot: Hex;
+type Block<T> = {
+  number: number;
+  hash: Hex;
+  parentHash: Hex;
   inMessagesRoot: Hex;
-  outMessagesRoot: Hex;
-  outMessagesNum: number;
   receiptsRoot: Hex;
-  childBlocksRootHash: string;
-  masterChainHash: Hex;
-  // biome-ignore lint/suspicious/noExplicitAny: need to investigate
-  logsBloom: any;
-  timestamp: number;
+  shardId: number;
+  messages: T extends true ? Array<ProcessedMessage> : Array<Hex>;
 };
 
 /**
