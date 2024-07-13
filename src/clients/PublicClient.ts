@@ -69,7 +69,7 @@ class PublicClient extends BaseClient {
     assertIsValidShardId(shardId);
 
     try {
-      return await this.request<Block>({
+      return await this.request<Block<typeof fullTx>>({
         method: "eth_getBlockByHash",
         params: [shardId, hash, fullTx],
       });
@@ -104,7 +104,7 @@ class PublicClient extends BaseClient {
     assertIsValidShardId(shardId);
 
     try {
-      return await this.request<Block>({
+      return await this.request<Block<typeof fullTx>>({
         method: "eth_getBlockByNumber",
         params: [shardId, blockNumber, fullTx],
       });
