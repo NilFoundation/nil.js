@@ -5,7 +5,7 @@ import type { ProcessedMessage } from "./ProcessedMessage.js";
  * The block type.
  * Type `T` determines whether the block contains processed messages or just message hashes.
  */
-type Block<T> = {
+type Block<T = false> = {
   number: number;
   hash: Hex;
   parentHash: Hex;
