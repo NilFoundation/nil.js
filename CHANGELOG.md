@@ -1,5 +1,15 @@
 # niljs
 
+## 0.10.0
+
+### Minor Changes
+
+- [#86](https://github.com/NilFoundation/nil.js/pull/86) [`0a7cfa0`](https://github.com/NilFoundation/nil.js/commit/0a7cfa0a78af03b5a962d801090f070a4c5a3e80) Thanks [@ukorvl](https://github.com/ukorvl)! - Remove viem encoding and replace with local implementation
+
+### Patch Changes
+
+- [#92](https://github.com/NilFoundation/nil.js/pull/92) [`99e44a9`](https://github.com/NilFoundation/nil.js/commit/99e44a902b375c5955bca247fa5e6f75b7ac8ec8) Thanks [@bajpai244](https://github.com/bajpai244)! - fix `Block` type to match with data returned from the RPC.
+
 ## 0.9.0
 
 ### Minor Changes
