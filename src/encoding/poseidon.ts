@@ -1,4 +1,16 @@
-import { poseidon } from "@iden3/js-crypto";
+import * as pkg from "@iden3/js-crypto";
+let poseidon: typeof pkg.poseidon;
+if (
+  "default" in pkg &&
+  typeof pkg.default === "object" &&
+  pkg.default !== null &&
+  "poseidon" in pkg.default &&
+  typeof pkg.default.poseidon === "function"
+) {
+  poseidon = pkg.default.poseidon as typeof pkg.poseidon;
+} else {
+  poseidon = pkg.poseidon;
+}
 
 /**
  * Creates the Poseidon hash of the given bytes.
