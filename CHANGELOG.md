@@ -1,5 +1,11 @@
 # niljs
 
+## 0.10.1
+
+### Patch Changes
+
+- [#94](https://github.com/NilFoundation/nil.js/pull/94) [`d25fa79`](https://github.com/NilFoundation/nil.js/commit/d25fa79d07b35fec6072ba51bf3720fda0e1ec9d) Thanks [@KlonD90](https://github.com/KlonD90)! - fix for tsx use default
+
 ## 0.10.0
 
 ### Minor Changes
