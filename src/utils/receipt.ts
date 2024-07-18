@@ -38,7 +38,7 @@ export const waitTillCompleted = async (
     receipts.push(receipt);
     if (receipt.outputReceipts) {
       for (const r of receipt.outputReceipts) {
-        hashes.push([r.shardId, r.messageHash]);
+        if (r !== null) hashes.push([r.shardId, r.messageHash]);
       }
     }
   }

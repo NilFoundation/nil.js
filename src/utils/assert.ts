@@ -1,7 +1,6 @@
 import invariant from "tiny-invariant";
 import { masterShardId } from "../clients/constants.js";
 import type { IDeployData } from "../clients/types/IDeployData.js";
-import type { ISendMessage } from "../clients/types/ISendMessage.js";
 import { type Hex, InvalidShardIdError } from "../index.js";
 import type { IPrivateKey } from "../signers/index.js";
 import type { Block } from "../types/Block.js";
@@ -49,58 +48,6 @@ const assertIsValidPrivateKey = (
     isHexString(privateKey) && privateKey.length === 32 * 2 + 2,
     message ?? `Expected a valid private key, but got ${privateKey}`,
   );
-};
-
-/**
- * Checks if the data to send message is valid. If the message is valid, it returns nothing.
- * @throws Will throw an error if the value is not a valid data to send message.
- * @param sendMessage - The data to validate.
- * @param message - The message to throw if the data is invalid.
- */
-const assertIsValidSendMessageData = (
-  sendMessage: ISendMessage,
-  message?: string,
-) => {
-  const { gasPrice, gasLimit, to, from, seqno, value } = sendMessage;
-  invariant(
-    typeof to === "string" && isAddress(to),
-    message ?? `Expected a valid 'to' address but got ${to}`,
-  );
-
-  invariant(
-    typeof value === "bigint" && value >= 0,
-    message ?? `Expected a valid 'value' but got ${value}`,
-  );
-
-  if (from !== undefined) {
-    invariant(
-      typeof from === "string" && isAddress(from),
-      message ?? `Expected a valid 'from' address but got ${from}`,
-    );
-  }
-
-  if (gasPrice !== undefined) {
-    invariant(
-      (typeof gasPrice === "number" || typeof gasPrice === "bigint") &&
-        gasPrice > 0,
-      message ?? `Expected a valid 'gasPrice' but got ${gasPrice}`,
-    );
-  }
-
-  if (gasLimit !== undefined) {
-    invariant(
-      (typeof gasLimit === "number" || typeof gasLimit === "bigint") &&
-        gasLimit > 0,
-      message ?? `Expected a valid 'gasLimit' but got ${gasLimit}`,
-    );
-  }
-
-  if (seqno !== undefined) {
-    invariant(
-      seqno >= 0,
-      message ?? `Expected a valid 'seqno' but got ${seqno}`,
-    );
-  }
 };
 
 /**
@@ -177,7 +124,6 @@ export {
   assertIsBuffer,
   assertIsHexString,
   assertIsValidPrivateKey,
-  assertIsValidSendMessageData,
   assertIsAddress,
   assertIsValidBlock,
   assertIsValidShardId,
