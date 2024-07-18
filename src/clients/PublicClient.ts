@@ -10,7 +10,7 @@ import { type Hex, assertIsValidShardId } from "../index.js";
 import type { IAddress } from "../signers/types/IAddress.js";
 import type { Block, BlockTag } from "../types/Block.js";
 import type { CallArgs } from "../types/CallArgs.js";
-import type { IReceipt } from "../types/IReceipt.js";
+import type { IReceipt, ProcessedReceipt } from "../types/IReceipt.js";
 import type { ProcessedMessage } from "../types/ProcessedMessage.js";
 import type { RPCMessage } from "../types/RPCMessage.js";
 import { addHexPrefix } from "../utils/hex.js";
@@ -295,8 +295,25 @@ class PublicClient extends BaseClient {
    *
    * const receipt = await client.getMessageReceiptByHash(1, Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]));
    */
-  public async getMessageReceiptByHash(hash: Hex, shardId = this.shardId) {
+  public async getMessageReceiptByHash(
+    hash: Hex,
+    shardId = this.shardId,
+  ): Promise<ProcessedReceipt | null> {
     assertIsValidShardId(shardId);
+    const mapReceipt = (receipt: IReceipt): ProcessedReceipt => {
+      return {
+        ...receipt,
+        gasUsed: BigInt(receipt.gasUsed),
+        gasPrice: BigInt(receipt.gasPrice),
+        outputReceipts:
+          receipt.outputReceipts?.map((x) => {
+            if (x === null) {
+              return null;
+            }
+            return mapReceipt(x);
+          }) ?? null,
+      };
+    };
 
     const res = await this.request<IReceipt | null>({
       method: "eth_getInMessageReceipt",
@@ -308,7 +325,11 @@ class PublicClient extends BaseClient {
       ],
     });
 
-    return res;
+    if (res === null) {
+      return null;
+    }
+
+    return mapReceipt(res);
   }
 
   /**

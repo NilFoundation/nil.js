@@ -1,6 +1,6 @@
 import type { PublicClient } from "../clients/PublicClient.js";
 import type { Hex } from "../types/Hex.js";
-import type { IReceipt } from "../types/IReceipt.js";
+import type { ProcessedReceipt } from "../types/IReceipt.js";
 
 /**
  * Makes it so that the client waits until the processing of the message whose hash is passed.
@@ -18,7 +18,7 @@ export const waitTillCompleted = async (
   shardId: number,
   hash: Hex,
 ) => {
-  const receipts: IReceipt[] = [];
+  const receipts: ProcessedReceipt[] = [];
   const hashes: [number, Hex][] = [[shardId, hash]];
   let cur = 0;
   while (cur !== hashes.length) {
