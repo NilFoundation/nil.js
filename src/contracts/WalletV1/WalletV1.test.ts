@@ -121,7 +121,7 @@ test("Deploy through wallet", async ({ expect }) => {
     salt: 100n,
     shardId: 1,
     value: 100n,
-    gas: 100_000n,
+    gas: 100_000n * 10n,
   });
   expect(fn.mock.calls).toHaveLength(1);
   expect(fn.mock.calls[0][0].method).toBe("eth_sendRawTransaction");

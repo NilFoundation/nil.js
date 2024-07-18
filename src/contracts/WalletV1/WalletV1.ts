@@ -315,7 +315,7 @@ export class WalletV1 {
    * @param {SendMessageParams} param0.data The message bytecode.
    * @param {SendMessageParams} param0.deploy The flag that determines whether the message is a deploy message.
    * @param {SendMessageParams} param0.seqno The message sequence number.
-   * @param {SendMessageParams} param0.gas The message gas.
+   * @param {SendMessageParams} param0.feeCredit The message fee credit for processing message on receiving shard.
    * @param {SendMessageParams} param0.value The message value.
    * @param {SendMessageParams} param0.chainId The message chain id.
    * @returns {unknown} The message hash.
@@ -338,7 +338,7 @@ export class WalletV1 {
     data,
     deploy,
     seqno,
-    gas,
+    feeCredit,
     value,
     tokens,
     chainId,
@@ -359,7 +359,7 @@ export class WalletV1 {
         hexTo,
         hexRefundTo,
         hexBounceTo,
-        gas,
+        feeCredit,
         !!deploy,
         tokens ?? [],
         value ?? 0n,
@@ -404,7 +404,7 @@ export class WalletV1 {
    * @param {DeployParams} param0.args The arbitrary arguments for deployment.
    * @param {DeployParams} param0.salt The arbitrary data for changing the contract address.
    * @param {DeployParams} param0.value The deployment message value.
-   * @param {DeployParams} param0.gas The deployment message gas.
+   * @param {DeployParams} param0.feeCredit The deployment message fee credit.
    * @param {DeployParams} param0.seqno The deployment message seqno.
    * @param {DeployParams} param0.chainId The deployment message chain id.
    * @returns {unknown} The object containing the deployment message hash and the contract address.
@@ -416,7 +416,7 @@ export class WalletV1 {
     args,
     salt,
     value,
-    gas,
+    feeCredit,
     seqno,
     chainId,
   }: DeployParams) {
@@ -449,7 +449,7 @@ export class WalletV1 {
       data,
       value: value ?? 0n,
       deploy: true,
-      gas,
+      feeCredit,
       seqno,
       chainId,
     });

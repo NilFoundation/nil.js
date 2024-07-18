@@ -50,6 +50,7 @@ test("Deploy through wallet", async ({ expect }) => {
   const walletCode = await client.getCode(walletAddress, "latest");
   expect(walletCode).toBeDefined();
   expect(walletCode.length).toBeGreaterThan(10);
+  const gasPrice = await client.getGasPrice(1);
 
   const abi = [
     {
@@ -67,7 +68,7 @@ test("Deploy through wallet", async ({ expect }) => {
     abi: abi,
     args: [bytesToHex(pubkey), walletAddress],
     value: 10000000n,
-    gas: 1000000n,
+    feeCredit: 1000000n * gasPrice,
     salt: 400n,
     shardId: 1,
   });

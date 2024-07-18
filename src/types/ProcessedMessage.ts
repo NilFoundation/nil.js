@@ -8,7 +8,6 @@ export type ProcessedMessage = {
   blockNumber: number;
   from: Address;
   gasUsed: bigint;
-  gasPrice: bigint;
   gasLimit: bigint;
   hash: Hex;
   seqno: bigint;

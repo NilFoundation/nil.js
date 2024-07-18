@@ -51,7 +51,7 @@ const anotherAddress = WalletV1.calculateWalletAddress({
 await wallet.syncSendMessage({
   to: anotherAddress,
   value: 10n,
-  gas: 100_000n,
+  gas: 100_000n * 10n,
 });
 
 while (true) {

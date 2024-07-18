@@ -24,6 +24,8 @@ test("bounce", async () => {
     privateKey: generateRandomPrivateKey(),
   });
 
+  const gasPrice = await client.getGasPrice(1);
+
   const pubkey = await signer.getPublicKey();
 
   const wallet = new WalletV1({
@@ -64,7 +66,7 @@ test("bounce", async () => {
     to: anotherWallet.getAddressHex(),
     value: 10_000_000n,
     bounceTo: bounceAddress,
-    gas: 100_000n,
+    feeCredit: 100_000n * gasPrice,
     data: encodeFunctionData({
       abi: WalletV1.abi,
       functionName: "syncCall",
