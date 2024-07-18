@@ -7,7 +7,6 @@ export type RPCMessage = {
   blockNumber: number;
   from: Hex;
   gasUsed: Hex;
-  gasPrice: string;
   gasLimit: string;
   hash: Hex;
   seqno: Hex;

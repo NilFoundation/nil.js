@@ -25,6 +25,9 @@ const client = new PublicClient({
 test("mint and transfer tokens", async () => {
   const faucet = new Faucet(client);
 
+  const gasPriceOnShard1 = await client.getGasPrice(1);
+  const gasPriceOnShard2 = await client.getGasPrice(2);
+
   const signer = new LocalECDSAKeySigner({
     privateKey: generateRandomPrivateKey(),
   });
@@ -47,7 +50,7 @@ test("mint and transfer tokens", async () => {
 
   const hashMessage = await wallet.sendMessage({
     to: MINTER_ADDRESS,
-    gas: 1_000_000n,
+    feeCredit: 1_000_000n * gasPriceOnShard1,
     value: 100_000_000n,
     data: encodeFunctionData({
       abi: MINTER_ABI,
@@ -78,7 +81,7 @@ test("mint and transfer tokens", async () => {
   const sendHash = await wallet.sendMessage({
     to: anotherAddress,
     value: 10_000_000n,
-    gas: 100_000n,
+    feeCredit: 100_000n * gasPriceOnShard2,
     tokens: [
       {
         id: n,

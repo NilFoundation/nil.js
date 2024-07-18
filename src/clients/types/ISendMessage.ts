@@ -6,7 +6,6 @@ type ISendMessage = {
   value: bigint;
   from?: string;
   seqno?: number;
-  gasPrice?: bigint;
   gasLimit?: bigint;
   data?: Uint8Array;
 };

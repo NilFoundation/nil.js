@@ -184,10 +184,10 @@ class PublicClient extends BaseClient {
    *
    * const code = await client.getCode(Uint8Array.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 'latest');
    */
-  public async getCode(address: IAddress, blockNumberOrHash: Hex | BlockTag) {
+  public async getCode(address: IAddress, blockNumberOrHash?: Hex | BlockTag) {
     const res = await this.request<`0x${string}`>({
       method: "eth_getCode",
-      params: [address, blockNumberOrHash],
+      params: [address, blockNumberOrHash ?? "latest"],
     });
 
     return hexToBytes(res);
@@ -210,11 +210,11 @@ class PublicClient extends BaseClient {
    */
   public async getMessageCount(
     address: IAddress,
-    blockNumberOrHash: Hex | BlockTag,
+    blockNumberOrHash?: Hex | BlockTag,
   ) {
     const res = await this.request<Hex>({
       method: "eth_getTransactionCount",
-      params: [address, blockNumberOrHash],
+      params: [address, blockNumberOrHash ?? "latest"],
     });
 
     return hexToNumber(res);
@@ -236,11 +236,11 @@ class PublicClient extends BaseClient {
    */
   public async getBalance(
     address: IAddress,
-    blockNumberOrHash: Hex | BlockTag,
+    blockNumberOrHash?: Hex | BlockTag,
   ) {
     const res = await this.request<`0x${string}`>({
       method: "eth_getBalance",
-      params: [addHexPrefix(address), blockNumberOrHash],
+      params: [addHexPrefix(address), blockNumberOrHash ?? "latest"],
     });
 
     return hexToBigInt(res);
@@ -276,7 +276,6 @@ class PublicClient extends BaseClient {
       value: BigInt(res.value),
       gasLimit: BigInt(res.gasLimit),
       gasUsed: hexToBigInt(res.gasUsed),
-      gasPrice: BigInt(res.gasPrice),
       seqno: hexToBigInt(res.seqno),
       index: res.index ? hexToNumber(res.index) : 0,
     };
@@ -342,10 +341,13 @@ class PublicClient extends BaseClient {
    * Returns the gas price in wei.
    * @returns The gas price.
    */
-  public async getGasPrice(): Promise<bigint> {
-    const stubGasPrice = BigInt(1);
+  public async getGasPrice(shardId: number): Promise<bigint> {
+    const price = await this.request<`0x${string}`>({
+      method: "eth_gasPrice",
+      params: [shardId],
+    });
 
-    return stubGasPrice;
+    return hexToBigInt(price);
   }
 
   /**

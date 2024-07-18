@@ -50,7 +50,7 @@ export type SendMessageParams = {
   bounceTo?: Address | Uint8Array;
   data?: Uint8Array | Hex;
   value?: bigint;
-  gas: bigint;
+  feeCredit: bigint;
   tokens?: Token[];
   deploy?: boolean;
   seqno?: number;
@@ -93,7 +93,7 @@ export type DeployParams = {
   args?: unknown[];
   salt: Uint8Array | bigint;
   shardId: number;
-  gas: bigint;
+  feeCredit: bigint;
   value?: bigint;
   seqno?: number;
   chainId?: number;

@@ -47,10 +47,12 @@ test("Async call to another shard send value", async () => {
     salt: 200n,
   });
 
+  const gasPriceOnShard2 = await client.getGasPrice(2);
+
   const hash = await wallet.sendMessage({
     to: anotherAddress,
     value: 50_000_000n,
-    gas: 100_000n,
+    feeCredit: 100_000n * gasPriceOnShard2,
   });
 
   const receipts = await waitTillCompleted(client, 1, hash);
