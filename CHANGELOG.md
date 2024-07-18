@@ -1,5 +1,13 @@
 # niljs
 
+## 0.11.0
+
+### Minor Changes
+
+- [#97](https://github.com/NilFoundation/nil.js/pull/97) [`7d2ac80`](https://github.com/NilFoundation/nil.js/commit/7d2ac80d5ed1822e1633d498b761f65694aa5f48) Thanks [@KlonD90](https://github.com/KlonD90)! - fix number to hex in integration tests
+
+- [#98](https://github.com/NilFoundation/nil.js/pull/98) [`6945f6c`](https://github.com/NilFoundation/nil.js/commit/6945f6c1dc3ffe8afd4fccfd273afa55706ec6f0) Thanks [@shermike](https://github.com/shermike)! - Breaking changes! Fee credit instead of gas
+
 ## 0.10.1
 
 ### Patch Changes
