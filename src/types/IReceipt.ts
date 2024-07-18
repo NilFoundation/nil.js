@@ -6,17 +6,27 @@ import type { ILog } from "./ILog.js";
  */
 type IReceipt = {
   success: boolean;
-  gasUsed: number;
+  gasUsed: string;
+  gasPrice: string;
   bloom: string;
   logs: ILog[];
   messageHash: Hex;
   contractAddress: string;
   blockHash: string;
-  blockNumber: bigint;
-  msgIndex: bigint;
+  blockNumber: number;
+  msgIndex: number;
   outMessages: Hex[] | null;
-  outputReceipts: IReceipt[] | null;
+  outputReceipts: (IReceipt | null)[] | null;
   shardId: number;
 };
 
-export type { IReceipt };
+type ProcessedReceipt = Omit<
+  IReceipt,
+  "gasUsed" | "gasPrice" | "outputReceipts"
+> & {
+  gasUsed: bigint;
+  gasPrice: bigint;
+  outputReceipts: (ProcessedReceipt | null)[] | null;
+};
+
+export type { IReceipt, ProcessedReceipt };
