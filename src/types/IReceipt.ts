@@ -7,7 +7,6 @@ import type { ILog } from "./ILog.js";
 type IReceipt = {
   success: boolean;
   gasUsed: string;
-  gasPrice: string;
   bloom: string;
   logs: ILog[];
   messageHash: Hex;
@@ -20,12 +19,8 @@ type IReceipt = {
   shardId: number;
 };
 
-type ProcessedReceipt = Omit<
-  IReceipt,
-  "gasUsed" | "gasPrice" | "outputReceipts"
-> & {
+type ProcessedReceipt = Omit<IReceipt, "gasUsed" | "outputReceipts"> & {
   gasUsed: bigint;
-  gasPrice: bigint;
   outputReceipts: (ProcessedReceipt | null)[] | null;
 };
 
