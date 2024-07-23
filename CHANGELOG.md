@@ -1,5 +1,11 @@
 # niljs
 
+## 0.11.1
+
+### Patch Changes
+
+- [#104](https://github.com/NilFoundation/nil.js/pull/104) [`464006e`](https://github.com/NilFoundation/nil.js/commit/464006ef3c805b9b07389ab5998f5ed801de7757) Thanks [@KlonD90](https://github.com/KlonD90)! - Make receipt compatible with previous version
+
 ## 0.11.0
 
 ### Minor Changes
