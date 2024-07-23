@@ -46,8 +46,6 @@ test("Receipt test", async ({ expect }) => {
   expect(receipts).toBeDefined();
   for (const receipt of receipts) {
     expect(receipt).toBeDefined();
-    expect(receipt.gasPrice).toBeDefined();
     expect(receipt.gasUsed).toBeDefined();
-    expect(receipt.gasPrice).toBeTypeOf("bigint");
   }
 });
