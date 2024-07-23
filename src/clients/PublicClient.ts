@@ -304,7 +304,7 @@ class PublicClient extends BaseClient {
       return {
         ...receipt,
         gasUsed: BigInt(receipt.gasUsed),
-        gasPrice: BigInt(receipt.gasPrice),
+        gasPrice: receipt.gasPrice ? BigInt(receipt.gasPrice) : 0n,
         outputReceipts:
           receipt.outputReceipts?.map((x) => {
             if (x === null) {
