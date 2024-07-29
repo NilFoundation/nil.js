@@ -170,7 +170,10 @@ test("getMessageByHash", async ({ expect }) => {
 
 test("getMessageReceiptByHash", async ({ expect }) => {
   const fn = vi.fn();
-  fn.mockReturnValue({});
+  fn.mockReturnValue({
+    gasPrice: "0x100",
+    gasUsed: "0x100",
+  });
   const client = new PublicClient({
     transport: new MockTransport(fn),
     shardId: 1,

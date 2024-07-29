@@ -2,17 +2,18 @@ import { PublicClient } from "../../clients/index.js";
 import { generateRandomPrivateKey } from "../../index.js";
 import { LocalECDSAKeySigner } from "../../signers/LocalECDSAKeySigner.js";
 import { MockTransport } from "../../transport/MockTransport.js";
-import { HttpTransport } from "../../transport/index.js";
 import { WalletV1 } from "./WalletV1.js";
 
 const signer = new LocalECDSAKeySigner({
   privateKey: generateRandomPrivateKey(),
 });
 const pubkey = await signer.getPublicKey();
+
+const fn = vi.fn();
+fn.mockReturnValue({});
+
 const client = new PublicClient({
-  transport: new HttpTransport({
-    endpoint: "http://127.0.0.1:8529",
-  }),
+  transport: new MockTransport(fn),
   shardId: 1,
 });
 
@@ -121,7 +122,7 @@ test("Deploy through wallet", async ({ expect }) => {
     salt: 100n,
     shardId: 1,
     value: 100n,
-    gas: 100_000n * 10n,
+    feeCredit: 100_000n,
   });
   expect(fn.mock.calls).toHaveLength(1);
   expect(fn.mock.calls[0][0].method).toBe("eth_sendRawTransaction");

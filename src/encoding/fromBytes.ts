@@ -1,4 +1,5 @@
-import { type Hex, toHex } from "../index.js";
+import type { Hex } from "../index.js";
+import { toHex } from "./toHex.js";
 
 const decoder = new TextDecoder("utf8");
 

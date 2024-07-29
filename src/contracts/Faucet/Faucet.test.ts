@@ -1,5 +1,5 @@
 import { PublicClient } from "../../clients/index.js";
-import { bytesToHex } from "../../index.js";
+import { bytesToHex } from "../../encoding/fromBytes.js";
 import {
   LocalECDSAKeySigner,
   generateRandomPrivateKey,

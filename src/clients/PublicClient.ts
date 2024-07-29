@@ -300,6 +300,7 @@ class PublicClient extends BaseClient {
     shardId = this.shardId,
   ): Promise<ProcessedReceipt | null> {
     assertIsValidShardId(shardId);
+
     const mapReceipt = (receipt: IReceipt): ProcessedReceipt => {
       return {
         ...receipt,

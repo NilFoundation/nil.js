@@ -1,4 +1,3 @@
-import { testEnv } from "../../test/testEnv.js";
 import {
   Faucet,
   HttpTransport,
@@ -9,7 +8,8 @@ import {
   convertEthToWei,
   generateRandomPrivateKey,
   waitTillCompleted,
-} from "../index.js";
+} from "../../src/index.js";
+import { testEnv } from "../testEnv.js";
 const client = new PublicClient({
   transport: new HttpTransport({
     endpoint: testEnv.endpoint,

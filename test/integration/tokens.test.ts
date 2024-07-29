@@ -1,5 +1,4 @@
 import { encodeFunctionData } from "viem";
-import { testEnv } from "../../test/testEnv.js";
 import {
   Faucet,
   HttpTransport,
@@ -14,7 +13,8 @@ import {
   hexToBigInt,
   toHex,
   waitTillCompleted,
-} from "../index.js";
+} from "../../src/index.js";
+import { testEnv } from "../testEnv.js";
 const client = new PublicClient({
   transport: new HttpTransport({
     endpoint: testEnv.endpoint,
