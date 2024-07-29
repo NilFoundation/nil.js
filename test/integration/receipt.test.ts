@@ -1,13 +1,14 @@
-import { testEnv } from "../../test/testEnv.js";
-import { Faucet, WalletV1 } from "../contracts/index.js";
 import {
+  Faucet,
   HttpTransport,
+  LocalECDSAKeySigner,
   PublicClient,
+  WalletV1,
   convertEthToWei,
+  generateRandomPrivateKey,
   waitTillCompleted,
-} from "../index.js";
-import { LocalECDSAKeySigner } from "../signers/LocalECDSAKeySigner.js";
-import { generateRandomPrivateKey } from "../signers/privateKey.js";
+} from "../../src/index.js";
+import { testEnv } from "../../test/testEnv.js";
 
 const client = new PublicClient({
   transport: new HttpTransport({

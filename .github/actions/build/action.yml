@@ -10,9 +10,9 @@ runs:
     - name: Npm audit
       shell: bash
       run: npm audit --audit-level=moderate
-    # - name: Test
-    #   shell: bash
-    #   run: npm run test:ci
+    - name: Test
+      shell: bash
+      run: npm run test:ci
     - name: Build
       shell: bash
       run: |
