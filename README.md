@@ -40,7 +40,7 @@
 - [Installation](#installation)
 - [Getting started](#getting-started)
 - [Usage](#usage)
-- [License](#license)
+- [Licence](#licence)
 
 ### Installation
 
@@ -190,4 +190,4 @@ await waitTillCompleted(client, 1, sendHash);
 
 ## Licence
 
-[MIT](./LICENSE)
+[MIT](./LICENCE)
