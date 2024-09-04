@@ -1,9 +1,11 @@
+import { numberToBytesBE } from "@noble/curves/abstract/utils";
 import type { PublicClient } from "../clients/PublicClient.js";
 import type { ISigner } from "../signers/index.js";
 import type { ExternalMessage } from "../types/ExternalMessage.js";
 import type { IDeployData } from "../types/IDeployData.js";
 import { prepareDeployPart } from "./deployPart.js";
 import { bytesToHex } from "./fromBytes.js";
+import { poseidonHash } from "./poseidon.js";
 import { SszMessageSchema, SszSignedMessageSchema } from "./ssz.js";
 
 /**
@@ -84,6 +86,7 @@ export class ExternalMessageEnvelope {
    */
   public encode(): Uint8Array {
     return SszSignedMessageSchema.serialize({
+      feeCredit: 50000000n,
       seqno: this.seqno,
       chainId: this.chainId,
       to: this.to,
@@ -99,14 +102,8 @@ export class ExternalMessageEnvelope {
    * @returns {Uint8Array} The hash tree root of the external message.
    */
   public hash(): Uint8Array {
-    return SszSignedMessageSchema.hashTreeRoot({
-      seqno: this.seqno,
-      chainId: this.chainId,
-      to: this.to,
-      data: this.data,
-      deploy: this.isDeploy,
-      authData: this.authData,
-    });
+    const raw = this.encode();
+    return numberToBytesBE(poseidonHash(raw), 32);
   }
   /**
    * Provides the signing hash of the external message.
@@ -116,13 +113,15 @@ export class ExternalMessageEnvelope {
    */
   public signingHash(): Uint8Array {
     // print all the fields
-    return SszMessageSchema.hashTreeRoot({
+    const raw = SszMessageSchema.serialize({
+      feeCredit: 50000000n,
       seqno: this.seqno,
       chainId: this.chainId,
       to: this.to,
       data: this.data,
       deploy: this.isDeploy,
     });
+    return numberToBytesBE(poseidonHash(raw), 32);
   }
   /**
    * Encodes the external message with its signature.
@@ -141,6 +140,7 @@ export class ExternalMessageEnvelope {
   }> {
     const signature = await this.sign(signer);
     const raw = SszSignedMessageSchema.serialize({
+      feeCredit: 50000000n,
       seqno: this.seqno,
       chainId: this.chainId,
       to: this.to,
@@ -148,14 +148,7 @@ export class ExternalMessageEnvelope {
       deploy: this.isDeploy,
       authData: signature,
     });
-    const hash = SszSignedMessageSchema.hashTreeRoot({
-      seqno: this.seqno,
-      chainId: this.chainId,
-      to: this.to,
-      data: this.data,
-      deploy: this.isDeploy,
-      authData: signature,
-    });
+    const hash = numberToBytesBE(poseidonHash(raw), 32);
     return { raw, hash };
   }
   /**

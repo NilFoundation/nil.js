@@ -1,27 +1,27 @@
+import FaucetCompiled from "@nilfoundation/smart-contracts/artifacts/Faucet.json";
 import { type Hex, bytesToHex, encodeFunctionData } from "viem";
 import type { PublicClient } from "../../clients/PublicClient.js";
 import { ExternalMessageEnvelope } from "../../encoding/externalMessage.js";
 import { hexToBytes } from "../../index.js";
 import { getShardIdFromAddress } from "../../utils/address.js";
 import { waitTillCompleted } from "../../utils/receipt.js";
-import FaucetAbi from "./Faucet.abi.json";
 
 /**
- * Faucet is a special contract that is used to top up other contracts in the =nil; devnet.
+ * The Faucet is a special contract that is used to top up other contracts in the =nil; devnet.
  *
  * @class Faucet
  * @typedef {Faucet}
  */
 export class Faucet {
   /**
-   * The const address of the faucet contract.
+   * The const address of the Faucet contract.
    *
    * @static
    * @type {"0x000100000000000000000000000000000FA00CE7"}
    */
   static address = "0x000100000000000000000000000000000FA00CE7" as const;
   /**
-   * The client to be used with the faucet contract.
+   * The client to be used with the Faucet contract.
    *
    * @private
    * @type {PublicClient}
@@ -54,7 +54,7 @@ export class Faucet {
       this.client.chainId(),
     ]);
     const calldata = encodeFunctionData({
-      abi: FaucetAbi,
+      abi: FaucetCompiled.abi,
       functionName: "withdrawTo",
       args: [address.toLowerCase(), value],
     });
@@ -93,7 +93,7 @@ export class Faucet {
           this.client.chainId(),
         ]);
         const calldata = encodeFunctionData({
-          abi: FaucetAbi,
+          abi: FaucetCompiled.abi,
           functionName: "withdrawTo",
           args: [address.toLowerCase(), value],
         });

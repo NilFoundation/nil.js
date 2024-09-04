@@ -1,3 +1,4 @@
+import Wallet from "@nilfoundation/smart-contracts/artifacts/Wallet.json";
 import type { Abi } from "abitype";
 import invariant from "tiny-invariant";
 import { bytesToHex, encodeFunctionData } from "viem";
@@ -6,12 +7,15 @@ import { prepareDeployPart } from "../../encoding/deployPart.js";
 import { externalMessageEncode } from "../../encoding/externalMessage.js";
 import { hexToBytes } from "../../encoding/fromHex.js";
 import { toHex } from "../../encoding/toHex.js";
+import { addHexPrefix } from "../../index.js";
 import type { ISigner } from "../../signers/index.js";
 import type { IDeployData } from "../../types/IDeployData.js";
 import { getShardIdFromAddress, refineAddress } from "../../utils/address.js";
-import { refineCompressedPublicKey, refineSalt } from "../../utils/refiners.js";
-import { code } from "./Wallet-bin.js";
-import WalletAbi from "./Wallet.abi.json";
+import {
+  refineCompressedPublicKey,
+  refineFunctionHexData,
+  refineSalt,
+} from "../../utils/refiners.js";
 import type {
   DeployParams,
   RequestParams,
@@ -33,14 +37,14 @@ export class WalletV1 {
    * @static
    * @type {*}
    */
-  static code = hexToBytes(code);
+  static code = hexToBytes(addHexPrefix(Wallet.evm.bytecode.object));
   /**
    * The wallet ABI.
    *
    * @static
    * @type {Abi}
    */
-  static abi = WalletAbi as Abi;
+  static abi = Wallet.abi as Abi;
 
   /**
    * Calculates the address of the new wallet.
@@ -84,7 +88,7 @@ export class WalletV1 {
     salt: Uint8Array | bigint;
   }) {
     const { address } = prepareDeployPart({
-      abi: WalletAbi as Abi,
+      abi: Wallet.abi as Abi,
       bytecode: WalletV1.code,
       args: [bytesToHex(pubKey)],
       salt: salt,
@@ -196,7 +200,7 @@ export class WalletV1 {
      } from '@nilfoundation/niljs';
    * const client = new PublicClient({
        transport: new HttpTransport({
-         endpoint: "http://127.0.0.1:8529",
+         endpoint: RPC_ENDPOINT,
        }),
        shardId: 1,
      });
@@ -237,7 +241,7 @@ export class WalletV1 {
     invariant(balance > 0n, "Insufficient balance");
 
     const { data } = prepareDeployPart({
-      abi: WalletAbi as Abi,
+      abi: Wallet.abi as Abi,
       bytecode: WalletV1.code,
       args: [bytesToHex(this.pubkey)],
       salt: this.salt,
@@ -314,6 +318,9 @@ export class WalletV1 {
    * @param {SendMessageParams} param0.bounceTo The address where the message value should be refunded in case of failure.
    * @param {SendMessageParams} param0.tokens The tokens to be sent with the message.
    * @param {SendMessageParams} param0.data The message bytecode.
+   * @param {SendMessageParams} param0.abi The message abi for encoding.
+   * @param {SendMessageParams} param0.functionName The message function name for abi.
+   * @param {SendMessageParams} param0.args The message args name for abi.
    * @param {SendMessageParams} param0.deploy The flag that determines whether the message is a deploy message.
    * @param {SendMessageParams} param0.seqno The message sequence number.
    * @param {SendMessageParams} param0.feeCredit The message fee credit for processing message on receiving shard.
@@ -337,6 +344,9 @@ export class WalletV1 {
     refundTo,
     bounceTo,
     data,
+    abi,
+    functionName,
+    args,
     deploy,
     seqno,
     feeCredit,
@@ -347,14 +357,10 @@ export class WalletV1 {
     const hexTo = bytesToHex(refineAddress(to));
     const hexRefundTo = bytesToHex(refineAddress(refundTo ?? this.address));
     const hexBounceTo = bytesToHex(refineAddress(bounceTo ?? this.address));
-    const hexData = data
-      ? data instanceof Uint8Array
-        ? bytesToHex(data)
-        : data
-      : "0x";
+    const hexData = refineFunctionHexData({ data, abi, functionName, args });
 
     const callData = encodeFunctionData({
-      abi: WalletAbi,
+      abi: Wallet.abi,
       functionName: "asyncCall",
       args: [
         hexTo,
@@ -373,6 +379,57 @@ export class WalletV1 {
       deploy: false,
       seqno,
       chainId,
+    });
+
+    return bytesToHex(hash);
+  }
+
+  /**
+   * Sets the name of the custom currency that the wallet can own and mint.
+   *
+   * @async
+   * @param {string} The name of the custom currency.
+   * @returns {unknown} The message hash.
+   * @example
+   * const hashMessage = await wallet.setCurrencyName("MY_TOKEN");
+   * await waitTillCompleted(client, 1, hashMessage);
+   */
+  async setCurrencyName(name: string) {
+    const callData = encodeFunctionData({
+      abi: Wallet.abi,
+      functionName: "setCurrencyName",
+      args: [name],
+    });
+
+    const { hash } = await this.requestToWallet({
+      data: hexToBytes(callData),
+      deploy: false,
+    });
+
+    return bytesToHex(hash);
+  }
+
+  /**
+   * Mints the currency that the wallet owns and withdraws it to the wallet.
+   * {@link setCurrencyName} has to be called first before minting a currency.
+   *
+   * @async
+   * @param {bigint} The amount to mint.
+   * @returns {unknown} The message hash.
+   * @example
+   * const hashMessage = await wallet.mintCurrency(mintCount);
+   * await waitTillCompleted(client, 1, hashMessage);
+   */
+  async mintCurrency(amount: bigint) {
+    const callData = encodeFunctionData({
+      abi: Wallet.abi,
+      functionName: "mintCurrency",
+      args: [amount],
+    });
+
+    const { hash } = await this.requestToWallet({
+      data: hexToBytes(callData),
+      deploy: false,
     });
 
     return bytesToHex(hash);
@@ -462,12 +519,15 @@ export class WalletV1 {
   }
 
   /**
-   * Send a message synchronously via the wallet.
+   * Creates a new message and performs a synchronous call to the specified address.
    *
    * @async
    * @param {SendSyncMessageParams} param0 The object representing the message params.
    * @param {SendSyncMessageParams} param0.to The address where the message should be sent.
    * @param {SendSyncMessageParams} param0.data The message bytecode.
+   * @param {SendSyncMessageParams} param0.abi The message abi.
+   * @param {SendSyncMessageParams} param0.functionName The message function name for abi.
+   * @param {SendSyncMessageParams} param0.args The message args for abi.
    * @param {SendMessageParams} param0.seqno The message sequence number.
    * @param {SendMessageParams} param0.gas The message gas.
    * @param {SendMessageParams} param0.value The message value.
@@ -487,19 +547,18 @@ export class WalletV1 {
   async syncSendMessage({
     to,
     data,
+    abi,
+    functionName,
+    args,
     seqno,
     gas,
     value,
   }: SendSyncMessageParams) {
     const hexTo = bytesToHex(refineAddress(to));
-    const hexData = data
-      ? data instanceof Uint8Array
-        ? bytesToHex(data)
-        : data
-      : "0x";
+    const hexData = refineFunctionHexData({ data, abi, functionName, args });
 
     const callData = encodeFunctionData({
-      abi: WalletAbi,
+      abi: Wallet.abi,
       functionName: "syncCall",
       args: [hexTo, gas, value, hexData],
     });

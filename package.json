@@ -1,7 +1,7 @@
 {
   "name": "@nilfoundation/niljs",
   "author": "=nil; Foundation",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/NilFoundation/nil.js.git"
@@ -36,18 +36,12 @@
     "prepare": "npx simple-git-hooks",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "changeset": "changeset",
-    "changeset:publish": "changeset publish",
     "git-hooks:update": "git config core.hooksPath .git/hooks/ && rm -rf .git/hooks && npx --no-install simple-git-hooks",
     "scripts": "npx --no-install allow-scripts"
   },
   "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "^1.8.1",
-    "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.27.2",
-    "@commitlint/cli": "^19.3.0",
-    "@commitlint/config-conventional": "^19.2.2",
     "@lavamoat/allow-scripts": "^3.0.4",
     "@lavamoat/preinstall-always-fail": "^2.0.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
@@ -58,6 +52,8 @@
     "rollup-plugin-esbuild": "^6.1.1",
     "rollup-plugin-filesize": "^10.0.0",
     "simple-git-hooks": "^2.11.1",
+    "ts-essentials": "^10.0.2",
+    "tsx": "^4.17.0",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
   },
@@ -66,16 +62,13 @@
     "registry": "https://registry.npmjs.org/"
   },
   "simple-git-hooks": {
-    "pre-commit": "npm run lint",
-    "commit-msg": "npx --no-install commitlint --edit $1",
-    "preserveUnused": [
-      "commit-msg"
-    ]
+    "pre-commit": "npm run lint"
   },
   "dependencies": {
     "@chainsafe/persistent-merkle-tree": "^0.7.2",
     "@chainsafe/ssz": "^0.16.0",
     "@iden3/js-crypto": "^1.1.0",
+    "@nilfoundation/smart-contracts": "^0.1.0",
     "@noble/curves": "^1.4.0",
     "@open-rpc/client-js": "^1.8.1",
     "@rollup/plugin-json": "^6.1.0",
@@ -96,5 +89,8 @@
       "@biomejs/biome": true,
       "simple-git-hooks": true
     }
+  },
+  "optionalDependencies": {
+    "@biomejs/cli-linux-x64": "^0.1.0"
   }
 }
