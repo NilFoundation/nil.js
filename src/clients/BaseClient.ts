@@ -4,7 +4,7 @@ import { assertIsValidShardId } from "../utils/assert.js";
 import type { IClientBaseConfig } from "./types/ClientConfigs.js";
 
 /**
- * BaseClient is the base class for any client tasked with interacting with =nil; *
+ * BaseClient is the base class for any client tasked with interacting with =nil;
  * @class BaseClient
  * @typedef {BaseClient}
  */
@@ -17,7 +17,7 @@ class BaseClient {
    */
   protected transport: ITransport;
   /**
-   * The ID of the shard which the client needs to interact with.
+   * The ID of the shard with which the client needs to interact.
    * The shard with this ID will be used in every call made by the client.
    * @protected
    * @type {number | undefined}
@@ -36,7 +36,7 @@ class BaseClient {
 
   /**
    * Sends a request.
-   * @param requestObject The request object. It contains the method and parameters.
+   * @param requestObject The request object. It contains the request method and parameters.
    * @returns The response.
    */
   protected async request<T>(requestObject: RequestArguments): Promise<T> {
