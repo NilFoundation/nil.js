@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.1/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.9.1/schema.json",
   "organizeImports": {
     "enabled": true
   },
@@ -10,7 +10,7 @@
       "correctness": {
         "noUnusedImports": "error"
       },
-      "nursery": {
+      "suspicious": {
         "noConsole": "error"
       },
       "style": {
@@ -39,6 +39,12 @@
     "lineWidth": 80
   },
   "files": {
-    "ignore": ["node_modules", "dist", "package.json", "test/coverage"]
+    "ignore": [
+      "node_modules",
+      "dist",
+      "package.json",
+      "test/coverage",
+      "vendor"
+    ]
   }
 }

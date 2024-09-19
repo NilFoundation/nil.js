@@ -33,14 +33,14 @@ const wallet = new WalletV1({
 });
 const walletAddress = await wallet.getAddressHex();
 
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("walletAddress", walletAddress);
 
 await faucet.withdrawToWithRetry(walletAddress, 100_000_000n);
 
 await wallet.selfDeploy(true);
 
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("Wallet deployed successfully");
 
 const anotherAddress = WalletV1.calculateWalletAddress({
@@ -58,8 +58,8 @@ const hash = await wallet.sendMessage({
 await waitTillCompleted(client, 1, hash);
 
 const balance = await client.getBalance(bytesToHex(anotherAddress), "latest");
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("balance", balance);
 
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("Message sent successfully");

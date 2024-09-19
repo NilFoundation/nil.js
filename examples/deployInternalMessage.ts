@@ -34,15 +34,15 @@ const wallet = new WalletV1({
 });
 const walletAddress = await wallet.getAddressHex();
 
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("walletAddress", walletAddress);
 
 await faucet.withdrawToWithRetry(walletAddress, 1000000000000n);
 await wallet.selfDeploy(true);
 
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("Wallet deployed successfully");
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log(await client.getCode(walletAddress, "latest"));
 
 const abi = [
@@ -72,8 +72,8 @@ if (receipts.some((receipt) => !receipt.success)) {
   throw new Error("Contract deployment failed");
 }
 
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("Another wallet deployed successfully");
 const code = await client.getCode(address, "latest");
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("code", bytesToHex(code));

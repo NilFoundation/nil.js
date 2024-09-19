@@ -40,9 +40,9 @@ const faucetHash = await faucet.withdrawTo(walletAddress, convertEthToWei(0.1));
 await waitTillCompleted(client, 1, bytesToHex(faucetHash));
 
 await wallet.selfDeploy(true);
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("Wallet deployed successfully");
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("walletAddress", walletAddress);
 
 const hashMessage = await wallet.sendMessage({
@@ -74,7 +74,7 @@ await waitTillCompleted(client, 1, hashMessage2);
 const n = hexToBigInt(walletAddress);
 
 const tokens = await client.getCurrencies(walletAddress, "latest");
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("tokens", tokens);
 
 const anotherAddress = WalletV1.calculateWalletAddress({
@@ -102,5 +102,5 @@ const anotherTokens = await client.getCurrencies(
   "latest",
 );
 
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("anotherTokens", anotherTokens);
