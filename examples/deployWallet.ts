@@ -34,7 +34,7 @@ const wallet = new WalletV1({
 });
 const walletAddress = wallet.getAddressHex();
 
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("walletAddress", walletAddress);
 
 const faucetHash = await faucet.withdrawTo(walletAddress, convertEthToWei(0.1));
@@ -43,7 +43,7 @@ await waitTillCompleted(client, 1, bytesToHex(faucetHash));
 await wallet.selfDeploy(true);
 
 const code = await client.getCode(walletAddress, "latest");
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("code", bytesToHex(code));
-// biome-ignore lint/nursery/noConsole: <explanation>
+// biome-ignore lint/suspicious/noConsole: <explanation>
 console.log("Wallet deployed successfully");

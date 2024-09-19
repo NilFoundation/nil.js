@@ -1,21 +1,14 @@
-node_modules
 dist
 
-logs
-*.log
-npm-debug.log*
 *.tsbuildinfo
 
 coverage
 
+.env
+logs
+*.log
+npm-debug.log*
+
 *.tgz
 
-.env
-.env.local
-
-.idea
-.vscode/*
-!.vscode/settings.json
-!.vscode/extensions.json
-
-.DS_Store
+node_modules
