@@ -204,7 +204,7 @@ const sendHash = await wallet.sendMessage({
 await waitTillCompleted(client, sendHash);
 ```
 
-=nil; also supports token bouncing. If a message carries custom tokens, and it is unsuccesful, the funds will be returned to the address specified in the `bounceTo` parameter when sending the message.
+=nil; also supports token bouncing. If a message carries custom tokens, and it is unsuccessful, the funds will be returned to the address specified in the `bounceTo` parameter when sending the message.
 
 ## Licence
 
