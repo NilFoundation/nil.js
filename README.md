@@ -206,6 +206,34 @@ await waitTillCompleted(client, sendHash);
 
 =nil; also supports token bouncing. If a message carries custom tokens, and it is unsuccesful, the funds will be returned to the address specified in the `bounceTo` parameter when sending the message.
 
-## Licence
+## Contributing
+
+We welcome contributions to nil.js! Whether you're fixing bugs, improving documentation, or adding new features, your help is appreciated.
+
+### Quick Start
+
+1. Fork and clone the repository
+2. Install dependencies: `npm install`
+3. Make your changes
+4. Run test
+5. Submit a pull request
+
+For detailed guidelines on:
+
+- Setting up your development environment
+- Code style and naming conventions
+- Testing with a local nil cluster
+- Building and bundling
+- Submitting changes
+
+Please see our [Contributing Guide](CONTRIBUTING.md).
+
+### Getting Help
+
+- Create an issue for bug reports or feature requests
+- Join our [Discord community](https://discord.com/invite/KmTAEjbmM3)
+- Check our [documentation](https://docs.nil.foundation/)
+
+## License
 
 [MIT](./LICENSE)
