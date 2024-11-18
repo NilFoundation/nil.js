@@ -6,8 +6,7 @@ Thank you for your interest in contributing to nil.js! This document will guide 
 
 1. **Prerequisites**
 
-   - Node.js (v16 or higher)
-   - npm (v7 or higher)
+   - Node.js (v18 or higher)
    - Git
    - A local nil cluster for testing (see Testing section)
 
