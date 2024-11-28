@@ -13,7 +13,7 @@ export type RPCMessage = {
   blockNumber: number;
   from: Hex;
   gasUsed: Hex;
-  gasLimit: string;
+  feeCredit: string;
   hash: Hex;
   seqno: Hex;
   to: Hex;

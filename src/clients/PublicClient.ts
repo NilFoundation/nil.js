@@ -244,7 +244,7 @@ class PublicClient extends BaseClient {
     return {
       ...res,
       value: BigInt(res.value),
-      gasLimit: BigInt(res.gasLimit),
+      feeCredit: res.feeCredit ? BigInt(res.feeCredit) : 0n,
       gasUsed: hexToBigInt(res.gasUsed),
       seqno: hexToBigInt(res.seqno),
       index: res.index ? hexToNumber(res.index) : 0,

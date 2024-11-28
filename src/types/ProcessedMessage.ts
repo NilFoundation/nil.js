@@ -14,7 +14,7 @@ export type ProcessedMessage = {
   blockNumber: number;
   from: Address;
   gasUsed: bigint;
-  gasLimit: bigint;
+  feeCredit: bigint;
   hash: Hex;
   seqno: bigint;
   to: Address;
