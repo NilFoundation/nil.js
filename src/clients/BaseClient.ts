@@ -10,7 +10,7 @@ import type { IClientBaseConfig } from "./types/Configs.js";
  */
 class BaseClient {
   /**
-   * The ITransport to be used in the client. See {@link ITransport}.
+   * The ITransport to be used by the client. See {@link ITransport}.
    *
    * @protected
    * @type {ITransport}
