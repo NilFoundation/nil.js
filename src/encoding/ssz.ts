@@ -48,7 +48,7 @@ const basicTypes = {
 };
 
 /**
- * The const representing a byte vector with 20 elements.
+ * The const represents a byte vector with 20 elements.
  *
  */
 const Bytes20 = new ByteVectorType(20);

@@ -74,7 +74,7 @@ class CometaService extends BaseClient {
 
   /**
    * Register the contract.
-   * @param inputJson - The JSON input for compiler.
+   * @param inputJson - The JSON input for the compiler.
    * @param address - Address of the contract.
    */
   public async registerContract(inputJson: string, address: Hex) {

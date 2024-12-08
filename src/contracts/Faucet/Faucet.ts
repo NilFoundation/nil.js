@@ -6,7 +6,7 @@ import { hexToBytes } from "../../index.js";
 import { waitTillCompleted } from "../../utils/receipt.js";
 
 /**
- * The Faucet is a special contract that is used to top up other contracts in the =nil; devnet.
+ * The Faucet is a special contract used to top up other contracts in the =nil; devnet.
  *
  * @class Faucet
  * @typedef {Faucet}
@@ -20,7 +20,7 @@ export class Faucet {
    */
   static address = "0x000100000000000000000000000000000FA00CE7" as const;
   /**
-   * The client to be used with the Faucet contract.
+   * The client is to be used with the Faucet contract.
    *
    * @private
    * @type {PublicClient}

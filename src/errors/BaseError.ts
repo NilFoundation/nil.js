@@ -6,7 +6,7 @@ import { version } from "../version.js";
 type IBaseErrorParameters = {
   /**
    * The flag that indicates if this error is operational.
-   * This is useful to differentiate operational errors from programming errors.
+   * This is useful for differentiating operational errors from programming errors.
    * It is recommended to always set this property to true when creating a custom error class.
    * @default true
    */
@@ -27,7 +27,7 @@ type IBaseErrorParameters = {
 class BaseError extends Error {
   /**
    * The flag that indicates if this error is operational.
-   * This is useful to differentiate operational errors from programming errors.
+   * This is useful for differentiating operational errors from programming errors.
    * It is recommended to always set this property to true when creating a custom error class.
    * @public
    * @type {boolean}

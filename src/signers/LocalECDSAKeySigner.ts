@@ -86,7 +86,7 @@ class LocalECDSAKeySigner implements ISigner {
    * Retrieves the public key.
    *
    * @public
-   * @returns {Uint8Array} The publc key of the signer.
+   * @returns {Uint8Array} The public key of the signer.
    */
   public getPublicKey() {
     if (this.publicKey) {
