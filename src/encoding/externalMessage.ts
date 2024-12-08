@@ -47,13 +47,13 @@ export class ExternalMessageEnvelope {
    */
   data: Uint8Array;
   /**
-   * The auth data attached to the message.
+   * The auth data is attached to the message.
    *
    * @type {Uint8Array}
    */
   authData: Uint8Array;
   /**
-   * The auth data attached to the message.
+   * The auth data is attached to the message.
    *
    * @type {BigInt}
    */
@@ -68,8 +68,8 @@ export class ExternalMessageEnvelope {
    * @param {ExternalMessage} param0.chainId The chain ID.
    * @param {ExternalMessage} param0.seqno The message sequence number.
    * @param {ExternalMessage} param0.data The message number.
-   * @param {ExternalMessage} param0.authData The auth data attached to the message.
-   * @param {ExternalMessage} param0.feeCredit The fee credit attached to the message.
+   * @param {ExternalMessage} param0.authData The auth data is attached to the message.
+   * @param {ExternalMessage} param0.feeCredit The fee credit is attached to the message.
    */
   constructor({
     isDeploy,
