@@ -17,7 +17,7 @@
 <img src="https://img.shields.io/npm/dy/%40nilfoundation%2Fniljs"/>
 </picture>
 </a>
-<a href="https://github.com/NilFoundation/nil.js">
+<a href="https://github.com/NilFoundation/nil.js/stargazers">
 <picture>
 <img src="https://img.shields.io/github/stars/NilFoundation/nil.js"/>
 </picture>
@@ -27,7 +27,7 @@
 <img src="https://img.shields.io/npm/v/%40nilfoundation%2Fniljs"/>
 </picture>
 </a>
-<a href="https://github.com/NilFoundation/nil.js">
+<a href="https://github.com/NilFoundation/nil.js/forks">
 <picture>
 <img src="https://img.shields.io/github/forks/NilFoundation/nil.js"/>
 </picture>
@@ -107,7 +107,7 @@ const addr = bytesToHex(deploymentMessage.to);
 console.log("walletAddress", addr);
 ```
 
-## Usage
+### Usage
 
 In =nil;, it is possible to call functions asynchronously. When a contract makes an async call, a new transaction is spawned. When this transaction is processed, the function call itself is executed.
 
@@ -206,6 +206,6 @@ await waitTillCompleted(client, sendHash);
 
 =nil; also supports token bouncing. If a message carries custom tokens, and it is unsuccesful, the funds will be returned to the address specified in the `bounceTo` parameter when sending the message.
 
-## Licence
+### Licence
 
-[MIT](./LICENSE)
+[MIT](https://github.com/NilFoundation/nil.js/blob/main/LICENCE)
