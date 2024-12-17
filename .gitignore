@@ -1,0 +1,16 @@
+dist
+
+*.tsbuildinfo
+
+coverage
+
+.env
+logs
+*.log
+npm-debug.log*
+
+*.tgz
+
+node_modules
+test/**/*.bin
+test/**/*.abi.json
